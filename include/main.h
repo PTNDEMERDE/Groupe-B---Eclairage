@@ -4,8 +4,6 @@
 
 // DEFINE 
 
-#define F_CPU 16000000UL
-
 // Gestion registre par bit unique
 #define SET_BIT(port,bit)  (port |= (1<<bit))   //set bit in port
 #define CLR_BIT(port,bit)  (port &= ~(1<<bit))  //clear bit in port

@@ -96,7 +96,7 @@ void USART0_Init_9600_INT_On_RX(void)
 		SET_BIT(UCSR0A,U2X0);
 		
 		// 9600 baud
-		UBRR0 = 103;
+		UBRR0 = 207;
 		
 
 		// Configuration en émission et réception avec interruption en RX
@@ -132,7 +132,7 @@ void USART1_Init_9600_INT_ON_RX(void)
 		//1xspeed  U2X1 = 1
 		UCSR1A |= (1<<U2X1);
 		// 9600 baud
-		UBRR1 = 103;
+		UBRR1 = 207;
 		// Configuration Emission + Réception, Interruptions en RX
 		//(UCSR1B) RXCIE1 = 1 | TXCIE1 =0 | UDRIE1 = 0 | RXEN1 = 1 | TXEN1 = 1 | UCSZ12 = 0 | RXB81 = 0 | TXB81 = 0
 		UCSR1B = 0b10011000;

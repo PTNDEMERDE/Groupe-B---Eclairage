@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "usart.h"
 #include "menu.h"
+#include "lcd.h"
 
 
 //Variables globales
@@ -237,7 +238,7 @@ ISR(TIMER0_OVF_vect)
 	#elif F_CPU == 8000000UL
 		TCNT0 = 131;
 	#elif F_CPU == 16000000UL
-		TCNT0 = 131;
+		TCNT0 = 6;
 	#endif
 }
 
