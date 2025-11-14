@@ -232,8 +232,13 @@ ISR(TIMER0_OVF_vect)
 	{
 		Tick_CB[Int_Counter]++;
 	}
-	TCNT0 = 131;
-	
+	#if F_CPU == 1000000UL
+		TCNT0 = 131;
+	#elif F_CPU == 8000000UL
+		TCNT0 = 131;
+	#elif F_CPU == 16000000UL
+		TCNT0 = 6;
+	#endif
 }
 
 
