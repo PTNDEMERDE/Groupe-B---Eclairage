@@ -50,12 +50,12 @@ void Timer0_Init_1ms(void)
 		// Mode timer normal avec interruption en overflow
 		TCCR0A =0b00000000;
 		CLR_BIT(TCCR0B,WGM02);
-		// Diviseur par 64 
-		CLR_BIT(TCCR0B,CS02);
-		SET_BIT(TCCR0B,CS01);
-		SET_BIT(TCCR0B,CS00);
-		//valeur initiale du compteur = 256-250=6
-		TCNT0 = 6;
+		// Diviseur par 128 (CS02=1, CS01=0, CS00=0)
+		SET_BIT(TCCR0B,CS02);
+		CLR_BIT(TCCR0B,CS01);
+		CLR_BIT(TCCR0B,CS00);
+		//valeur initiale du compteur = 256-125=131
+		TCNT0 = 131;
 		SET_BIT(TIMSK0,TOIE0);
 	#endif
 }

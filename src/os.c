@@ -237,7 +237,7 @@ ISR(TIMER0_OVF_vect)
 	#elif F_CPU == 8000000UL
 		TCNT0 = 131;
 	#elif F_CPU == 16000000UL
-		TCNT0 = 6;
+		TCNT0 = 131;
 	#endif
 }
 
