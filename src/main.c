@@ -25,7 +25,7 @@ int main (void)
  	// Initialisation hardware 
 	Init_Hardware();
 
-	//lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
+	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
 	
 	// Initialisation des Callbacks

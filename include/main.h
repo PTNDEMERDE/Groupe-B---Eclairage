@@ -21,7 +21,12 @@
 enum {NONE,UP, DOWN, LEFT, ENTER, RIGHT};	// Used with the button variable
 
 // STATE MACHINE
-#define ST_TXT_START	1
+#define ST_TXT_START	    1
+#define ST_TXT_UP           2
+#define ST_TXT_DOWN         3
+#define ST_TXT_LEFT         4
+#define ST_TXT_RIGHT        5
+#define ST_TXT_ENTER        6
 
 
 // Prototype des fonctions

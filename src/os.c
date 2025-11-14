@@ -275,11 +275,11 @@ ISR(PCINT2_vect)
 	// tester	PINC, la variable Button mémorise la touche appuyée.
 	char comp_PINC = ~PINC;
 	//push test
-	if (Is_BIT_SET(comp_PINC,PINC6))
+	if (Is_BIT_SET(comp_PINC,PINC3))
 	Button = UP;
-	else if (Is_BIT_SET(comp_PINC,PINC2))
+	else if (Is_BIT_SET(comp_PINC,PINC6))
 	Button = RIGHT;
-	else if (Is_BIT_SET(comp_PINC,PINC3))
+	else if (Is_BIT_SET(comp_PINC,PINC7))
 	Button = ENTER;
 	else if (Is_BIT_SET(comp_PINC,PINC4))
 	Button = DOWN;
