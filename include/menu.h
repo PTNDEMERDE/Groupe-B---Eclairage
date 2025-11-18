@@ -36,11 +36,16 @@ const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
 // MENUS
 
 	{ST_TXT_START,              NONE,       ST_TXT_START},
-    {ST_TXT_START,	            DOWN,		ST_TXT_DOWN},	
+    {ST_TXT_START,	            DOWN,		ST_TXT_DOWN},
+    {ST_TXT_DOWN,               ENTER,		ST_TXT_START},	
 	{ST_TXT_START,				UP,			ST_TXT_UP},
-	{ST_TXT_START,				ENTER,		ST_TXT_ENTER},
+    {ST_TXT_UP,                 ENTER,		ST_TXT_START},
 	{ST_TXT_START,				LEFT,		ST_TXT_LEFT},
+    {ST_TXT_LEFT,               ENTER,		ST_TXT_START},
 	{ST_TXT_START,				RIGHT,		ST_TXT_RIGHT},
+    {ST_TXT_RIGHT,              ENTER,		ST_TXT_START},
+    {ST_TXT_START,              ENTER,       ST_TXT_ENTER},
+    {ST_TXT_ENTER,              ENTER,      ST_TXT_START},
 
 	{0,                         0,          0},
 };
