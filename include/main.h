@@ -28,6 +28,9 @@ enum {NONE,UP, DOWN, LEFT, ENTER, RIGHT};	// Used with the button variable
 #define ST_TXT_RIGHT        5
 #define ST_TXT_ENTER        6
 
+#define LAMP1_ON Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
+#define LAMP1_OFF Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW);
+
 
 // Prototype des fonctions
 
@@ -40,4 +43,7 @@ void Switch_LED(void);	// callback timer --> cligotement de la LED
 
 //AUTRES
 
+
+// TEST 
+void Expander_test(void);
 #endif 

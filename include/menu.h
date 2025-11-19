@@ -44,9 +44,8 @@ const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
     {ST_TXT_LEFT,               ENTER,		ST_TXT_START},
 	{ST_TXT_START,				RIGHT,		ST_TXT_RIGHT},
     {ST_TXT_RIGHT,              ENTER,		ST_TXT_START},
-    {ST_TXT_START,              ENTER,       ST_TXT_ENTER},
+    {ST_TXT_START,              ENTER,      ST_TXT_ENTER},
     {ST_TXT_ENTER,              ENTER,      ST_TXT_START},
-
 	{0,                         0,          0},
 };
 
