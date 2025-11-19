@@ -1,0 +1,23 @@
+8 IO dispo
+1 LED PWM
+action modulaire (la meme action sur deux interrupteurs (ex: double appuis) differents ne fait pas la meme chose)
+réfléchir pour étendre les expender
+
+Définir des scenes selon l'heure
+
+Pour l'heure, communiquer avec le groupe 3 pour la variable/norme
+
+travailler sur l'extender (I2C)
+
+1Fichier de config  pour btn et LED
+
+GPB0-GPB7 :
+
+GPB0	 -->	LED1
+GPB1 	 -->	LED2(PWM)
+GPB2 	 -->	LED3
+GPB3 	 -->	LED4
+GPB4 	 -->	BTN1	--> LED1
+GPB5 	 -->	BTN2	--> LED2(PWM)
+GPB6  	 -->	BTN3	--> 2x Eteint
+GPB7	 -->	BTN4	--> 2x ACT/DESACT RTC fonction
