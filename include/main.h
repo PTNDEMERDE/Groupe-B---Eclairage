@@ -18,15 +18,14 @@
 #define NULL	0
 #endif
 
-enum {NONE,UP, DOWN, LEFT, ENTER, RIGHT};	// Used with the button variable
+enum {NONE,ONE_PUSH, DOUBLE_PUSH, LONG_PUSH, MORE_LONG_PUSH};	// Used with the button variable
 
 // STATE MACHINE
-#define ST_TXT_START	    1
-#define ST_TXT_UP           2
-#define ST_TXT_DOWN         3
-#define ST_TXT_LEFT         4
-#define ST_TXT_RIGHT        5
-#define ST_TXT_ENTER        6
+#define ST_TXT_START	 1
+#define ST_TXT_SWITCH    2
+#define ST_TXT_ALL_OFF   3
+#define ST_TXT_T_UP      4
+#define ST_TXT_OFF_ON    5
 
 
 // Prototype des fonctions

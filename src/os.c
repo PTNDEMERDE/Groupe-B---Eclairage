@@ -11,6 +11,9 @@
 
 //Variables globales
 
+// Timer0
+volatile unsigned char Temps_appuis = 0; // variable ou a chaque interuption (1ms) on incrémante, jusqu'a 1000(1s) pour éteindre ou allumer la LED.
+									 // volatile car elle peut etre modifier ailleur dans le code.
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
@@ -271,29 +274,60 @@ ISR(USART0_RX_vect)
 
 //Interruption Touches
 ISR(PCINT2_vect)
-{
-	// tester	PINC, la variable Button mémorise la touche appuyée.
-	char comp_PINC = ~PINC;
-	//push test
-	if (Is_BIT_SET(comp_PINC,PINC3))
-	Button = UP;
-	else if (Is_BIT_SET(comp_PINC,PINC6))
-	Button = RIGHT;
-	else if (Is_BIT_SET(comp_PINC,PINC7))
-	Button = ENTER;
-	else if (Is_BIT_SET(comp_PINC,PINC4))
-	Button = DOWN;
-	else if (Is_BIT_SET(comp_PINC,PINC5))
-	Button = LEFT;
-	//else Button = NONE;
-	
+{	
+
+    if ()
+    {
+		Callbacks_Record_Timer(Quelle_Button, 1000);
+        // CAS 1 : LONG PUSH ?
+        if (Temps_appuis >= 2)
+        {
+            Button = LONG_PUSH;
+            waiting_second_press = 0;
+			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("LONG PUSH");sei();
+            return;
+        }
+
+        // CAS 2 : SECOND PUSH => DOUBLE PUSH
+        if (waiting_second_press)
+        {
+            Button = DOUBLE_PUSH;
+            waiting_second_press = 0;
+			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("DOUBLE_PUSH");sei();
+            return;
+        }
+
+		// CAS 3 : SIMPLE PUSH
+        if (Tick_CB[9] - last_release >= 1000)
+        {
+            Button = ONE_PUSH;
+			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("ONE PUSH");sei();
+            waiting_second_press = 0;
+        }
+    }
 }
 
+void Quelle_Button(void)
+{
+	Temps_appuis = 1;
+}
+/*
+
+*/
 
 
+/*	// tester	PINC, la variable Button mémorise la touche appuyée.
+	char comp_PINC = ~PINC;
+	//push test
+	if (Is_BIT_SET(comp_PINC,PINC7))
+	Button = ONE_PUSH;
+	else if (Is_BIT_SET(comp_PINC,PINC7))
+	Button = DOUBLE_PUSH;
+	else if (Is_BIT_SET(comp_PINC,PINC7))
+	Button = LONG_PUSH;
 
-
-
+	//else Button = NONE;
+*/
 
 
 
