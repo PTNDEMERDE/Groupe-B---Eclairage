@@ -15,25 +15,24 @@ unsigned char IOCON_CFG = 0b00000010;
 void Expander_Init()
 {
 	Expander_Write(IOCON1, IOCON_CFG);
-	//Expander_Write(IODIRA, IODIRA_CFG);
-	//Expander_Write(IODIRB, IODIRB_CFG);
-	//Expander_Write(GPINTENB, GPINTENB_CFG);
+	Expander_Write(IODIRA, IODIRA_CFG);
+	Expander_Write(IODIRB, IODIRB_CFG);
+	Expander_Write(GPINTENB, GPINTENB_CFG);
 	
 	
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,LOW); // LED Identification OFF
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA3,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA4,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA5,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA6,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA7,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
-	// Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
-	
-	
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,LOW); // LED Identification OFF
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA3,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA4,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA5,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA6,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA7,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
+	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
+		
 }
 
 void Expander_Write(unsigned char registerAddress,unsigned char dataToWrite)
