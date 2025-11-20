@@ -18,7 +18,7 @@
 #define NULL	0
 #endif
 
-enum {NONE,ONE_PUSH, DOUBLE_PUSH, LONG_PUSH, MORE_LONG_PUSH};	// Used with the button variable
+enum {NONE,BTN_ENTER_SHORT, BTN_ENTER_DOUBLE, BTN_ENTER_LONG, BTN_MORE_LONG_PUSH};	// Used with the button variable
 
 // STATE MACHINE
 #define ST_TXT_START	 1

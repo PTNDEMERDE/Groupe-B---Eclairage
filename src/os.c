@@ -8,8 +8,32 @@
 #include "menu.h"
 #include "lcd.h"
 
-
+//------------------------------------------------------------------------------------------
 //Variables globales
+//------------------------------------------------------------------------------------------
+
+//Gestion bouton
+// Bouton ENTER (analyse avancée)
+volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
+
+#define ENTER_PRESSED 1
+#define ENTER_RELEASED 0
+
+// Pour la détection des patterns
+volatile uint16_t press_time = 0;
+volatile uint16_t release_timer = 0;
+
+typedef enum {
+    BTN_STATE_IDLE,
+    BTN_STATE_PRESSED,
+    BTN_STATE_WAIT_SECOND
+} BtnState_t;
+
+volatile BtnState_t btn_state = BTN_STATE_IDLE;
+
+// Événements à envoyer à la machine d'état
+volatile uint8_t ButtonEvent = NONE;
+
 
 // Timer0
 volatile unsigned char Temps_appuis = 0; // variable ou a chaque interuption (1ms) on incrémante, jusqu'a 1000(1s) pour éteindre ou allumer la LED.
@@ -169,10 +193,23 @@ void OS_Start(void)
 			 // END DEBUG
 			 statetext = NULL; // Pour ne pas écrire le même texte sur l'afficheur (évite la scintillation de l'écran)
 		 }
+
+		
+		  // --------- LECTURE DES BOUTONS ---------
 		 		 
 		 // Read buttons
-		 input = Button;
-		 Button = NONE;
+		 //input = Button;
+		 //Button = NONE;
+		 
+		input = NONE;
+
+		cli();
+		if (ButtonEvent != NONE)
+		{
+			input = ButtonEvent;
+			ButtonEvent = NONE;
+		}
+		sei();
 
 		 // When in this state, we must call the state function
 		 if (pStateFunc)
@@ -275,59 +312,61 @@ ISR(USART0_RX_vect)
 //Interruption Touches
 ISR(PCINT2_vect)
 {	
+    char comp_PINC = ~PINC;
 
-    if ()
+    if (Is_BIT_SET(comp_PINC, PINC7))  // ENTER
+        button_raw = ENTER_PRESSED;
+    else
+        button_raw = ENTER_RELEASED;
+}
+
+void Button_Handler(void)
+{
+    switch (btn_state)
     {
-		Callbacks_Record_Timer(Quelle_Button, 1000);
-        // CAS 1 : LONG PUSH ?
-        if (Temps_appuis >= 2)
-        {
-            Button = LONG_PUSH;
-            waiting_second_press = 0;
-			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("LONG PUSH");sei();
-            return;
-        }
+        case BTN_STATE_IDLE:
+            if (button_raw == ENTER_PRESSED) 
+            {
+                btn_state = BTN_STATE_PRESSED;
+                press_time = 0;
+            }
+        break;
 
-        // CAS 2 : SECOND PUSH => DOUBLE PUSH
-        if (waiting_second_press)
-        {
-            Button = DOUBLE_PUSH;
-            waiting_second_press = 0;
-			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("DOUBLE_PUSH");sei();
-            return;
-        }
+        case BTN_STATE_PRESSED:
+            if (button_raw == ENTER_PRESSED)
+            {
+                press_time++;
 
-		// CAS 3 : SIMPLE PUSH
-        if (Tick_CB[9] - last_release >= 1000)
-        {
-            Button = ONE_PUSH;
-			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("ONE PUSH");sei();
-            waiting_second_press = 0;
-        }
+                if (press_time >= 2000)  // 2 secondes
+                {
+                    ButtonEvent = BTN_ENTER_LONG;
+                    btn_state = BTN_STATE_IDLE;
+                }
+            }
+            else  // relâché avant 2 sec → peut-être simple ou double
+            {
+                btn_state = BTN_STATE_WAIT_SECOND;
+                release_timer = 0;
+            }
+        break;
+
+        case BTN_STATE_WAIT_SECOND:
+            release_timer++;
+
+            if (button_raw == ENTER_PRESSED && release_timer < 500)
+            {
+                ButtonEvent = BTN_ENTER_DOUBLE;
+                btn_state = BTN_STATE_IDLE;
+            }
+            else if (release_timer >= 500)
+            {
+                ButtonEvent = BTN_ENTER_SHORT;
+                btn_state = BTN_STATE_IDLE;
+            }
+        break;
     }
 }
 
-void Quelle_Button(void)
-{
-	Temps_appuis = 1;
-}
-/*
-
-*/
-
-
-/*	// tester	PINC, la variable Button mémorise la touche appuyée.
-	char comp_PINC = ~PINC;
-	//push test
-	if (Is_BIT_SET(comp_PINC,PINC7))
-	Button = ONE_PUSH;
-	else if (Is_BIT_SET(comp_PINC,PINC7))
-	Button = DOUBLE_PUSH;
-	else if (Is_BIT_SET(comp_PINC,PINC7))
-	Button = LONG_PUSH;
-
-	//else Button = NONE;
-*/
 
 
 
