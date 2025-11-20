@@ -28,6 +28,7 @@ int main (void)
 {
  	// Initialisation hardware 
 	Init_Hardware();
+	sei(); // Activer les interruptions globales
 	Expander_Init();
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");

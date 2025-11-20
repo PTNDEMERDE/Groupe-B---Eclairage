@@ -41,8 +41,8 @@ void Timer0_Init_1ms(void)
 	#elif F_CPU == 16000000UL
 		// Mode timer normal avec interruption en overflow
 		TCCR0A = 0b00000000;  // Mode normal (WGM01=0, WGM00=0)
-		TCCR0B = 0b00000011;  // Prescaleur 128 (CS02=0, CS01=1, CS00=1) et WGM02=0
-		//valeur initiale du compteur = 256-125=131
+		TCCR0B = 0b00000011;  // Prescaleur 64 (CS02=0, CS01=1, CS00=1) et WGM02=0
+		//valeur initiale du compteur = 256-250=6
 		TCNT0 = 6;
 		SET_BIT(TIMSK0,TOIE0);
 	#endif
