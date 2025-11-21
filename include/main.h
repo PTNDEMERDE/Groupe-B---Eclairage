@@ -4,6 +4,8 @@
 
 // DEFINE 
 
+//#define F_CPU 16000000UL
+
 // Gestion registre par bit unique
 #define SET_BIT(port,bit)  (port |= (1<<bit))   //set bit in port
 #define CLR_BIT(port,bit)  (port &= ~(1<<bit))  //clear bit in port
@@ -21,19 +23,19 @@
 enum {NONE,UP, DOWN, LEFT, ENTER, RIGHT};	// Used with the button variable
 
 // STATE MACHINE
-#define ST_TXT_START	    1
-#define ST_TXT_UP           2
-#define ST_TXT_DOWN         3
-#define ST_TXT_LEFT         4
-#define ST_TXT_RIGHT        5
-#define ST_TXT_ENTER        6
-
+#define ST_TXT_START	1
+#define ST_TXT_UP	    2
+#define ST_TXT_DOWN	    3
+#define ST_TXT_RIGHT	4
+#define ST_TXT_LEFT	    5
+#define ST_TXT_ENTER	6
 
 // Prototype des fonctions
 
 //CALLBACK
 void Switch_LED(void);	// callback timer --> cligotement de la LED
-
+void PWM_update(void);
+void PWM_Cycle_ON(void);
 
 //STATE MACHINE
 
