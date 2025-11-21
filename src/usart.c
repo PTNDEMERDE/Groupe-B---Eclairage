@@ -68,6 +68,23 @@ void USART0_Init_9600(void)
 		// Async. mode, 8 bits, 1 bit de stop, pas de contrôle de parité
 		//(UCSR0C) UMSEL01 = 0 | UMSEL00 = 0 | UPM01 = 0 | UPM00 = 0 | USBS0 = 0 | UCSZ01 = 1 | UCSZ00 = 1 | UCPOL0 = 0;
 		UCSR0C = 0b00000110;
+	#elif F_CPU == 16000000UL
+			// fréquence horloge = 8000000 hz, Si Baudrate = 4800 alors UBRR = 12
+		//1xspeed  U2X0 = 1  
+		//UCSR0A |= (1<<U2X0);
+		SET_BIT(UCSR0A,U2X0);
+		
+		// 9600 baud
+		UBRR0 = 207;
+		
+
+		// Configuration en émission seulement.
+		//(UCSR0B) RXCIE0 = 1 | TXCIE0 =0 | UDRIE0 = 0 | RXEN0 = 1 | TXEN0 = 1 | UCSZ02 = 0 | RXB80 = 0 | TXB80 = 0
+		UCSR0B = 0b10001000;
+		
+		// Async. mode, 8 bits, 1 bit de stop, pas de contrôle de parité
+		//(UCSR0C) UMSEL01 = 0 | UMSEL00 = 0 | UPM01 = 0 | UPM00 = 0 | USBS0 = 0 | UCSZ01 = 1 | UCSZ00 = 1 | UCPOL0 = 0;
+		UCSR0C = 0b00000110;
 	#endif
 }
 
@@ -110,7 +127,7 @@ void USART0_Init_9600_INT_On_RX(void)
 		//(UCSR0C) UMSEL01 = 0 | UMSEL00 = 0 | UPM01 = 0 | UPM00 = 0 | USBS0 = 0 | UCSZ01 = 1 | UCSZ00 = 1 | UCPOL0 = 0;
 		UCSR0C = 0b00000110;
 	#elif F_CPU == 16000000UL
-		// fréquence horloge = 16000000 hz, Si Baudrate = 9600 alors UBRR = 207
+		// fréquence horloge = 16000000 hz, Si Baudrate = 4800 alors UBRR = 207
 		//1xspeed  U2X0 = 1  
 		//UCSR0A |= (1<<U2X0);
 		SET_BIT(UCSR0A,U2X0);
@@ -167,7 +184,7 @@ void Usart1_Tx(char data)
 {
 	// UDRE Flag , is the transmit buffer UDR) ready to receive new data ?
 	// if UDRE1 =1 the buffer is empty
-	while (!(UCSR0A & (1<<UDRE1)));
+	while (!(UCSR1A & (1<<UDRE1)));
     UDR1 = data;
 }
 
