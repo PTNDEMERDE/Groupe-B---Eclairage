@@ -41,7 +41,6 @@ const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
 	{0,                         0,                       0},
 };
 
-
 const MENU_STATE Menu_State[] PROGMEM = {
 //  STATE                               STATE TEXT                  STATE_FUNC
 

@@ -10,11 +10,8 @@
 
 //------------------------------------------------------------------------------------------
 //Variables globales
-<<<<<<< HEAD
-=======
 //------------------------------------------------------------------------------------------
 
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
 //Gestion bouton
 // Bouton ENTER (analyse avancée)
 volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
@@ -36,10 +33,7 @@ volatile BtnState_t btn_state = BTN_STATE_IDLE;
 
 // Événements à envoyer à la machine d'état
 volatile uint8_t ButtonEvent = NONE;
-<<<<<<< HEAD
-=======
 
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
 
 // Timer0
 volatile unsigned char Temps_appuis = 0; // variable ou a chaque interuption (1ms) on incrémante, jusqu'a 1000(1s) pour éteindre ou allumer la LED.
@@ -203,8 +197,6 @@ void OS_Start(void)
 		
 		  // --------- LECTURE DES BOUTONS ---------
 		 		 
-				  // --------- LECTURE DES BOUTONS ---------
-		 		 
 		 // Read buttons
 		 //input = Button;
 		 //Button = NONE;
@@ -322,11 +314,6 @@ ISR(PCINT2_vect)
 {	
     char comp_PINC = ~PINC;
 
-<<<<<<< HEAD
-	    char comp_PINC = ~PINC;
-
-=======
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
     if (Is_BIT_SET(comp_PINC, PINC7))  // ENTER
         button_raw = ENTER_PRESSED;
     else
@@ -336,52 +323,6 @@ ISR(PCINT2_vect)
 void Button_Handler(void)
 {
     switch (btn_state)
-<<<<<<< HEAD
-    {
-        case BTN_STATE_IDLE:
-            if (button_raw == ENTER_PRESSED) 
-			{
-                btn_state = BTN_STATE_PRESSED;
-                press_time = 0;
-            }
-        break;
-
-        case BTN_STATE_PRESSED:
-            if (button_raw == ENTER_PRESSED)
-            {
-                press_time++;
-
-                if (press_time >= 2000)  // 2 secondes
-                {ButtonEvent = BTN_ENTER_LONG;
-                    btn_state = BTN_STATE_IDLE;
-                }
-            }
-			            else  // relâché avant 2 sec → peut-être simple ou double
-            {
-                btn_state = BTN_STATE_WAIT_SECOND;
-                release_timer = 0;
-            }
-        break;
-
-        case BTN_STATE_WAIT_SECOND:
-            release_timer++;
-
-            if (button_raw == ENTER_PRESSED && release_timer < 500)
-            {
-                ButtonEvent = BTN_ENTER_DOUBLE;
-                btn_state = BTN_STATE_IDLE;
-            }
-            else if (release_timer >= 500)
-            {
-                ButtonEvent = BTN_ENTER_SHORT;
-                btn_state = BTN_STATE_IDLE;
-            }
-        break;
-    }
-
-    /*if ()
-=======
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
     {
         case BTN_STATE_IDLE:
             if (button_raw == ENTER_PRESSED) 
@@ -396,16 +337,6 @@ void Button_Handler(void)
             {
                 press_time++;
 
-<<<<<<< HEAD
-		// CAS 3 : SIMPLE PUSH
-        if (Tick_CB[9] - last_release >= 1000)
-        {
-            Button = ONE_PUSH;
-			cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("ONE PUSH");sei();
-            waiting_second_press = 0;
-        }
-    }*/
-=======
                 if (press_time >= 2000)  // 2 secondes
                 {
                     ButtonEvent = BTN_ENTER_LONG;
@@ -434,11 +365,4 @@ void Button_Handler(void)
             }
         break;
     }
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
 }
-
-
-
-
-
-

@@ -33,11 +33,6 @@ void OS_Start(void);
 //State Machine
 unsigned char StateMachine(char state, unsigned char stimuli);
 
-<<<<<<< HEAD
 void Button_Handler(void);
-=======
-// Gestion du bouton poussoir
-void Button_Handler(void)
->>>>>>> f96a601fb34ca7a32f0781700893dc80cdf1c9ab
 
 #endif 
