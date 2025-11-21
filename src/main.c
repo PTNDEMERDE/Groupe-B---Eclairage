@@ -48,13 +48,14 @@ int main (void)
 //****************************************************************
 void Switch_LED(void)
 {
+	Usart0_Tx_String("Toggle LED\r\n");
 	TOGGLE_IO(PORTD,PORTD7);
 }
 
 
 
 //*****************************************
-//           STATE MACHINE
+//           STATE MACHINE	cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("1");sei();
 //*****************************************
 	
 	

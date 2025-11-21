@@ -55,7 +55,7 @@ unsigned char Date)
 {
 	// Configuration des registres pour autoriser l'alarme
 	RTC_buf[0] = ((RTC_ADDRESS << 1) | 0); // Salve Address + W
-	RTC_buf[1] = CONTROL;                  // Adresse du registre de contrôle
+	RTC_buf[1] = CONTROL;                  // Adresse du registre de contrï¿½le
 	// REGISTRE CONTROLE : Bit2 : Enables interrupt
 	//					   Bit0 : Enables interrupts related to Alarm 1
 	RTC_buf[2] = 0b00000101;
@@ -144,7 +144,7 @@ void RTC_Alarm_Set_Seconde( unsigned char Sec)
 {
 	// Configuration des registres pour autoriser l'alarme
 	RTC_buf[0] = ((RTC_ADDRESS << 1) | 0);  // Salve Address + W
-	RTC_buf[1] = CONTROL;                   // Adresse du registre de contrôle
+	RTC_buf[1] = CONTROL;                   // Adresse du registre de contrï¿½le
 	// REGISTRE CONTROLE : Bit2 : Enables interrupt
 	//					   Bit0 : Enables interrupts related to Alarm 1
 	RTC_buf[2] = 0b00000101;
@@ -188,14 +188,14 @@ unsigned char convertBCDtoChar(unsigned char AddressOfData, unsigned char Regist
 	Usart0_Tx_String(dizaine);
 	unsigned char unite = 0;
 	unsigned char valeur = 0;
-	// Selon le type de donnée,
+	// Selon le type de donnï¿½e,
 	switch (AddressOfData)
 	{
 		case SECONDE :
 		//Usart0_Tx_String("Secondes : ");
 		// Isolation of the tens in BCD and shifting by 4 bits to convert it into a tens digit.
 		dizaine = ((Register_Data & 0b01110000)>> 4);
-		// Isolation des unités dans le BCD
+		// Isolation des unitï¿½s dans le BCD
 		unite = Register_Data & 0b00001111;;
 		// The return value is the tens digit multiplied by 10, to which the units digit is added.
 		valeur = dizaine * 10 + unite;

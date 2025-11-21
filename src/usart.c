@@ -36,6 +36,7 @@ void USART0_Init_9600(void)
 	//1xspeed  U2X0 = 1  
 	//UCSR0A |= (1<<U2X0);
 	SET_BIT(UCSR0A,U2X0);
+
 	
 	// 9600 baud
 	//UBRR0 = 12;
@@ -94,6 +95,7 @@ void USART0_Init_9600_INT_On_RX(void)
 		// fréquence horloge = 16000000 hz, Si Baudrate = 9600 alors UBRR = 103
 		//1xspeed  U2X0 = 1  
 		SET_BIT(UCSR0A,U2X0);
+
 		
 		// 9600 baud
 		UBRR0 = 207;
@@ -147,7 +149,7 @@ void Usart1_Tx(char data)
 {
 	// UDRE Flag , is the transmit buffer UDR) ready to receive new data ?
 	// if UDRE1 =1 the buffer is empty
-	while (!(UCSR0A & (1<<UDRE1)));
+	while (!(UCSR1A & (1<<UDRE1)));
     UDR1 = data;
 }
 

@@ -137,9 +137,11 @@ void OS_Start(void)
  	Timer0_Init_1ms(); //A partir d'ici, interruption toutes les ms par Timer0
 	// Configuration USART0 pour 9600 baud avec interruption en réception
 	USART0_Init_9600_INT_On_RX();
+
+
 	// Configuration USART1 pour 9600 baud avec interruptionen réception (remplacement des touches)
 	//USART1_Init_9600_INT_ON_RX();
-
+	
 	// Pour STATES MACHINE
 	unsigned char nextstate;
 	PGM_P statetext; // chaîne de texte sauvegardé dans la mémoire programme
@@ -362,6 +364,7 @@ void Button_Handler(void)
             {
                 ButtonEvent = BTN_ENTER_SHORT;
                 btn_state = BTN_STATE_IDLE;
+				Usart0_Tx_String("Short Press Detected\r\n");
             }
         break;
     }
