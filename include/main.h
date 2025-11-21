@@ -43,7 +43,4 @@ void Switch_LED(void);	// callback timer --> cligotement de la LED
 
 //AUTRES
 
-
-// TEST 
-void Expander_test(void);
 #endif 

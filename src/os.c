@@ -7,10 +7,14 @@
 #include "usart.h"
 #include "menu.h"
 #include "lcd.h"
+#include "EXPANDER_MCP23017.h"
+#include "i2c_master.h"
+#include "lighting.h"
 
 
 //Variables globales
-
+unsigned int BTN1 = 0;
+unsigned int LAMP1 = 0;
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
@@ -129,6 +133,14 @@ void OS_Start(void)
 	// On autorise toutes les interruptions
  	sei();  
 
+	// Initialisation de l'I2C (TWI)
+	TWI_Master_Initialise();
+
+	// Initialisation de l'Expander MCP23017
+	Expander_Init();
+
+
+
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais
 	 while(1)
@@ -195,8 +207,7 @@ void OS_Start(void)
 					 break;
 				 }
 			 }
-		 }
-		 
+		 }		 
 		
   	 }
 }
@@ -218,6 +229,22 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 		}
 	}
 	return nextstate;
+}
+
+void Expander_test(void)
+{
+	// Test d'allumage des lampes
+
+	BTN1 = Expander_Read(GPIOB) & (1 << BTN1_PIN); // Lire l'état du bouton BTN1
+
+	if (BTN1 == 0)
+		{
+			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);// Allumer LAMP1
+		}
+	else if (BTN1 == 1)
+		{
+			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW); // Eteindre LAMP1
+		}
 }
 
     

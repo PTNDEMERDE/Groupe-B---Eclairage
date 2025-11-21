@@ -12,13 +12,18 @@ unsigned char IODIRB_CFG = 0b11110000; // GPIOB7-4 are inputs and GPIOB3-0 are o
 unsigned char GPINTENB_CFG = 0b11110000; // Interrupts enables for GPIOB7-4
 unsigned char IOCON_CFG = 0b00000010;
 
+// Configuration IOCON2 Register: Enable pull-ups and interrupt mirroring
+unsigned char GPPUB_CFG = 0b11110000; // Enable pull-ups and interrupt mirroring
+
 void Expander_Init()
 {
 	Expander_Write(IOCON1, IOCON_CFG);
 	Expander_Write(IODIRA, IODIRA_CFG);
 	Expander_Write(IODIRB, IODIRB_CFG);
 	Expander_Write(GPINTENB, GPINTENB_CFG);
-	
+
+	// Activation des pull-up sur les entrées
+	Expander_Write(GPPUB, GPPUB_CFG); // Enable pull-ups on GPIOB7-4
 	
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.

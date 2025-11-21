@@ -20,16 +20,11 @@
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 
-unsigned int BTN1 = 0;
-unsigned int LAMP1 = 0;
-
 //****************** fonction principale *****************
 int main (void)
 {
  	// Initialisation hardware 
 	Init_Hardware();
-	sei(); // Activer les interruptions globales
-	Expander_Init();
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
@@ -53,24 +48,10 @@ int main (void)
 void Switch_LED(void)
 {
 	TOGGLE_IO(PORTD,PORTD7);
-	Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
+	//Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
 }
 
-/*void Expander_test(void)
-{
-	// Test d'allumage des lampes
 
-	BTN1 = Expander_Read(GPIOB) & (1 << BTN1_PIN); // Lire l'état du bouton BTN1
-
-	if (BTN1 == 0)
-		{
-			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);// Allumer LAMP1
-		}
-	else if (BTN1 == 1)
-		{
-			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW); // Eteindre LAMP1
-		}
-}*/
 
 
 //*****************************************
