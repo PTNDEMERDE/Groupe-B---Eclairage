@@ -58,7 +58,7 @@ void Switch_LED(void)
 		TOGGLE_IO(PORTD,PORTD7);
 	}
 	*/
-	//TOGGLE_IO(PORTD,PORTD7);
+	TOGGLE_IO(PORTD,PORTD7);
 }
 
 // ******************
