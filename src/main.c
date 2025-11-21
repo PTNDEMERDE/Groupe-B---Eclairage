@@ -20,6 +20,7 @@
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 
+
 //****************** fonction principale *****************
 int main (void)
 {
@@ -48,8 +49,10 @@ int main (void)
 void Switch_LED(void)
 {
 	TOGGLE_IO(PORTD,PORTD7);
-	//Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
 }
+
+
+
 
 
 

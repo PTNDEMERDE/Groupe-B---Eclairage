@@ -21,10 +21,3 @@ GPB4 	 -->	BTN1	--> LED1
 GPB5 	 -->	BTN2	--> LED2(PWM)
 GPB6  	 -->	BTN3	--> 2x Eteint
 GPB7	 -->	BTN4	--> 2x ACT/DESACT RTC fonction
-
-<<<<<<< HEAD
-Test1
-=======
-
-testtest
->>>>>>> 16c0eb29b6a6dd960fd5305bd3ed7c8e4674a707

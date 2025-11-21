@@ -16,6 +16,8 @@
 unsigned int BTN1 = 0;
 unsigned int LAMP1 = 0;
 
+unsigned char LAMP1_Current_State = LOW;
+
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
 unsigned int Time_CB[MAX_CALLBACKS];
@@ -138,6 +140,8 @@ void OS_Start(void)
 
 	// Initialisation de l'Expander MCP23017
 	Expander_Init();
+
+
 
 
 
@@ -316,6 +320,29 @@ ISR(PCINT2_vect)
 	
 }
 
+ISR(PCINT1_vect)
+{
+	// tester	PORTB, la variable Button mémorise la touche appuyée.
+	unsigned char interrupt_status = Expander_Read(INTCAPB);
+	unsigned char current_button_state;
+
+	current_button_state = Expander_Read(GPIOB) & (1 << BTN1_PIN);
+
+	if (!(interrupt_status & (1 << BTN1_PIN)) && (current_button_state == 0))
+	{
+		BTN1 = Expander_Read(GPIOB) & (1 << BTN1_PIN); // Lire l'état du bouton BTN1
+		if (LAMP1_Current_State == LOW)
+		{
+			LAMP1_Current_State = HIGH;// Allumer LAMP1
+		}
+		else if (LAMP1_Current_State == HIGH)
+		{
+			LAMP1_Current_State = LOW; // Eteindre LAMP1
+		}
+
+		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+	}
+}
 
 
 
