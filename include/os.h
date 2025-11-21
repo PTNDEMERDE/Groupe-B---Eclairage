@@ -33,4 +33,6 @@ void OS_Start(void);
 //State Machine
 unsigned char StateMachine(char state, unsigned char stimuli);
 
+void Button_Handler(void);
+
 #endif 

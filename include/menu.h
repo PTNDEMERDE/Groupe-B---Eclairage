@@ -34,9 +34,9 @@ const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
 //  STATE                       INPUT       NEXT STATE
 // MENUS
 
-	{ST_TXT_START,	            ONE_PUSH,		ST_TXT_SWITCH},	
-    {ST_TXT_START,	            DOUBLE_PUSH,	ST_TXT_ALL_OFF},
-    {ST_TXT_START,	            LONG_PUSH,		ST_TXT_T_UP},
+	{ST_TXT_START,	            BTN_ENTER_SHORT,		ST_TXT_SWITCH},	
+    {ST_TXT_START,	            BTN_ENTER_DOUBLE,	    ST_TXT_ALL_OFF},
+    {ST_TXT_START,	            BTN_ENTER_LONG,	    	ST_TXT_T_UP},
 	
 	{0,                         0,          0},
 };

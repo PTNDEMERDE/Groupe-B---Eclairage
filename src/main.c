@@ -31,6 +31,8 @@ int main (void)
 	// Initialisation des Callbacks
 	OS_Init();
  	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
+		Callbacks_Record_Timer(Button_Handler, 1); // callback chaque 1 ms pour la gestion du bouton
+
 
  	// Lancement OS (Boucle infinie)
 	OS_Start();
