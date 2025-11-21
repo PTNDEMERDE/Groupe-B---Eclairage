@@ -8,9 +8,9 @@
 #include "menu.h"
 #include "lcd.h"
 
-
+//testtest
 //Variables globales
-
+//test2
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
