@@ -30,8 +30,8 @@ int main (void)
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 	
-	PWM_1_A_B_init(0b001,4095);
-	setDutyCycle_1A(4095);
+	//PWM_1_A_B_init(0b001,4095);
+	//setDutyCycle_1A(4095);
 
 	//PWM_1_A_B_init(1, 65535) // TOP_3 = 65535 car 16bits de resolution PWM à 244Hz(prescaler de 1)
 	
@@ -58,6 +58,7 @@ void Switch_LED(void)
 		TOGGLE_IO(PORTD,PORTD7);
 	}
 	*/
+	Usart0_Tx('U'); //
 	TOGGLE_IO(PORTD,PORTD7);
 }
 
