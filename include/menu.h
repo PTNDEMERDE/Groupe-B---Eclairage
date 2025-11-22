@@ -37,6 +37,7 @@ const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
 	{ST_TXT_START,	            BTN_ENTER_SHORT,		ST_TXT_SWITCH},	
     {ST_TXT_START,	            BTN_ENTER_DOUBLE,	    ST_TXT_ALL_OFF},
     {ST_TXT_START,	            BTN_ENTER_LONG,	    	ST_TXT_T_UP},
+
 	
 	{0,                         0,                       0},
 };
@@ -45,9 +46,9 @@ const MENU_STATE Menu_State[] PROGMEM = {
 //  STATE                               STATE TEXT                  STATE_FUNC
 
     {ST_TXT_START,				        Txt_START,	  		        NULL},
-    {ST_TXT_SWITCH,				        Txt_Switch,	  		        NULL},
-    {ST_TXT_ALL_OFF,				    Txt_All_off,	            NULL},
-    {ST_TXT_T_UP,				        Txt_T_up,	  		        NULL},
+    {ST_TXT_SWITCH,				        Txt_Switch,	  		        Light_Switch},
+    {ST_TXT_ALL_OFF,				    Txt_All_off,	            Light_All_Off},
+    {ST_TXT_T_UP,				        Txt_T_up,	  		        Light_Trimming_Up},
     {ST_TXT_OFF_ON,				        NULL,   	  		        NULL},
 	
     {0,                                 NULL,                       NULL},

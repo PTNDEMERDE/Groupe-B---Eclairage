@@ -35,7 +35,9 @@ void Switch_LED(void);	// callback timer --> cligotement de la LED
 
 
 //STATE MACHINE
-
+char Light_Switch(char input);
+char Light_All_Off(char input);
+char Light_Trimming_Up(char input,char button_state);
 
 //AUTRES
 

@@ -26,10 +26,14 @@ volatile uint16_t release_timer = 0;
 typedef enum {
     BTN_STATE_IDLE,
     BTN_STATE_PRESSED,
-    BTN_STATE_WAIT_SECOND
+    BTN_STATE_WAIT_SECOND,
+    BTN_STATE_IGNORE_RELEASE  // pour ignorer le relâchement après un double appui
 } BtnState_t;
 
+
 volatile BtnState_t btn_state = BTN_STATE_IDLE;
+volatile char DoublePressDetected = FALSE;
+volatile char LongPressDetected = FALSE;
 
 // Événements à envoyer à la machine d'état
 volatile uint8_t ButtonEvent = NONE;
@@ -314,12 +318,21 @@ ISR(USART0_RX_vect)
 //Interruption Touches
 ISR(PCINT2_vect)
 {	
+	
     char comp_PINC = ~PINC;
 
     if (Is_BIT_SET(comp_PINC, PINC7))  // ENTER
-        button_raw = ENTER_PRESSED;
+	{
+		button_raw = ENTER_PRESSED;
+		
+	}
     else
-        button_raw = ENTER_RELEASED;
+	{
+		
+		button_raw = ENTER_RELEASED;
+	}
+        
+
 }
 
 void Button_Handler(void)
@@ -330,42 +343,65 @@ void Button_Handler(void)
             if (button_raw == ENTER_PRESSED) 
             {
                 btn_state = BTN_STATE_PRESSED;
+
                 press_time = 0;
+                release_timer = 0;
+                DoublePressDetected = FALSE;
+                LongPressDetected = FALSE;
             }
         break;
 
         case BTN_STATE_PRESSED:
-            if (button_raw == ENTER_PRESSED)
-            {
-                press_time++;
+			if (button_raw == ENTER_PRESSED)
+			{
+				press_time++;
 
-                if (press_time >= 2000)  // 2 secondes
-                {
-                    ButtonEvent = BTN_ENTER_LONG;
-                    btn_state = BTN_STATE_IDLE;
-                }
-            }
-            else  // relâché avant 2 sec → peut-être simple ou double
-            {
-                btn_state = BTN_STATE_WAIT_SECOND;
-                release_timer = 0;
-            }
-        break;
+				if (press_time >= 2000)
+				{
+					LongPressDetected = TRUE;
+					ButtonEvent = BTN_ENTER_LONG;
+
+					// On attend le relâchement sans générer de short
+					btn_state = BTN_STATE_IGNORE_RELEASE;
+				}
+			}
+			else
+			{
+				btn_state = BTN_STATE_WAIT_SECOND;
+				release_timer = 0;
+			}
+		break;
+
 
         case BTN_STATE_WAIT_SECOND:
             release_timer++;
 
+            // DOUBLE PRESS
             if (button_raw == ENTER_PRESSED && release_timer < 500)
-            {
-                ButtonEvent = BTN_ENTER_DOUBLE;
-                btn_state = BTN_STATE_IDLE;
-            }
-            else if (release_timer >= 500)
+			{
+				DoublePressDetected = TRUE;
+				ButtonEvent = BTN_ENTER_DOUBLE;
+
+				// après un double : on attend juste que le bouton soit relâché
+				btn_state = BTN_STATE_IGNORE_RELEASE;
+}
+
+            // SIMPLE PRESS
+            else if (release_timer >= 500 && DoublePressDetected == FALSE && LongPressDetected == FALSE)
             {
                 ButtonEvent = BTN_ENTER_SHORT;
                 btn_state = BTN_STATE_IDLE;
-				Usart0_Tx_String("Short Press Detected\r\n");
             }
         break;
+
+			// Après un double appui, on ignore le relâchement
+		case BTN_STATE_IGNORE_RELEASE:
+			// On attend uniquement que le bouton soit relâché
+			if (button_raw == ENTER_RELEASED)
+			{
+				btn_state = BTN_STATE_IDLE;
+			}
+		break;
+
     }
 }
