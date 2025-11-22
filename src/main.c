@@ -18,6 +18,8 @@
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 
+// Gestion bouton
+extern volatile uint8_t button_raw;
 #define ENTER_PRESSED 1
 #define ENTER_RELEASED 0
 
@@ -69,33 +71,41 @@ char Light_All_Off(char input)
 	return ST_TXT_START;
 }
 
-char Light_Trimming_Up(char input,char button_state)
+char Light_Trimming_Up(char input)
 {
     static unsigned char first_time = TRUE;
+    static uint16_t tick = 0; // uint16_t pour pouvoir compter jusqu'à 500+
 
-    // Si on arrive ici juste après le long press → démarrage
     if (first_time)
     {
         Usart0_Tx_String("Trimming Up\r\n");
         first_time = FALSE;
     }
 
-    // Tant que le bouton reste pressé → continuer à augmenter
-    if (button_state == ENTER_PRESSED)
+    // Tant que le bouton reste appuyé --> continuer à augmenter
+    if (button_raw == ENTER_PRESSED)
     {
-        Usart0_Tx_String("Up\r\n");
+        tick++;
+        if (tick >= 10000) // 200 ms si la fonction est appelée toutes les 1ms
+        {
+            Usart0_Tx_String("Up\r\n");
+            tick = 0; // reset compteur
+        }
         return ST_TXT_T_UP;
     }
 
-    // Si le bouton est relâché → sortie de l’état
-    if (button_state == ENTER_RELEASED)
+    // Si le bouton est relâché --> retour
+    if (button_raw == ENTER_RELEASED)
     {
-        first_time = TRUE;  // reset pour la prochaine fois
+        first_time = TRUE;
+        tick = 0;
         return ST_TXT_START;
     }
 
     return ST_TXT_T_UP;
 }
+
+
 
 
 
