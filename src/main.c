@@ -28,7 +28,8 @@ int main (void)
  	// Initialisation hardware 
 	Init_Hardware();
 
-	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
+	lcd_init(LCD_DISP_ON);
+	lcd_puts("LCD OK !");
 	
 	//PWM_1_A_B_init(0b001,4095);
 	//setDutyCycle_1A(4095);
@@ -37,8 +38,8 @@ int main (void)
 	
 	// Initialisation des Callbacks
 	OS_Init();
- 	//IDCB_Led = Callbacks_Record_Timer(Switch_LED, 2500); //2500*200us=500ms
-	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
+ 	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 2500); //2500*200us=500ms
+	//IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
  	// Lancement OS (Boucle infinie)
 	OS_Start();
 	//N'arrive jamais ici

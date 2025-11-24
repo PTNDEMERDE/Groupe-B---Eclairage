@@ -14,6 +14,8 @@
 
 
 //CONTENU FONCTIONS EXTERNES
+
+
 void Timer0_Init_1ms(void)
 {
     #if F_CPU == 1000000UL
@@ -65,6 +67,27 @@ void Timer0_Init_1ms(void)
 	#endif
 }
 
+/*
+void Timer0_Init_1ms(void)
+{
+    TCCR0A = 0;
+    TCCR0B = 0;
+
+    // Mode CTC : WGM01 = 1
+    TCCR0A |= (1 << WGM01);
+
+    // Prescaler 64
+    TCCR0B |= (1 << CS01) | (1 << CS00);
+
+    OCR0A = 249;           // 1 ms
+
+    TIMSK0 |= (1 << OCIE0A);  // interruption compare A
+}
+
+*/
+
+
+/*
 void Timer0_Init_200us(void)
 {
 
@@ -80,12 +103,30 @@ void Timer0_Init_200us(void)
 		CLR_BIT(TCCR0B,CS02);
 		SET_BIT(TCCR0B,CS01);
 		SET_BIT(TCCR0B,CS00);
-		//valeur initiale du compteur = 256-50=206
+		//valeur initiale du compteur = 256-50-1=205 (-1 car on compte le 0)
 		//50fois 4µs pour 200µs = 5000hz
-		TCNT0 = 206;
+		TCNT0 = 205;
 		SET_BIT(TIMSK0,TOIE0);
 	#endif
 }
+*/
+
+void Timer0_Init_200us(void)
+{
+    TCCR0A = 0;
+    TCCR0B = 0;
+
+    // Mode CTC : WGM01 = 1
+    TCCR0A |= (1 << WGM01);
+
+    // Prescaler = 64
+    TCCR0B |= (1 << CS01) | (1 << CS00);
+
+    OCR0A = 49;               // 50 ticks → 200 µs (-1 car on compte le 0)
+
+    TIMSK0 |= (1 << OCIE0A);  // interruption compare match A
+}
+
 
 //Initialisation du PWM_1
 void PWM_1_A_B_init(unsigned char Prescaler, unsigned int Top_1)

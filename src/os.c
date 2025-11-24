@@ -107,8 +107,8 @@ void OS_Start(void)
 {
 	unsigned char idx;
 	//Création, configuration et démarrage de Timer0pour générer une interruption toutes les mS
- 	Timer0_Init_1ms(); //A partir d'ici, interruption toutes les ms par Timer0
-	//Timer0_Init_200us();
+ 	//Timer0_Init_1ms(); //A partir d'ici, interruption toutes les ms par Timer0
+	Timer0_Init_200us();
 	// Configuration USART0 pour 9600 baud avec interruption en réception
 	USART0_Init_9600();
 	//USART0_Init_9600_INT_On_RX();
@@ -228,6 +228,7 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 // ******************
 // INTERRUPTION TIMER
 // ******************
+/*
 ISR(TIMER0_OVF_vect)
 {
 	// Ajourner tous les TICKS
@@ -236,15 +237,22 @@ ISR(TIMER0_OVF_vect)
 	{
 		Tick_CB[Int_Counter]++;
 	}
-	#if F_CPU == 1000000UL
-		TCNT0 = 131;
-	#elif F_CPU == 8000000UL
-		TCNT0 = 131;
-	#elif F_CPU == 16000000UL
-		TCNT0 = 6;
-	#endif
+	
+	TCNT0 = 206;
+	
 }
+*/
 
+ISR(TIMER0_COMPA_vect)
+{
+	// Ajourner tous les TICKS
+	unsigned char Int_Counter;
+  	for (Int_Counter = 0; Int_Counter < MAX_CALLBACKS; Int_Counter++)
+	{
+		Tick_CB[Int_Counter]++;
+	}
+	
+}
 
 
 // ***************************************
