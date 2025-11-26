@@ -29,6 +29,8 @@ void Init_Hardware(void)
 	// PWM1A sur PD5, Output Mode
 	SET_BIT(DDRD,DDD5);
 
+	// PWM1B sur PD4, Output Mode
+	SET_BIT(DDRD,DDD4);
 	
 	// Configuration clavier 5 touches
 	// TOUCHES UP (PC3),DOWN (PC4), LEFT (PC5), RIGHT (PC6), ENTER (PC7)

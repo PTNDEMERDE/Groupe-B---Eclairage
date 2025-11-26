@@ -14,12 +14,15 @@
 #include "i2c_master.h"
 #include <string.h>	// Manipulation de chaînes de caractères
 #include <stdlib.h> // pour utiliser la fonction itoa()
+#include <util/delay.h>
 
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 unsigned char IDCB_LANCE_timer_2s = 0;
-unsigned char IDCB_PWM = 0;
+unsigned char IDCB_PWM_ON = 0;
+unsigned char IDCB_PWM_DIM = 0;
 
+volatile int value_dim = 2; // variable pour le dimming PWM //200µs
 volatile unsigned char BTN_appuyer = FALSE ;	// variable booléenne qui signale une demande d'ouverture de porte (via INT0)
 
 //****************** fonction principale *****************
@@ -38,7 +41,7 @@ int main (void)
 	
 	// Initialisation des Callbacks
 	OS_Init();
- 	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 2500); //2500*200us=500ms
+ 	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
 	//IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
  	// Lancement OS (Boucle infinie)
 	OS_Start();
@@ -54,12 +57,7 @@ int main (void)
 //****************************************************************
 void Switch_LED(void)
 {
-	/*
-	if(BTN_appuyer){
-		TOGGLE_IO(PORTD,PORTD7);
-	}
-	*/
-	Usart0_Tx('U'); //
+	//Usart0_Tx('U'); //
 	TOGGLE_IO(PORTD,PORTD7);
 }
 
@@ -77,7 +75,7 @@ ISR(INT0_vect)
 	{
 		BTN_appuyer = FALSE;
 		IDCB_LANCE_timer_2s = Callbacks_Remove_Timer(IDCB_LANCE_timer_2s);
-		IDCB_PWM = Callbacks_Remove_Timer(IDCB_PWM);
+		IDCB_PWM_ON = Callbacks_Remove_Timer(IDCB_PWM_ON);
 		Usart0_Tx_String("ARRET_PWM"); 
 		Usart0_Tx(0X0D);
 
@@ -92,12 +90,58 @@ ISR(INT0_vect)
 void PWM_Cycle_ON(void){
 
 	IDCB_LANCE_timer_2s = Callbacks_Remove_Timer(IDCB_LANCE_timer_2s);
-	IDCB_PWM = Callbacks_Record_Timer(PWM_update, 500);
+	IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10); // 10*100us = 1ms
 	Usart0_Tx_String("PWM_ON"); 
 	Usart0_Tx(0X0D);
 
 }
 
+
+void PWM_update(void){ //toute les millisecondes
+
+	static float value_dim_float;
+	char buffer[10];
+	Usart0_Tx_String("PWM_UPDATE");
+	Usart0_Tx(0X0D);
+	
+	IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
+	IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim); //5khz
+
+	int PWM_HZ = (1000000/(value_dim*200)); // en Hz
+	
+	itoa(value_dim,buffer,10); // conversion int en string
+	Usart0_Tx_String(buffer);
+	Usart0_Tx(0X0D);
+	
+	if(value_dim_float < 10000.0){// 10000 * 100us = 1s = signal à 1Hz
+		if(value_dim_float < 10.0){ // jusqu'à 1kHz
+        	value_dim_float += 0.5;      // lent pour les hautes fréquences
+    	} 
+		else if((10.0 <= value_dim_float) && (value_dim_float < 1000.0)){
+        	value_dim_float += 50.0;      // ralentir progression
+   		} 
+		else {
+        	value_dim_float += 200.0;      // trés rapide pour basses fréquences
+   		}
+	}
+	else{
+		value_dim_float= 2.0; // reset 200us
+	}
+
+	value_dim = (int)value_dim_float;
+	
+}
+
+void Switch_LED_DIM(void) // si frequence à 5kHz duty cycle = 100% (active la callcback tout les 200us et attend 200us avant de couper donc signal toujours haut)
+{
+	SET_BIT(PORTD,PORTD4);
+	_delay_us(200);           // <-- attente de 200 microsecondes
+	CLR_BIT(PORTD,PORTD4);
+}
+
+
+
+/*
 void PWM_update(void){
 
 	char buffer[10];
@@ -116,7 +160,7 @@ void PWM_update(void){
 	setDutyCycle_1A(Command_PWM*41); // conversion pourcent en valeur 12 bits
 
 }
-
+*/
 
 
 

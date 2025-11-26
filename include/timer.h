@@ -25,4 +25,6 @@ void setDutyCycle_3A(int Duty_cycle);
 
 void Timer0_Init_200us(void);
 
+void Timer0_Init_100us(void);
+
 #endif 

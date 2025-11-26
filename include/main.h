@@ -36,6 +36,7 @@ enum {NONE,UP, DOWN, LEFT, ENTER, RIGHT};	// Used with the button variable
 void Switch_LED(void);	// callback timer --> cligotement de la LED
 void PWM_update(void);
 void PWM_Cycle_ON(void);
+void Switch_LED_DIM(void);
 
 //STATE MACHINE
 

@@ -127,6 +127,23 @@ void Timer0_Init_200us(void)
     TIMSK0 |= (1 << OCIE0A);  // interruption compare match A
 }
 
+void Timer0_Init_100us(void)
+{
+    TCCR0A = 0;
+    TCCR0B = 0;
+
+    // Mode CTC
+    TCCR0A |= (1 << WGM01);
+
+    // Prescaler = 1
+    TCCR0B |= (1 << CS01);
+
+    // OCR0A = 15 → 1 µs
+    OCR0A = 199;
+
+    // interruption compare match A
+    TIMSK0 |= (1 << OCIE0A);
+}
 
 //Initialisation du PWM_1
 void PWM_1_A_B_init(unsigned char Prescaler, unsigned int Top_1)
