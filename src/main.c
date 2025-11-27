@@ -14,6 +14,7 @@
 #include "i2c_master.h"
 #include <string.h>	// Manipulation de chaînes de caractères
 #include <stdlib.h> // pour utiliser la fonction itoa()
+#include <util/delay.h>
 
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
@@ -22,7 +23,7 @@ unsigned char IDCB_LANCE_timer_2s = 0;
 unsigned char IDCB_PWM_ON = 0;
 unsigned char IDCB_PWM_DIM = 0;
 
-volatile int value_dim = 2; // variable pour le dimming PWM //200µs
+volatile int value_dim = 1; // variable pour le dimming PWM //200µs
 
 // Gestion bouton
 extern volatile uint8_t button_raw;
@@ -40,7 +41,7 @@ int main (void)
 	
 	// Initialisation des Callbacks
 	OS_Init();
- 	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
+ //	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
 	Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms pour la gestion du bouton
 
 
@@ -65,6 +66,10 @@ void Switch_LED(void)
 char Light_Switch(char input)
 {
 	Usart0_Tx_String("Switch Light\r\n");
+	if(IDCB_PWM_DIM != 0){
+		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM); // arrêter le dimming si en cours
+		SET_BIT(PORTD,PORTD7); // LED on PB0
+	}
 	TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
 	
 	return ST_TXT_START;
@@ -73,6 +78,7 @@ char Light_Switch(char input)
 char Light_All_Off(char input)
 {
 	Usart0_Tx_String("All Off\r\n");
+	IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM); 
 	CLR_BIT(PORTD,PORTD7); // LED off on PB0
 	return ST_TXT_START;
 }
@@ -82,13 +88,13 @@ char Light_All_Off(char input)
 char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 {
     static unsigned char first_time = TRUE;
-    static uint16_t tick = 0; // uint16_t pour pouvoir compter jusqu'à 500+
+   // static uint16_t tick = 0; // uint16_t pour pouvoir compter jusqu'à 500+
 
     if (first_time)
     {
         Usart0_Tx_String("Trimming down\r\n");
         first_time = FALSE;
-		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10); // 10*100us = 1ms
+		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10000); // 10*100us = 1ms
     }
 
 	/*
@@ -112,7 +118,7 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
     if (button_raw == ENTER_RELEASED)
     {
         first_time = TRUE;
-        tick = 0;
+        //tick = 0;
 		IDCB_PWM_ON = Callbacks_Remove_Timer(IDCB_PWM_ON);
 		Usart0_Tx_String("ARRET_PWM"); Usart0_Tx(0X0D);
         return ST_TXT_START;
@@ -134,7 +140,7 @@ void PWM_update(void){ //toute les millisecondes
 	Usart0_Tx(0X0D);
 	
 	IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
-	IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim); //5khz
+	IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim); //10khz
 
 	int PWM_HZ = (1000000/(value_dim*200)); // en Hz
 	
@@ -142,19 +148,21 @@ void PWM_update(void){ //toute les millisecondes
 	Usart0_Tx_String(buffer);
 	Usart0_Tx(0X0D);
 	
-	if(value_dim_float < 10000.0){// 10000 * 100us = 1s = signal à 1Hz
-		if(value_dim_float < 10.0){ // jusqu'à 1kHz
-        	value_dim_float += 0.5;      // lent pour les hautes fréquences
+	if(value_dim_float < 10.0){// 10 * 100us = 1ms = signal à 1kHz
+		if(value_dim_float <= 10.0){ // jusqu'à 1kHz
+        	value_dim_float += 2.0;      // lent pour les hautes fréquences
     	} 
-		else if((10.0 <= value_dim_float) && (value_dim_float < 1000.0)){
+		/*
+		else if((10.0 < value_dim_float) && (value_dim_float < 1000.0)){
         	value_dim_float += 50.0;      // ralentir progression
    		} 
 		else {
         	value_dim_float += 200.0;      // trés rapide pour basses fréquences
    		}
+			*/
 	}
 	else{
-		value_dim_float= 2.0; // reset 200us
+		value_dim_float= 1.0; // reset 100us
 	}
 
 	value_dim = (int)value_dim_float;
@@ -163,9 +171,9 @@ void PWM_update(void){ //toute les millisecondes
 
 void Switch_LED_DIM(void) // si frequence à 5kHz duty cycle = 100% (active la callcback tout les 200us et attend 200us avant de couper donc signal toujours haut)
 {
-	SET_BIT(PORTD,PORTD4);
-	_delay_us(200);           // <-- attente de 200 microsecondes
-	CLR_BIT(PORTD,PORTD4);
+	SET_BIT(PORTD,PORTD7);
+	_delay_us(100);           // <-- attente de 100 microsecondes
+	CLR_BIT(PORTD,PORTD7);
 }
 
 
