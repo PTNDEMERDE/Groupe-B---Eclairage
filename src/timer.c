@@ -164,6 +164,41 @@ void PWM_3_A_init(unsigned char Prescaler, unsigned int Top_3)
 }
 
 
+void Timer0_Init_200us(void)
+{
+    TCCR0A = 0;
+    TCCR0B = 0;
+
+    // Mode CTC : WGM01 = 1
+    TCCR0A |= (1 << WGM01);
+
+    // Prescaler = 64
+    TCCR0B |= (1 << CS01) | (1 << CS00);
+
+    OCR0A = 49;               // 50 ticks → 200 µs (-1 car on compte le 0)
+
+    TIMSK0 |= (1 << OCIE0A);  // interruption compare match A
+}
+
+void Timer0_Init_100us(void)
+{
+    TCCR0A = 0;
+    TCCR0B = 0;
+
+    // Mode CTC
+    TCCR0A |= (1 << WGM01);
+
+    // Prescaler = 1
+    TCCR0B |= (1 << CS01);
+
+    // OCR0A = 15 → 1 µs
+    OCR0A = 199;
+
+    // interruption compare match A
+    TIMSK0 |= (1 << OCIE0A);
+}
+
+
 //Change le duty cycle du PWM_1A
 void setDutyCycle_1A(int Duty_cycle)
 {

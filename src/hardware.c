@@ -42,8 +42,10 @@ void Init_Hardware(void)
 	SET_BIT(PCMSK2,PCINT21); // LEFT
 	SET_BIT(PCMSK2,PCINT22); // RIGHT
 	SET_BIT(PCMSK2,PCINT23); // ENTER
-	
 
+
+	// PWM1B sur PD4, Output Mode
+	SET_BIT(DDRD,DDD4);
 }
 
 

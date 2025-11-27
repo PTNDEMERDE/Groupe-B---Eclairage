@@ -23,5 +23,7 @@ void PWM_3_A_init(unsigned char Prescaler, unsigned int Top_3);
 //Change le dutyCycle du PWM_3A
 void setDutyCycle_3A(int Duty_cycle);
 
+void Timer0_Init_100us(void);
 
+void Timer0_Init_200us(void);
 #endif 
