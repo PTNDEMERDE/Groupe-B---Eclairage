@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "usart.h"  // for debug
 #include "lcd.h"
+//test PWM
 #include "adc.h"
 #include "ftoa.h"
 #include "spi.h"
