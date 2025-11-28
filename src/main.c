@@ -14,6 +14,7 @@
 #include "i2c_master.h"
 #include "EXPANDER_MCP23017.h"
 #include "lighting.h"
+#include "SRAM23LC1024.h"
 #include <string.h>	// Manipulation de chaînes de caractères
 #include <stdlib.h> // pour utiliser la fonction itoa()
 
@@ -25,6 +26,9 @@ int main (void)
 {
  	// Initialisation hardware 
 	Init_Hardware();
+
+	// Initialisation SRAM
+	SRAM_Init();
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 

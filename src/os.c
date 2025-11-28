@@ -10,6 +10,7 @@
 #include "EXPANDER_MCP23017.h"
 #include "i2c_master.h"
 #include "lighting.h"
+#include "SRAM23LC1024.h"
 
 
 //Variables globales
@@ -207,7 +208,19 @@ void OS_Start(void)
 					 break;
 				 }
 			 }
-		 }		 
+		 }	
+		 
+		 
+		 // Enregistrement des valeurs dans la SRAMµ
+		 // on enregistre l'état de la machine d'état toutes les secondes
+		 static unsigned int counter = 0;
+		 counter++;
+		 if (counter >= 1000)
+		 {
+			 counter = 0;
+			 SRAM_Write(0, state);
+		 }
+		 
 		
   	 }
 }
