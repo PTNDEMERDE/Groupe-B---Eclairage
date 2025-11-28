@@ -16,7 +16,7 @@ unsigned char IOCON_CFG = 0b00000100;
 // Configuration IOCON2 Register: Enable pull-ups and interrupt mirroring
 unsigned char GPPUB_CFG = 0b11110000; // Enable pull-ups and interrupt mirroring
 unsigned char DEFVALB_CFG = 0b11110000; // Default comparison value for interrupt on change
-unsigned char INTCONB_CFG = 0b11110000; // Compare against DEFVAL register for interrupt on change
+unsigned char INTCONB_CFG = 0b00000000; // Compare against DEFVAL register for interrupt on change
 
 void Expander_Init()
 {
