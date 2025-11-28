@@ -33,6 +33,7 @@ int main (void)
 	// Initialisation des Callbacks
 	OS_Init();
  	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
+	//IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 500);
 
  	// Lancement OS (Boucle infinie)
 	OS_Start();
@@ -50,6 +51,8 @@ void Switch_LED(void)
 {
 	TOGGLE_IO(PORTD,PORTD7);
 }
+
+
 
 
 

@@ -11,12 +11,12 @@ unsigned char IODIRA_CFG = 0b00000000; // All GPIOA are outputs
 unsigned char IODIRB_CFG = 0b11110000; // GPIOB7-4 are inputs and GPIOB3-0 are outputs
 
 unsigned char GPINTENB_CFG = 0b11110000; // Interrupts enables for GPIOB7-4
-unsigned char IOCON_CFG = 0b00000010;
+unsigned char IOCON_CFG = 0b00000100;
 
 // Configuration IOCON2 Register: Enable pull-ups and interrupt mirroring
 unsigned char GPPUB_CFG = 0b11110000; // Enable pull-ups and interrupt mirroring
 unsigned char DEFVALB_CFG = 0b11110000; // Default comparison value for interrupt on change
-unsigned char INTCONB_CFG = 0b00000000; // Compare against DEFVAL register for interrupt on change
+unsigned char INTCONB_CFG = 0b11110000; // Compare against DEFVAL register for interrupt on change
 
 void Expander_Init()
 {

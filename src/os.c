@@ -16,7 +16,10 @@
 unsigned int BTN1 = 0;
 unsigned int LAMP1 = 0;
 
-unsigned char LAMP1_Current_State = LOW;
+unsigned char IDCB_LAMP1 = 0;		// Identificateur callback timer pour la gestion de l'éclairage
+
+
+unsigned char LAMP1_Current_State = LOW; // Variable pour stocker l'état actuel de LAMP1
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
@@ -235,7 +238,16 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 	return nextstate;
 }
 
-void Expander_test(void)
+//**************** Control LAMP1 ************************************
+//  Gestion de l'éclairage LAMP1
+//****************************************************************
+void Control_LAMP1(void)
+{
+	//TOGGLE_IO(PORTD,PORTD6); // Supposons que PORTD6 contrôle LAMP1
+	Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
+}
+
+/*void Expander_test(void)
 {
 	// Test d'allumage des lampes
 
@@ -249,7 +261,7 @@ void Expander_test(void)
 		{
 			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW); // Eteindre LAMP1
 		}
-}
+}*/
 
     
 
@@ -322,26 +334,37 @@ ISR(PCINT2_vect)
 
 ISR(PCINT1_vect)
 {
-	// tester	PORTB, la variable Button mémorise la touche appuyée.
-	unsigned char interrupt_status = Expander_Read(INTCAPB);
-	unsigned char current_button_state;
 
-	current_button_state = Expander_Read(GPIOB) & (1 << BTN1_PIN);
-
-	if (!(interrupt_status & (1 << BTN1_PIN)) && (current_button_state == 0))
+	cli();lcd_gotoxy(0,1);lcd_puts("Enter_int");sei();
+	
+	if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0)
 	{
-		BTN1 = Expander_Read(GPIOB) & (1 << BTN1_PIN); // Lire l'état du bouton BTN1
-		if (LAMP1_Current_State == LOW)
-		{
-			LAMP1_Current_State = HIGH;// Allumer LAMP1
-		}
-		else if (LAMP1_Current_State == HIGH)
-		{
-			LAMP1_Current_State = LOW; // Eteindre LAMP1
-		}
-
-		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+		LAMP1_Current_State = Expander_Read(GPIOB) & (1 << LAMP1_PIN);
+		lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
+		lcd_gotoxy(0,1);lcd_puts(LAMP1_Current_State ? "ON " : "OFF ");
+		
 	}
+	
+			IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
+	
+
+	//cli();lcd_gotoxy(0,1);lcd_puts("Enter_exit");sei();
+	/*if(LAMP1_Current_State == HIGH)
+	{
+		LAMP1_Current_State = LOW;
+		cli();lcd_gotoxy(0,1);lcd_puts("LAMP1 OFF");sei();
+		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+		
+	}
+	else if (LAMP1_Current_State == LOW)
+	{
+		LAMP1_Current_State = HIGH;
+		cli();lcd_gotoxy(0,1);lcd_puts("LAMP1 ON");sei();
+		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+
+	}*/
+	
+
 }
 
 
