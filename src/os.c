@@ -138,6 +138,7 @@ void OS_Start(void)
 	statetext = Txt_START;
 	pStateFunc = NULL;
 
+	
 	// On autorise toutes les interruptions
  	sei();  
 
@@ -147,8 +148,11 @@ void OS_Start(void)
 	// Initialisation de l'Expander MCP23017
 	Expander_Init();
 
+	Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
 
+	cli();lcd_gotoxy(0,0);lcd_puts("INIT FINI");sei();
 
+	
 
 
  	// BOUCLE INFINIE
@@ -219,47 +223,60 @@ void OS_Start(void)
 			}
 		}
 
+		//LAMP1_ON
 		LAMP1_ON
-		Expander_Gpio_Ctrl(GPIOA, EXP_GPIOA0, LOW);
-		Expander_Gpio_Ctrl(GPIOA, EXP_GPIOA1, LOW);
-		Expander_Gpio_Ctrl(GPIOA, EXP_GPIOA2, LOW);
+		LAMP2_ON
+		LAMP3_ON
+		LAMP4_ON
+
+		Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+		lcd_clrscr();
+		cli();lcd_gotoxy(0,1);lcd_puts("Attente");sei();
+		
 
 		if (Expander_Flag == 1)
 		{
 
-			cli();lcd_gotoxy(0,1);lcd_puts("BTN1 Pressed ");sei();
-				LAMP1_OFF
+			if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
+				lcd_clrscr();
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 Pressed ");sei();
+				LAMP1_ON
+				LAMP2_ON
+				LAMP3_ON
+				LAMP4_ON
 				Expander_Flag = 0;
-
-			/*if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
-				
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN2_PIN)) == 0){
+				lcd_clrscr();
 				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 Pressed ");sei();
 				LAMP1_OFF
+				LAMP2_OFF
+				LAMP3_OFF
+				LAMP4_OFF
 				Expander_Flag = 0;
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN3_PIN)) == 0){
+				lcd_clrscr();
 				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 Pressed ");sei();
 				Expander_Flag = 0;
+				LAMP1_ON
+				LAMP2_OFF
+				LAMP3_ON
+				LAMP4_OFF
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN4_PIN)) == 0){
+				lcd_clrscr();
 				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 Pressed ");sei();
 				Expander_Flag = 0;
+				LAMP1_OFF
+				LAMP2_ON
+				LAMP3_OFF
+				LAMP4_ON
 			}else
 			{
 				cli();lcd_gotoxy(0,1);lcd_puts("                ");sei();
 				Expander_Flag = 0;
-			}*/
-			
-			
-			//else if (expander_inputs & (1 << BTN2_PIN))
-			//BTN_EXP = BTN2;
-			//else if (expander_inputs & (1 << BTN3_PIN))
-			//BTN_EXP = BTN3;
-			//else if (expander_inputs & (1 << BTN4_PIN))
-			//BTN_EXP = BTN4;
-
+			}
 			
 			
 		}
