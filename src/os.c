@@ -150,6 +150,8 @@ void OS_Start(void)
 
 	Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
 
+	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,HIGH); // LED Identification ON
+
 	cli();lcd_gotoxy(0,0);lcd_puts("INIT FINI");sei();
 
 	
@@ -223,21 +225,66 @@ void OS_Start(void)
 			}
 		}
 
-		//LAMP1_ON
-		LAMP1_ON
-		LAMP2_ON
-		LAMP3_ON
-		LAMP4_ON
-
-		Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
-		lcd_clrscr();
-		cli();lcd_gotoxy(0,1);lcd_puts("Attente");sei();
 		
+		//cli();lcd_gotoxy(0,1);lcd_puts("Attente");sei();
+
+		unsigned char current_buttons = Expander_Read(GPIOB);
+
+		if (current_buttons & (1 << BTN1_PIN))
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 ACTIF ");sei();
+			}
+		else if (current_buttons & (1 << BTN2_PIN))
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 ACTIF ");sei();
+			}
+		else if (current_buttons & (1 << BTN3_PIN))
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 ACTIF ");sei();
+			}
+		else if (current_buttons & (1 << BTN4_PIN))
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 ACTIF ");sei();
+			}
+		else
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("No BTN");sei();
+			}
 
 		if (Expander_Flag == 1)
 		{
 
-			if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
+			lcd_gotoxy(0,0);lcd_puts("INT EXPANDER ");
+
+			cli(); // Désactiver les interruptions pour un accès sûr
+
+			lcd_gotoxy(0,0);lcd_puts("After CLI     ");
+
+			// 1. Purge du flag matériel de l'Expander (avec INTCAPB ou GPIOB, si GPIOB est plus simple)
+			// Utilisez de préférence INTCAPB (0x11) car c'est le rôle de ce registre de capturer l'état.
+			//Expander_Read(INTCAPB); 
+			
+			// 2. Afficher la confirmation de l'interruption et l'état de la broche
+			lcd_gotoxy(0,1);
+			lcd_gotoxy(0,0);lcd_puts("After INTCAPB ");
+			
+			// Le bit PCINT10 sur PINB2 est l'entrée de l'interruption. 
+			// S'il est HIGH, l'interruption est désactivée.
+			if (Is_BIT_SET(PINB, PINB2)) { 
+				lcd_gotoxy(0,0);lcd_puts("INT PURGEE   "); // Le pin INTB est repassé HIGH (inactif)
+			} else {
+				lcd_gotoxy(0,0);lcd_puts("INT PERSISTE"); // Le pin INTB est resté LOW (actif)
+			}
+			
+			// 3. Logique d'analyse des boutons (pour une utilisation future)
+			// Ici, vous pouvez décoder 'interrupt_value' pour savoir quel bouton a été pressé.
+			
+			Expander_Flag = 0; // Réinitialisation du flag logiciel
+			sei();
+
+			Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+
+			/*if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
 				lcd_clrscr();
 				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 Pressed ");sei();
 				LAMP1_ON
@@ -245,6 +292,8 @@ void OS_Start(void)
 				LAMP3_ON
 				LAMP4_ON
 				Expander_Flag = 0;
+				Expander_Read(GPIOB);
+				Expander_Read(INTCAPB);
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN2_PIN)) == 0){
 				lcd_clrscr();
@@ -254,6 +303,8 @@ void OS_Start(void)
 				LAMP3_OFF
 				LAMP4_OFF
 				Expander_Flag = 0;
+				Expander_Read(GPIOB);
+				Expander_Read(INTCAPB);
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN3_PIN)) == 0){
 				lcd_clrscr();
@@ -263,6 +314,8 @@ void OS_Start(void)
 				LAMP2_OFF
 				LAMP3_ON
 				LAMP4_OFF
+				Expander_Read(GPIOB);
+				Expander_Read(INTCAPB);
 			}
 			else if ((Expander_Read(GPIOB) & (1 << BTN4_PIN)) == 0){
 				lcd_clrscr();
@@ -272,13 +325,24 @@ void OS_Start(void)
 				LAMP2_ON
 				LAMP3_OFF
 				LAMP4_ON
+				Expander_Read(GPIOB);
+				Expander_Read(INTCAPB);
 			}else
 			{
 				cli();lcd_gotoxy(0,1);lcd_puts("                ");sei();
 				Expander_Flag = 0;
+				Expander_Read(GPIOB);
+				Expander_Read(INTCAPB);
 			}
+
+			Expander_Flag = 0;
+			Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+			Expander_Read(INTCAPB);*/
 			
 			
+		}
+		else {
+			//cli();lcd_gotoxy(0,1);lcd_puts("No INT       ");sei();
 		}
 
 		/*switch (BTN_EXP)
@@ -418,11 +482,11 @@ ISR(PCINT2_vect)
 ISR(PCINT1_vect)
 {
 
-	/*char comp_PINB = ~PINB;
-	if (Is_BIT_SET(comp_PINB, PINB2))*/
+	char comp_PINB = ~PINB;
+	if (Is_BIT_SET(comp_PINB, PINB2))
 	Expander_Flag = 1;
 
-	
+	//Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
 
 	/*cli();lcd_gotoxy(0,1);lcd_puts("Enter_int");sei();
 	

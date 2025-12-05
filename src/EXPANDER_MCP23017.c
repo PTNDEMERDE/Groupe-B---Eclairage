@@ -39,10 +39,10 @@ void Expander_Init()
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA5,LOW); // Output OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA6,LOW); // Output OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA7,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
+	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
+	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
+	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
+	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
 		
 }
 
