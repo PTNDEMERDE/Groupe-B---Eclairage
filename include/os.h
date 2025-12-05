@@ -35,6 +35,7 @@ unsigned char StateMachine(char state, unsigned char stimuli);
 
 
 // TEST 
-void Expander_test(void);
+
+void Control_LAMP1(void);
 
 #endif 

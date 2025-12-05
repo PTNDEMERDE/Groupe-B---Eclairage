@@ -20,6 +20,7 @@
 // Mes variables globales
 unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 
+
 //****************** fonction principale *****************
 int main (void)
 {
@@ -32,6 +33,7 @@ int main (void)
 	// Initialisation des Callbacks
 	OS_Init();
  	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
+	//IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 500);
 
  	// Lancement OS (Boucle infinie)
 	OS_Start();
@@ -48,8 +50,12 @@ int main (void)
 void Switch_LED(void)
 {
 	TOGGLE_IO(PORTD,PORTD7);
-	//Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);
 }
+
+
+
+
+
 
 
 

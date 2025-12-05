@@ -1,0 +1,41 @@
+timer.txt
+
+	#elif F_CPU == 16000000UL
+		// Mode timer normal avec interruption en overflow
+		TCCR0A = 0b00000000;  // Mode normal (WGM01=0, WGM00=0)
+		TCCR0B = 0b00000011;  // Prescaleur 128 (CS02=0, CS01=1, CS00=1) et WGM02=0
+		//valeur initiale du compteur = 256-125=131
+		TCNT0 = 6;
+		SET_BIT(TIMSK0,TOIE0);
+
+
+
+	cli();lcd_gotoxy(0,1);lcd_puts("Enter_int");sei();
+	
+	if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0)
+	{
+		LAMP1_Current_State = Expander_Read(GPIOB) & (1 << LAMP1_PIN);
+		lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
+		lcd_gotoxy(0,1);lcd_puts(LAMP1_Current_State ? "ON " : "OFF ");
+		
+	}
+	
+			IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
+	
+
+	//cli();lcd_gotoxy(0,1);lcd_puts("Enter_exit");sei();
+	/*if(LAMP1_Current_State == HIGH)
+	{
+		LAMP1_Current_State = LOW;
+		cli();lcd_gotoxy(0,1);lcd_puts("LAMP1 OFF");sei();
+		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+		
+	}
+	else if (LAMP1_Current_State == LOW)
+	{
+		LAMP1_Current_State = HIGH;
+		cli();lcd_gotoxy(0,1);lcd_puts("LAMP1 ON");sei();
+		Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LAMP1_Current_State);
+
+	}*/
+	

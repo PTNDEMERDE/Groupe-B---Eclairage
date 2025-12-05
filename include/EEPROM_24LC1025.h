@@ -8,9 +8,9 @@
 
 #ifndef EEPROM_24LC1025_H_
 #define EEPROM_24LC1025_H_
-#define EEPROM_ADDRESS_0 0b1010000 // The I²C address for the first bloc of the 24LC1025
-#define EEPROM_ADDRESS_1 0b1010100 // THe I²C address for the second bloc of the 24LC1025
-#define I2C_BUFFER_SIZE  4
+#define EEPROM_ADDRESS_0 0b1010000 // The I2C address for the first bloc of the 24LC1025
+#define EEPROM_ADDRESS_1 0b1010100 // TThe I2C address for the second bloc of the 24LC1025
+#define I2C_BUFFER_SIZE  10 //previously 4
 
 // WARNING:  TWI_BUFFER_SIZE must be at 20
 

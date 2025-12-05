@@ -13,8 +13,16 @@
 
 
 //Variables globales
-unsigned int BTN1 = 0;
+
+unsigned int Expander_Flag = 0; // Flag pour indiquer une interruption de l'Expander MCP23017
+
+unsigned int BTN_EXP = 0;
 unsigned int LAMP1 = 0;
+
+unsigned char IDCB_LAMP1 = 0;		// Identificateur callback timer pour la gestion de l'éclairage
+
+
+unsigned char LAMP1_Current_State = LOW; // Variable pour stocker l'état actuel de LAMP1
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
@@ -130,6 +138,7 @@ void OS_Start(void)
 	statetext = Txt_START;
 	pStateFunc = NULL;
 
+	
 	// On autorise toutes les interruptions
  	sei();  
 
@@ -139,15 +148,20 @@ void OS_Start(void)
 	// Initialisation de l'Expander MCP23017
 	Expander_Init();
 
+	Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+
+	cli();lcd_gotoxy(0,0);lcd_puts("INIT FINI");sei();
+
+	
 
 
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais
-	 while(1)
- 	 {
-  		 // Check les conditions pour rappeler les fonctions liées au temps 
-  		 for (idx = 0; idx < MAX_CALLBACKS; idx++)
-    	 {
+	while(1)
+ 	{
+  		// Check les conditions pour rappeler les fonctions liées au temps 
+  		for (idx = 0; idx < MAX_CALLBACKS; idx++)
+    	{
 	 		if (My_CB[idx]) //Si on a l'adresse d'une fonction CB à cet index
      		//Si on est arrivé au nombre de mS demandé, on appelle la fonction 
 			{	
@@ -157,59 +171,134 @@ void OS_Start(void)
       				 My_CB[idx]();  //Rappel de la fonction enregistrée!
 	 			}
 			}
-  		 }
-		 if (MaCBUSART0)
-		 {
+  		}
+		if (MaCBUSART0)
+		{
 			 
-			 // Check si réception Trame USART0
-			 if (USART0_Reception)
-			 {
+			// Check si réception Trame USART0
+			if (USART0_Reception)
+			{
 				 USART0_Reception = FALSE;
 				 if (MaCBUSART0) MaCBUSART0(buf_USART0); //Rappel de la fonction enregistrée!
-			 }
-		 }
-		 // State Machine
-		 if (statetext)
-		 {
-			 //Afficher_LCD(statetext);
-			 cli();lcd_gotoxy(0,0);lcd_puts("                ");lcd_gotoxy(0,0);lcd_puts_p(statetext);sei();
-			 //FOR DEBUG ONLY
-			 //Usart_Tx_String(strcpy_P(Message_LCD, statetext));
-			 // END DEBUG
-			 statetext = NULL; // Pour ne pas écrire le même texte sur l'afficheur (évite la scintillation de l'écran)
-		 }
+			}
+		}
+		// State Machine
+		if (statetext)
+		{
+			//Afficher_LCD(statetext);
+			cli();lcd_gotoxy(0,0);lcd_puts("                ");lcd_gotoxy(0,0);lcd_puts_p(statetext);sei();
+			//FOR DEBUG ONLY
+			//Usart_Tx_String(strcpy_P(Message_LCD, statetext));
+			// END DEBUG
+			statetext = NULL; // Pour ne pas écrire le même texte sur l'afficheur (évite la scintillation de l'écran)
+		}
 		 		 
-		 // Read buttons
-		 input = Button;
-		 Button = NONE;
+		// Read buttons
+		input = Button;
+		Button = NONE;
 
-		 // When in this state, we must call the state function
-		 if (pStateFunc)
-		 {
-			 nextstate = pStateFunc(input);
-		 }
-		 else
-		 {
-			 if (input != NONE)
-			 {
-				 nextstate = StateMachine(state, input);
-			 }
-		 }
-		 if (nextstate != state)  // il y a changement d'état
-		 {
-			 state = nextstate; // l'état est maintenant le nouveau état de la séquence définie dans main.h
-			 for (i=0; (j=pgm_read_byte(&Menu_State[i].state)); i++)
-			 {
-				 if (j == state)
-				 {
-					 statetext =  (PGM_P) pgm_read_word(&Menu_State[i].pText);
-					 pStateFunc = (PGM_VOID_P) pgm_read_word(&Menu_State[i].pFunc);
-					 break;
-				 }
-			 }
-		 }		 
+		// When in this state, we must call the state function
+		if (pStateFunc)
+		{
+			nextstate = pStateFunc(input);
+		}
+		else
+		{
+			if (input != NONE)
+			{
+				nextstate = StateMachine(state, input);
+			}
+		}
+		if (nextstate != state)  // il y a changement d'état
+		{
+			state = nextstate; // l'état est maintenant le nouveau état de la séquence définie dans main.h
+			for (i=0; (j=pgm_read_byte(&Menu_State[i].state)); i++)
+			{
+				if (j == state)
+				{
+					statetext =  (PGM_P) pgm_read_word(&Menu_State[i].pText);
+					pStateFunc = (PGM_VOID_P) pgm_read_word(&Menu_State[i].pFunc);
+					break;
+				}
+			}
+		}
+
+		//LAMP1_ON
+		LAMP1_ON
+		LAMP2_ON
+		LAMP3_ON
+		LAMP4_ON
+
+		Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+		lcd_clrscr();
+		cli();lcd_gotoxy(0,1);lcd_puts("Attente");sei();
 		
-  	 }
+
+		if (Expander_Flag == 1)
+		{
+
+			if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
+				lcd_clrscr();
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 Pressed ");sei();
+				LAMP1_ON
+				LAMP2_ON
+				LAMP3_ON
+				LAMP4_ON
+				Expander_Flag = 0;
+			}
+			else if ((Expander_Read(GPIOB) & (1 << BTN2_PIN)) == 0){
+				lcd_clrscr();
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 Pressed ");sei();
+				LAMP1_OFF
+				LAMP2_OFF
+				LAMP3_OFF
+				LAMP4_OFF
+				Expander_Flag = 0;
+			}
+			else if ((Expander_Read(GPIOB) & (1 << BTN3_PIN)) == 0){
+				lcd_clrscr();
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 Pressed ");sei();
+				Expander_Flag = 0;
+				LAMP1_ON
+				LAMP2_OFF
+				LAMP3_ON
+				LAMP4_OFF
+			}
+			else if ((Expander_Read(GPIOB) & (1 << BTN4_PIN)) == 0){
+				lcd_clrscr();
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 Pressed ");sei();
+				Expander_Flag = 0;
+				LAMP1_OFF
+				LAMP2_ON
+				LAMP3_OFF
+				LAMP4_ON
+			}else
+			{
+				cli();lcd_gotoxy(0,1);lcd_puts("                ");sei();
+				Expander_Flag = 0;
+			}
+			
+			
+		}
+
+		/*switch (BTN_EXP)
+		{
+			case BTN1:
+				IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
+				break;
+			case BTN2:
+				Callbacks_Remove_Timer(IDCB_LAMP1);
+				break;
+			case BTN3:
+				
+				break;
+			case BTN4:
+				
+				break;
+			default:
+				break;
+		}*/
+	}
 }
 
 
@@ -231,7 +320,17 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 	return nextstate;
 }
 
-void Expander_test(void)
+//**************** Control LAMP1 ************************************
+//  Gestion de l'éclairage LAMP1
+//****************************************************************
+void Control_LAMP1(void)
+{
+	//TOGGLE_IO(PORTD,PORTD6); // Supposons que PORTD6 contrôle LAMP1
+	LAMP1_ON
+	
+}
+
+/*void Expander_test(void)
 {
 	// Test d'allumage des lampes
 
@@ -245,7 +344,7 @@ void Expander_test(void)
 		{
 			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW); // Eteindre LAMP1
 		}
-}
+}*/
 
     
 
@@ -316,6 +415,42 @@ ISR(PCINT2_vect)
 	
 }
 
+ISR(PCINT1_vect)
+{
+
+	/*char comp_PINB = ~PINB;
+	if (Is_BIT_SET(comp_PINB, PINB2))*/
+	Expander_Flag = 1;
+
+	
+
+	/*cli();lcd_gotoxy(0,1);lcd_puts("Enter_int");sei();
+	
+	if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0)
+	{
+		LAMP1_Current_State = Expander_Read(GPIOB) & (1 << LAMP1_PIN);
+
+		if (LAMP1_Current_State == HIGH)
+		{
+			LAMP1_Current_State = LOW;
+			IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
+			lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
+			lcd_gotoxy(0,1);lcd_puts("ON");
+		}
+		else if (LAMP1_Current_State == LOW)
+		{
+			LAMP1_Current_State = HIGH;
+			Callbacks_Remove_Timer(IDCB_LAMP1);
+			lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
+			lcd_gotoxy(0,1);lcd_puts("OFF");
+		}
+
+		lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
+		lcd_gotoxy(0,1);lcd_puts(LAMP1_Current_State ? "ON " : "OFF ");
+		
+	}*/
+
+}
 
 
 

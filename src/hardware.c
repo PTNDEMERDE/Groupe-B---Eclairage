@@ -42,7 +42,12 @@ void Init_Hardware(void)
 	SET_BIT(PCMSK2,PCINT21); // LEFT
 	SET_BIT(PCMSK2,PCINT22); // RIGHT
 	SET_BIT(PCMSK2,PCINT23); // ENTER
-	
+
+	// activate PB2 interrupt
+	CLR_BIT(DDRB, DDB2); // Set PB2 as input
+    SET_BIT(PORTB, PORTB2); // Enable pull-up resistor on PB2
+    SET_BIT(PCICR, PCIE1);  // Enable pin change interrupt for PORTB
+    SET_BIT(PCMSK1, PCINT10); // Mask for PB2
 
 }
 
