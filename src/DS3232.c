@@ -116,7 +116,8 @@ unsigned char Heure)
 // clock data (excluding alarms). After the transmission,
 // it waits for the I2C transmission to complete
 // before proceeding.
-void RTC_Clock_Read_All(void)
+void RTC_Clock_Read_All
+(void)
 {
 	RTC_buf[0] = ((RTC_ADDRESS<<1)|0);		//Salve Address + W
 	RTC_buf[1] = 0x00;

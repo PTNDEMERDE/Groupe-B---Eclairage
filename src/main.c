@@ -65,12 +65,37 @@ void Switch_LED(void)
 
 char Light_Switch(char input)
 {
+	static unsigned char ??? = 100; 
 	Usart0_Tx_String("Switch Light\r\n");
-	if(IDCB_PWM_DIM != 0){
+	if(IDCB_PWM_DIM != 0){	// si dimming en cours
 		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM); // arrêter le dimming si en cours
 		SET_BIT(PORTD,PORTD7); // LED on PB0
 	}
-	TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
+
+	if( ??? = 100 ) // si en plein jour
+	{
+		TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
+
+	}else if  ( ??? = 80)	// si de 18h à 21h ou de 6h à 9h
+	{
+
+		value_dim = 8;
+
+		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
+		IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim);
+
+
+	}else if ( ??? = 60)	// si de 21h à 6h
+	{
+
+		value_dim = 6;
+		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
+		IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim);
+
+	}
+	
+	
+	
 	
 	return ST_TXT_START;
 }
