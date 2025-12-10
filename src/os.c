@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------------------
 
 //Gestion bouton
+//-----------------------------------------------------------
 // Bouton ENTER (analyse avancée)
 volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
 
@@ -37,7 +38,7 @@ volatile char LongPressDetected = FALSE;
 
 // Événements à envoyer à la machine d'état
 volatile uint8_t ButtonEvent = NONE;
-
+// ----------------------------------------------------------
 
 // Timer0
 volatile unsigned char Temps_appuis = 0; // variable ou a chaque interuption (1ms) on incrémante, jusqu'a 1000(1s) pour éteindre ou allumer la LED.
@@ -208,13 +209,13 @@ void OS_Start(void)
 		 //input = Button;
 		 //Button = NONE;
 		 
-		input = NONE;
+		input = NONE;	//réinitialise l’évènement du bouton. Tant qu’aucun nouvel événement n’est présent, input restera NONE.
 
 		cli();
-		if (ButtonEvent != NONE)
+		if (ButtonEvent != NONE)	//Si un évènement bouton a été généré par Button_Handler()
 		{
-			input = ButtonEvent;
-			ButtonEvent = NONE;
+			input = ButtonEvent;	// transfère l’évènement dans input pour le traitement dans la state machine
+			ButtonEvent = NONE;		// remet ButtonEvent à NONE
 		}
 		sei();
 
@@ -327,86 +328,93 @@ ISR(USART0_RX_vect)
 }
 
 
-//Interruption Touches
+/*----------------------Interruption Touches----------------------
+détecter l’état instantané du bouton (pressé / relâché) 
+*/
 ISR(PCINT2_vect)
 {	
-	
-    char comp_PINC = ~PINC;
+    char comp_PINC = ~PINC;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
 
-    if (Is_BIT_SET(comp_PINC, PINC7))  // ENTER
+    if (Is_BIT_SET(comp_PINC, PINC7))  // PINC7 = ENTER
 	{
-		button_raw = ENTER_PRESSED;
-		
+		button_raw = ENTER_PRESSED;	// Bouton appuyé mais le bouton envoi un 0 logique
 	}
     else
 	{
-		
-		button_raw = ENTER_RELEASED;
-	}
-        
+		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
+	}   
 
+	if (Is_BIT_SET(comp_PINC, ???))  // 
+	{
+		button_raw = ENTER_PRESSED;	// Bouton appuyé mais le bouton envoi un 0 logique
+	}
+    else
+	{
+		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
+	}   
 }
 
-void Button_Handler(void)
+void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 {
-    switch (btn_state)
+    switch (btn_state)		// a partir de l'état actuel du bouton
     {
-        case BTN_STATE_IDLE:
-            if (button_raw == ENTER_PRESSED) 
+        case BTN_STATE_IDLE:	// si le bouton n'a eu acun appui
+            if (button_raw == ENTER_PRESSED) 	// et vient d'être appuyé
             {
-                btn_state = BTN_STATE_PRESSED;
+                btn_state = BTN_STATE_PRESSED;	// alors on passe à l'état appuyé
 
-                press_time = 0;
+                press_time = 0;					// on reset le temps d'appui et de relachement
                 release_timer = 0;
-                DoublePressDetected = FALSE;
+                DoublePressDetected = FALSE;	// et on reset les flags de détections de double et long appui
                 LongPressDetected = FALSE;
             }
         break;
 
-        case BTN_STATE_PRESSED:
-			if (button_raw == ENTER_PRESSED)
+        case BTN_STATE_PRESSED:					// arrive ici apres un appui
+			if (button_raw == ENTER_PRESSED)	// tant que le bouton reste appuyé
 			{
-				press_time++;
+				press_time++;					// on incrémente le temps d'appui
 
-				if (press_time >= 2000)
+				if (press_time >= 2000)			// si le bouton est appuyé depuis 2 secondes
 				{
-					LongPressDetected = TRUE;
-					ButtonEvent = BTN_ENTER_LONG;
+					LongPressDetected = TRUE;	// on set le flag de long appui
+					ButtonEvent = BTN_ENTER_LONG; 	// on génère l'événement long appui
 
 					// On attend le relâchement sans générer de short
-					btn_state = BTN_STATE_IGNORE_RELEASE;
+					btn_state = BTN_STATE_IGNORE_RELEASE; 	// après un long appui, on force un autre état "vide" pour ignorer le relâchement
+															// et éviter de générer un short press.
 				}
 			}
-			else
+			else								// ou si non si le bouton est relâché apres un appui	
 			{
-				btn_state = BTN_STATE_WAIT_SECOND;
-				release_timer = 0;
+				btn_state = BTN_STATE_WAIT_SECOND;	// on passe à l'état d'attente d'un second appui pour un double appui ou de rien pour un simple appui
+				release_timer = 0;			// on reset le timer de relâchement pour savoir si on a un double appui ou simple
 			}
 		break;
 
 
-        case BTN_STATE_WAIT_SECOND:
-            release_timer++;
+        case BTN_STATE_WAIT_SECOND:			// état d'attente d'un second appui
+            release_timer++;				// on incrémente le timer de relâchement
 
             // DOUBLE PRESS
-            if (button_raw == ENTER_PRESSED && release_timer < 500)
+            if (button_raw == ENTER_PRESSED && release_timer < 500)	// si le bouton est appuyé de nouveau et avant 500ms
 			{
-				DoublePressDetected = TRUE;
-				ButtonEvent = BTN_ENTER_DOUBLE;
+				DoublePressDetected = TRUE;							// alors on set le flag de double appui
+				ButtonEvent = BTN_ENTER_DOUBLE;						// et on génère l'événement double appui
 
-				// après un double : on attend juste que le bouton soit relâché
-				btn_state = BTN_STATE_IGNORE_RELEASE;
+				btn_state = BTN_STATE_IGNORE_RELEASE;		// après un double appui, on force un autre état "vide" pour ignorer le relâchement
+															// et éviter de générer un short press.
 }
 
             // SIMPLE PRESS
-            else if (release_timer >= 500 && DoublePressDetected == FALSE && LongPressDetected == FALSE)
+            else if (release_timer >= 500 && DoublePressDetected == FALSE && LongPressDetected == FALSE)	// si le bouton n'est pas appuyé de nouveau avant 500ms
             {
-                ButtonEvent = BTN_ENTER_SHORT;
-                btn_state = BTN_STATE_IDLE;
+                ButtonEvent = BTN_ENTER_SHORT;		// alors on génère l'événement simple appui
+                btn_state = BTN_STATE_IDLE;			// et on retourne à l'état initial d'attente d'un appui
             }
         break;
 
-			// Après un double appui, on ignore le relâchement
+			// Après un double ou long appui, on ignore le relâchement pour éviter de générer un short press
 		case BTN_STATE_IGNORE_RELEASE:
 			// On attend uniquement que le bouton soit relâché
 			if (button_raw == ENTER_RELEASED)

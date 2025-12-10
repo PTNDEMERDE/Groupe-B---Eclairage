@@ -33,7 +33,15 @@ void OS_Start(void);
 //State Machine
 unsigned char StateMachine(char state, unsigned char stimuli);
 
-
+/*
+1. Interruption PCINT2  → lit le bouton en temps réel (button_raw)
+2. Callback Button_Handler → analyse button_raw pour produire :
+       - SHORT
+       - LONG
+       - DOUBLE
+3. OS_Start() → lit ButtonEvent de façon protégée (cli/sei)
+4. State machine → réagit à SHORT / DOUBLE / LONG
+*/
 void Button_Handler(void);
 
 #endif 
