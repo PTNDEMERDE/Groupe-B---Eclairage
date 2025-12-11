@@ -278,18 +278,17 @@ void Pulse_Generate(uint16_t duree_us)
 }
 
 
-void Pulse_Init(void)
+void Timer1_Init_Microtimer(void)
 {
-    DDRD |= (1 << PD5);   // OC1A = sortie
 
     TCCR1A = 0;
     TCCR1B = 0;
-
+	TCNT1 = 0;
     // Mode CTC : WGM12 = 1
-    TCCR1B |= (1 << WGM12);
+   // TCCR1B |= (1 << WGM12);
 
     // Compare Output Mode : Set on compare match (impulsion)
-    TCCR1A |= (1 << COM1A0);  
+   // TCCR1A |= (1 << COM1A0);  
     // COM1A0 = 1 → Toggle OC1A on Compare Match
 
     TCCR1B |= (1 << CS10);   // prescaler = 1 (tick = 62.5 ns)
