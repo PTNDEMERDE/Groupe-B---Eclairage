@@ -39,7 +39,8 @@ char Light_Switch(char input);
 char Light_All_Off(char input);
 char Light_Trimming_Up(char input);
 void PWM_update(void);
-void Switch_LED_DIM(void);
+void Switch_LED_DIM_ON(void);
+void Switch_LED_DIM_OFF(void);
 
 //AUTRES
 

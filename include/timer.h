@@ -1,7 +1,7 @@
 #ifndef _TIMERS_H_
 #define _TIMERS_H_
 
-
+#include <stdint.h>
 //DEFINE
 
 
@@ -26,4 +26,8 @@ void setDutyCycle_3A(int Duty_cycle);
 void Timer0_Init_100us(void);
 
 void Timer0_Init_200us(void);
+
+void Pulse_Init(void);
+
+void Pulse_Generate(uint16_t duree_us);
 #endif 
