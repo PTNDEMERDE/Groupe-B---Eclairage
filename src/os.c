@@ -39,6 +39,8 @@ volatile BtnState_t btn_state = BTN_STATE_IDLE;
 volatile char DoublePressDetected = FALSE;
 volatile char LongPressDetected = FALSE;
 
+volatile uint16_t debounce_timer = 0;
+
 // Événements à envoyer à la machine d'état
 volatile uint8_t ButtonEvent = NONE;
 // ----------------------------------------------------------
@@ -384,7 +386,7 @@ détecter l’état instantané du bouton (pressé / relâché)
 */
 ISR(PCINT1_vect)
 {	
-	static volatile uint16_t debounce_timer = 0;
+	
 
     char comp_PINB = ~PINB;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
 
@@ -420,7 +422,7 @@ ISR(PCINT1_vect)
 void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 {
 	
-    extern  uint16_t debounce_timer;
+    extern volatile uint16_t debounce_timer;
 
    if (debounce_timer > 0)			// anti rebond
    {

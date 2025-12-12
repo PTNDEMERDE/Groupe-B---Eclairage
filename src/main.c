@@ -50,6 +50,8 @@ int main (void)
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
 	TWI_Master_Initialise(); // Initialisation I2C (TWI) two wire interface
+	
+	SPI_MasterInit();       // Initialisation SPI
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
@@ -86,18 +88,6 @@ char Light_Switch(char input)
     // 2) attendre 1 tick OS avant de changer la LED
     IDCB_Light_Switch_finalize = Callbacks_Record_Timer(Light_Switch_Finalize, 1);
 
-
-/*
-	if(IDCB_PWM_ON_DIM != 0){	// si dimming en cours
-		IDCB_PWM_ON_DIM = Callbacks_Remove_Timer(IDCB_PWM_ON_DIM); // arrêter le dimming si en cours
-//Callbacks_Remove_Timer(IDCB_PWM_ON); // arrêter cette callback
-		//Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
-	//	IDCB_PWM_ON_DIM = 0;
-		//IDCB_PWM_OFF_DIM = 0;
-		SET_BIT(PORTD,PORTD7); // LED on PB0
-
-	}
-*/	
 //	TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
 /*
 	if( ??? = 100 ) // si en plein jour
@@ -136,20 +126,54 @@ void Light_Switch_Finalize(void)
 		
 		break;
 	case 1 :
-		/*if(& (1 << LAMP1_PIN)){ // si LAMP1 est allumé
-			LAMP1_OFF;
+		/*if(SRAM_Read(???) == TRUE){ // si LAMP1 est allumé
+		LAMP1_ON;
+		SRAM_Write(???, TRUE); // sauvegarde état on dans SRAM
 		}
-		else{expender_Read(GPIOB) & (1 << LAMP1_PIN)==0; // si LAMP1 est éteint*/		
+		else{
+		LAMP1_OFF;
+		SRAM_Write(???, FALSE); // sauvegarde état éteint dans SRAM
+		}*/	
 
 		LAMP1_ON;
 		break;	
 	case 2 :
+
+		/*if(SRAM_Read(???) == TRUE){ // si LAMP2 est allumé
+		LAMP2_ON;
+		SRAM_Write(???, TRUE); // sauvegarde état on dans SRAM
+		}
+		else{
+		LAMP2_OFF;
+		SRAM_Write(???, FALSE); // sauvegarde état éteint dans SRAM
+		}*/	
+
 		LAMP2_ON
 		break;
 	case 3 :
+
+		/*if(SRAM_Read(???) == TRUE){ // si LAMP3 est allumé
+		LAMP3_ON;
+		SRAM_Write(???, TRUE); // sauvegarde état on dans SRAM
+		}
+		else{
+		LAMP3_OFF;
+		SRAM_Write(???, FALSE); // sauvegarde état éteint dans SRAM
+		}*/	
+
 		LAMP3_ON
 		break;
 	case 4 :	
+
+		/*if(SRAM_Read(???) == TRUE){ // si LAMP4 est allumé
+		LAMP4_ON;
+		SRAM_Write(???, TRUE); // sauvegarde état on dans SRAM
+		}
+		else{
+		LAMP4_OFF;
+		SRAM_Write(???, FALSE); // sauvegarde état éteint dans SRAM
+		}*/	
+
 		LAMP4_ON
 		break;
 	default:
@@ -195,9 +219,11 @@ char Light_All_Off(char input)
 void Light_All_Off_Finalize(void)
 {
 	cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("All OFF");sei();
-
-    //CLR_BIT(PORTD, PORTD7);   // LED OFF définitif
-
+	/*
+    CLR_BIT(PORTD, PORTD7);   // LED OFF définitif
+	for (int i=???;i<=???;i++){
+		//SRAM_Write(i, FALSE); // sauvegarde état éteint dans SRAM
+	}*/	
 	LAMP1_OFF;
 	LAMP2_OFF;
 	LAMP3_OFF;
@@ -205,19 +231,6 @@ void Light_All_Off_Finalize(void)
     Callbacks_Remove_Timer(IDCB_Light_All_Off_Finalize);
 	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
 }
-
-
-/*
-char Light_All_Off(char input)
-{
-	Usart0_Tx_String("All Off\r\n");
-	//Callbacks_Remove_Timer(IDCB_PWM_ON); // arrêter cette callback
-	IDCB_PWM_ON_DIM = Callbacks_Remove_Timer(IDCB_PWM_ON_DIM); 
-	//Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
-	CLR_BIT(PORTD,PORTD7); // LED off on PB0
-	return ST_TXT_START;
-}
-*/
 
 
 char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
@@ -250,10 +263,6 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
     return ST_TXT_T_UP;
 }
 
-
-//*****************************************
-//           STATE MACHINE	cli();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(0,1);lcd_puts("1");sei();
-//*****************************************
 
 void PWM_update(void){ //toute les millisecondes
 
@@ -291,21 +300,12 @@ void PWM_update(void){ //toute les millisecondes
 	value_dim = (int)value_dim_float;
 	
 }
-/*
-void Switch_LED_DIM_ON(void) // si frequence à 5kHz duty cycle = 100% (active la callcback tout les 200us et attend 200us avant de couper donc signal toujours haut)
-{
-	SET_BIT(PORTD,PORTD7); 
-	//Pulse_Generate(100); // 100us ON
-	//IDCB_PWM_OFF_DIM = Callbacks_Record_Timer(Switch_LED_DIM_OFF, 1); // 1 * 100us = 100us → extinction programmée
-	//_delay_us(100);           // <-- attente de 100 microsecondes
-	CLR_BIT(PORTD,PORTD7);
-}
-*/
+
 
 void Switch_LED_DIM_ON(void)
 {
 	//
-	//SRAM_Write pour etat haut
+	//SRAM_Write(???, TRUE);
 	//
 
     // Allume la LED immédiatement
