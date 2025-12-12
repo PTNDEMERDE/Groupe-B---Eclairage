@@ -18,6 +18,7 @@
 #include <stdlib.h> // pour utiliser la fonction itoa()
 #include <util/delay.h>
 #include <stdint.h>
+#include "SRAM23LC1024.h"
 
 // Mes variables globales
 //unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
@@ -46,6 +47,7 @@ int main (void)
 	Init_Hardware();
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
+	
 
 	TWI_Master_Initialise(); // Initialisation I2C (TWI) two wire interface
 	//Timer1_Init_Microtimer();
