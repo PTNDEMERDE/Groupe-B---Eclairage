@@ -18,6 +18,8 @@
 #include <stdlib.h> // pour utiliser la fonction itoa()
 #include <util/delay.h>
 #include <stdint.h>
+#include "SRAM23LC1024.h"
+#include "SRAMConf.h"
 
 // Mes variables globales
 //unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
@@ -53,8 +55,8 @@ int main (void)
 
 	SPI_MasterInit();       // Initialisation SPI
 
-	SRAM_Init();            // Initialisation SRAM externe 23LC1024
 	
+
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
@@ -129,16 +131,21 @@ void Light_Switch_Finalize(void)
 		
 		break;
 	case 1 :
-		/*if(SRAM_Read(???) == TRUE){ // si LAMP1 est allumé
+		if(SRAM_Read(6) == FALSE){ // si LAMP1 est allumé
+		cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
 		LAMP1_ON;
-		SRAM_Write(???, TRUE); // sauvegarde état on dans SRAM
+		//LAMP1_State = TRUE;
+		//LAMP1SRAM; // sauvegarde état on dans SRAM
+		SRAM_Write(6, TRUE);
 		}
-		else{
-		LAMP1_OFF;
-		SRAM_Write(???, FALSE); // sauvegarde état éteint dans SRAM
-		}*/	
-
-		LAMP1_ON;
+		else if (SRAM_Read(6) == TRUE)
+		{cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
+			LAMP1_OFF;
+		//LAMP1_State = FALSE;
+		//LAMP1SRAM; // sauvegarde état éteint dans SRAM
+		SRAM_Write(6, FALSE);
+		}
+	
 		break;	
 	case 2 :
 

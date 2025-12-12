@@ -82,6 +82,9 @@ void Init_Hardware(void)
     SET_BIT(PCMSK1, PCINT10); // Mask for PB2
 	SET_BIT(PCMSK1, PCINT8); // Mask for PB0
 
+	SET_BIT(DDRB, DDB1); // 
+	SET_BIT(PORTB, PORTB1); //
+
 }
 
 

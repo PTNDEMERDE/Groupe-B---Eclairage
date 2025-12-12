@@ -9,6 +9,8 @@
 #include "lcd.h"
 #include "expander_mcp23017.h"
 #include "Lighting.h"
+#include "SRAM23LC1024.h"
+#include "SRAMConf.h"
 
 //------------------------------------------------------------------------------------------
 //Variables globales
@@ -179,6 +181,9 @@ void OS_Start(void)
  	sei();  
 
 	Expander_Init(); // Initialisation de l'expander MCP23017
+
+	SRAM_Init();            // Initialisation SRAM externe 23LC1024
+	SRAM_Write(6, FALSE);
 
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais
