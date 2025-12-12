@@ -12,6 +12,8 @@
 #include "ftoa.h"
 #include "spi.h"
 #include "i2c_master.h"
+#include "EXPANDER_MCP23017.h"
+#include "Lighting.h"
 #include <string.h>	// Manipulation de chaînes de caractères
 #include <stdlib.h> // pour utiliser la fonction itoa()
 #include <util/delay.h>
@@ -24,11 +26,12 @@ unsigned char IDCB_Light_Switch_finalize = 0;
 unsigned char IDCB_Light_All_Off_Finalize = 0;
 
 unsigned char IDCB_PWM_ON = 0;
-
+extern unsigned char IDCB_BTN_HANDLER;
 unsigned char IDCB_Switch_LED_DIM_ON = 0;
 unsigned char IDCB_Switch_LED_DIM_OFF = 0;
 
-
+//unsigned char current_button = NONE;
+extern volatile char statebtn;
 volatile int value_dim = 1; // variable pour le dimming PWM //200µs
 
 // Gestion bouton
@@ -44,11 +47,12 @@ int main (void)
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
-	Timer1_Init_Microtimer();
+	TWI_Master_Initialise(); // Initialisation I2C (TWI) two wire interface
+	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
  //	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
-	Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
+	//Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 
 
  	// Lancement OS (Boucle infinie)
@@ -122,7 +126,31 @@ char Light_Switch(char input)
 void Light_Switch_Finalize(void)
 {
     TOGGLE_IO(PORTD,PORTD7);  // enfin le toggle sans PWM interférant
+	cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("switch");sei();
+
+	switch (statebtn)
+	{
+	case 0 :
+		/* code */
+		break;
+	case 1 :
+		LAMP1_ON;
+		break;	
+	case 2 :
+		LAMP2_ON
+		break;
+	case 3 :
+		LAMP3_ON
+		break;
+	case 4 :	
+		LAMP4_ON
+		break;
+	default:
+		break;
+	}
+	statebtn = 0;
     Callbacks_Remove_Timer(IDCB_Light_Switch_finalize);
+	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
 }
 
 
@@ -144,7 +172,6 @@ void Stop_PWM_DIM(void)
     // Il faut attendre un tick OS avant de faire ON ou OFF.
 }
 
-
 char Light_All_Off(char input)
 {
     Usart0_Tx_String("All Off\r\n");
@@ -160,8 +187,16 @@ char Light_All_Off(char input)
 
 void Light_All_Off_Finalize(void)
 {
-    CLR_BIT(PORTD, PORTD7);   // LED OFF définitif (sans glitch)
+	cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("All OFF");sei();
+
+    //CLR_BIT(PORTD, PORTD7);   // LED OFF définitif
+
+	LAMP1_OFF;
+	LAMP2_OFF;
+	LAMP3_OFF;
+	LAMP4_OFF;
     Callbacks_Remove_Timer(IDCB_Light_All_Off_Finalize);
+	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
 }
 
 
@@ -190,23 +225,6 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10000); // 10*100us = 1ms
     }
 
-	/*
-    // Tant que le bouton reste appuyé --> continuer à augmenter
-    if (button_raw != ENTER_RELEASED)
-    {
-		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10); // 10*100us = 1ms
-		
-        tick++;
-        if (tick >= 10000) // 200 ms si la fonction est appelée toutes les 1ms
-        {
-            Usart0_Tx_String("Up\r\n");
-            tick = 0; // reset compteur
-        }
-			
-        return ST_TXT_T_UP;
-    }
-	*/
-
     // Si le bouton est relâché --> retour
     if (button_raw == ENTER_RELEASED)
     {
@@ -215,6 +233,9 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 		IDCB_PWM_ON = Callbacks_Remove_Timer(IDCB_PWM_ON);
 		//IDCB_PWM_OFF_DIM = Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
 		Usart0_Tx_String("ARRET_PWM"); Usart0_Tx(0X0D);
+
+		Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
+		
         return ST_TXT_START;
     }
 
@@ -293,44 +314,6 @@ void Switch_LED_DIM_OFF(void)
     IDCB_Switch_LED_DIM_OFF = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
 }
 
-/*
-void Switch_LED_DIM_ON(void)
-{
-    static char state = 0;
-
-    switch(state)
-    {
-        case 0:
-            SET_BIT(PORTD, PORTD7);  // LED ON
-            TCNT1 = 0;
-            OCR1A = 1600;            // 100 µs à 16 MHz
-            TIFR1 |= (1 << OCF1A);   // clear flag
-            state = 1;
-			IDCB_test = Callbacks_Record_Timer(compare_100µs, 1); // 1 * 100us = 100us
-            break;
-
-        case 1:
-            // Attendre la fin des 100µs SANS BLOQUER
-            if (TIFR1 & (1 << OCF1A))
-            {
-                CLR_BIT(PORTD, PORTD7);   // LED OFF
-                state = 0;               // reset
-            }
-            break;
-    }
-}
-
-void compare_100µs(void)
-{
-	if (TIFR1 & (1 << OCF1A))
-	{
-		IDCB_test = Callbacks_Remove_Timer(IDCB_test);
-		CLR_BIT(PORTD, PORTD7);   // LED OFF
-		state = 0;               // reset
-	}
-	
-}
-*/
 
 
 

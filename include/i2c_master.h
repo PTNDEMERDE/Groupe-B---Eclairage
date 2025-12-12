@@ -20,27 +20,36 @@
 *
 ****************************************************************************/
 
+
+
+
+///// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!juste ça à définir!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!////
+//twbr : value pour determiner la vitesse de la clock
+//twps : prescaler pour arriver à cette vitesse
+
+
+
 /****************************************************************************
   TWI Status/Control register definitions
 ****************************************************************************/
 #define TWI_BUFFER_SIZE 10   // Set this to the largest message size that will be sent including address byte.
 
 // F I2C = 25000 Hz
-    #if F_CPU == 1000000UL
+#if F_CPU == 1000000UL
     #define TWI_TWBR            0x0C        // TWI Bit rate Register setting.
                                             // See Application note for detailed 
                                             // information on setting this value.
     // Not used defines!
     #define TWI_TWPS          0x00        // This driver presumes prescaler = 00
 
-#elif F_CPU == 16000000UL
-    #define TWI_TWBR            0x98        // TWI Bit rate Register setting.
+#elif F_CPU == 16000000UL  //400kHz
+    #define TWI_TWBR            0x0C        // TWI Bit rate Register setting.
                                             // See Application note for detailed 
                                             // information on setting this value.
     // Not used defines!
     #define TWI_TWPS          0x00        // This driver presumes prescaler = 00
 
-    #elif F_CPU == 8000000UL
+#elif F_CPU == 8000000UL
     #define TWI_TWBR            0x98        // TWI Bit rate Register setting.
                                             // See Application note for detailed 
                                             // information on setting this value.

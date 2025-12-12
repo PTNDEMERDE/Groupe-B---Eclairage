@@ -13,7 +13,7 @@
 
 
 unsigned char EEPROM_buf[4];
-extern unsigned char TWI_buf[I2C_BUFFER_SIZE];
+// extern unsigned char TWI_buf[I2C_BUFFER_SIZE];
 
 // READ in first bloc
 unsigned char Eeprom_Read_0(uint16_t address) {
@@ -35,7 +35,8 @@ unsigned char Eeprom_Read_0(uint16_t address) {
 	//Usart0_Tx(TWI_buf[1]);
 	//Usart0_Tx_String("inside read");
 
-	return TWI_buf[1];
+	//return TWI_buf[1];
+	return 0;
 }
 // READ in second bloc same logic as EEPROM_Read_0
 unsigned char Eeprom_Read_1(uint16_t address)
@@ -52,7 +53,8 @@ unsigned char Eeprom_Read_1(uint16_t address)
 	//Usart0_Tx(TWI_buf[1]);
 	//Usart0_Tx_String("inside read");
 
-	return TWI_buf[1];
+	//return TWI_buf[1];
+	return 0;
 }
 // WRITE in the first bloc
 void EEPROM_Write_0(unsigned int ad,unsigned int nbr_byte,char msg[]){
