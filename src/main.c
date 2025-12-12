@@ -318,7 +318,7 @@ void USART0_RX(char *Trame_USART0)
 		cli();lcd_gotoxy(7,1);lcd_puts(Display_temp);sei();
 
 		//si ancienne valeur ADC est différente de la nouvelle, on affiche nouvelle valeur
-		if (Voltage_Int_NEW!=Voltage_Int_OLD)
+		if(Voltage_Int_NEW!=Voltage_Int_OLD)
 		{
 			Voltage_Float = (float)Voltage_Int_NEW*5/1024; // passer de bit en volte
 			My_ftoa(Voltage_Float, Display_Volt, 2, 'f'); //float_value, buffer, numbre de chiffre après la virgule, decimal ||| peut renvoyer la longueur 
