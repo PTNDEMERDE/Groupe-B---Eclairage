@@ -36,10 +36,18 @@ void Switch_LED(void);	// callback timer --> cligotement de la LED
 
 //STATE MACHINE
 char Light_Switch(char input);
+void Light_Switch_Finalize(void);
+
 char Light_All_Off(char input);
+void Light_All_Off_Finalize(void);
+
+void Stop_PWM_DIM(void);
+
 char Light_Trimming_Up(char input);
 void PWM_update(void);
-void Switch_LED_DIM(void);
+
+void Switch_LED_DIM_ON(void);
+void Switch_LED_DIM_OFF(void);
 
 //AUTRES
 

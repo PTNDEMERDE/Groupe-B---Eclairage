@@ -15,13 +15,19 @@
 #include <string.h>	// Manipulation de chaînes de caractères
 #include <stdlib.h> // pour utiliser la fonction itoa()
 #include <util/delay.h>
+#include <stdint.h>
 
 // Mes variables globales
-unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
+//unsigned char IDCB_Led = 0;			// Identificateur callback timer pour le clignotement de la LED
 
-unsigned char IDCB_LANCE_timer_2s = 0;
+unsigned char IDCB_Light_Switch_finalize = 0;
+unsigned char IDCB_Light_All_Off_Finalize = 0;
+
 unsigned char IDCB_PWM_ON = 0;
-unsigned char IDCB_PWM_DIM = 0;
+
+unsigned char IDCB_Switch_LED_DIM_ON = 0;
+unsigned char IDCB_Switch_LED_DIM_OFF = 0;
+
 
 volatile int value_dim = 1; // variable pour le dimming PWM //200µs
 
@@ -38,7 +44,7 @@ int main (void)
 
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
-	
+	Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
  //	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
@@ -65,13 +71,29 @@ void Switch_LED(void)
 
 char Light_Switch(char input)
 {
-	static unsigned char ??? = 100; 
+	//static unsigned char ??? = 100; 
 	Usart0_Tx_String("Switch Light\r\n");
-	if(IDCB_PWM_DIM != 0){	// si dimming en cours
-		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM); // arrêter le dimming si en cours
-		SET_BIT(PORTD,PORTD7); // LED on PB0
-	}
 
+    // 1) arrêter proprement le PWM
+    Stop_PWM_DIM();
+
+    // 2) attendre 1 tick OS avant de changer la LED
+    IDCB_Light_Switch_finalize = Callbacks_Record_Timer(Light_Switch_Finalize, 1);
+
+
+/*
+	if(IDCB_PWM_ON_DIM != 0){	// si dimming en cours
+		IDCB_PWM_ON_DIM = Callbacks_Remove_Timer(IDCB_PWM_ON_DIM); // arrêter le dimming si en cours
+//Callbacks_Remove_Timer(IDCB_PWM_ON); // arrêter cette callback
+		//Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
+	//	IDCB_PWM_ON_DIM = 0;
+		//IDCB_PWM_OFF_DIM = 0;
+		SET_BIT(PORTD,PORTD7); // LED on PB0
+
+	}
+*/	
+//	TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
+/*
 	if( ??? = 100 ) // si en plein jour
 	{
 		TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
@@ -93,21 +115,67 @@ char Light_Switch(char input)
 		IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim);
 
 	}
-	
-	
-	
-	
+*/	
 	return ST_TXT_START;
 }
+
+void Light_Switch_Finalize(void)
+{
+    TOGGLE_IO(PORTD,PORTD7);  // enfin le toggle sans PWM interférant
+    Callbacks_Remove_Timer(IDCB_Light_Switch_finalize);
+}
+
+
+
+void Stop_PWM_DIM(void)
+{
+    // Arrête les deux callbacks
+    if (IDCB_Switch_LED_DIM_ON) {
+        Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
+        IDCB_Switch_LED_DIM_ON = 0;
+    }
+
+    if (IDCB_Switch_LED_DIM_OFF) {
+        Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
+        IDCB_Switch_LED_DIM_OFF = 0;
+    }
+
+    // Important : NE PAS toucher à la LED ici.
+    // Il faut attendre un tick OS avant de faire ON ou OFF.
+}
+
 
 char Light_All_Off(char input)
 {
+    Usart0_Tx_String("All Off\r\n");
+
+    Stop_PWM_DIM();  // on arrête le PWM proprement
+
+    // IMPORTANT : ne pas allumer/éteindre dans la même fonction !
+    // => On demande un traitement au prochain tick OS.
+    IDCB_Light_All_Off_Finalize = Callbacks_Record_Timer(Light_All_Off_Finalize, 1);
+
+    return ST_TXT_START;
+}
+
+void Light_All_Off_Finalize(void)
+{
+    CLR_BIT(PORTD, PORTD7);   // LED OFF définitif (sans glitch)
+    Callbacks_Remove_Timer(IDCB_Light_All_Off_Finalize);
+}
+
+
+/*
+char Light_All_Off(char input)
+{
 	Usart0_Tx_String("All Off\r\n");
-	IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM); 
+	//Callbacks_Remove_Timer(IDCB_PWM_ON); // arrêter cette callback
+	IDCB_PWM_ON_DIM = Callbacks_Remove_Timer(IDCB_PWM_ON_DIM); 
+	//Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
 	CLR_BIT(PORTD,PORTD7); // LED off on PB0
 	return ST_TXT_START;
 }
-
+*/
 
 
 char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
@@ -117,7 +185,7 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 
     if (first_time)
     {
-        Usart0_Tx_String("Trimming down\r\n");
+        Usart0_Tx_String("Trimming up\r\n");
         first_time = FALSE;
 		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10000); // 10*100us = 1ms
     }
@@ -145,6 +213,7 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
         first_time = TRUE;
         //tick = 0;
 		IDCB_PWM_ON = Callbacks_Remove_Timer(IDCB_PWM_ON);
+		//IDCB_PWM_OFF_DIM = Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
 		Usart0_Tx_String("ARRET_PWM"); Usart0_Tx(0X0D);
         return ST_TXT_START;
     }
@@ -164,8 +233,8 @@ void PWM_update(void){ //toute les millisecondes
 	Usart0_Tx_String("PWM_UPDATE");
 	Usart0_Tx(0X0D);
 	
-	IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
-	IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim); //10khz
+	IDCB_Switch_LED_DIM_ON = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
+	IDCB_Switch_LED_DIM_ON = Callbacks_Record_Timer(Switch_LED_DIM_ON, value_dim); //10khz
 
 	int PWM_HZ = (1000000/(value_dim*200)); // en Hz
 	
@@ -193,13 +262,78 @@ void PWM_update(void){ //toute les millisecondes
 	value_dim = (int)value_dim_float;
 	
 }
-
-void Switch_LED_DIM(void) // si frequence à 5kHz duty cycle = 100% (active la callcback tout les 200us et attend 200us avant de couper donc signal toujours haut)
+/*
+void Switch_LED_DIM_ON(void) // si frequence à 5kHz duty cycle = 100% (active la callcback tout les 200us et attend 200us avant de couper donc signal toujours haut)
 {
-	SET_BIT(PORTD,PORTD7);
-	_delay_us(100);           // <-- attente de 100 microsecondes
+	SET_BIT(PORTD,PORTD7); 
+	//Pulse_Generate(100); // 100us ON
+	//IDCB_PWM_OFF_DIM = Callbacks_Record_Timer(Switch_LED_DIM_OFF, 1); // 1 * 100us = 100us → extinction programmée
+	//_delay_us(100);           // <-- attente de 100 microsecondes
 	CLR_BIT(PORTD,PORTD7);
 }
+*/
+
+void Switch_LED_DIM_ON(void)
+{
+    // Allume la LED immédiatement
+    SET_BIT(PORTD, PORTD7);
+
+    // Empêche un ancien OFF de couper la LED
+    IDCB_Switch_LED_DIM_OFF = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
+
+    // Programme extinction dans 100 µs (1 tick)
+    IDCB_Switch_LED_DIM_OFF = Callbacks_Record_Timer(Switch_LED_DIM_OFF, 1);
+}
+
+void Switch_LED_DIM_OFF(void)
+{
+    CLR_BIT(PORTD, PORTD7);  // LED OFF
+
+    // Supprime ce callback (anti-répétition)
+    IDCB_Switch_LED_DIM_OFF = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
+}
+
+/*
+void Switch_LED_DIM_ON(void)
+{
+    static char state = 0;
+
+    switch(state)
+    {
+        case 0:
+            SET_BIT(PORTD, PORTD7);  // LED ON
+            TCNT1 = 0;
+            OCR1A = 1600;            // 100 µs à 16 MHz
+            TIFR1 |= (1 << OCF1A);   // clear flag
+            state = 1;
+			IDCB_test = Callbacks_Record_Timer(compare_100µs, 1); // 1 * 100us = 100us
+            break;
+
+        case 1:
+            // Attendre la fin des 100µs SANS BLOQUER
+            if (TIFR1 & (1 << OCF1A))
+            {
+                CLR_BIT(PORTD, PORTD7);   // LED OFF
+                state = 0;               // reset
+            }
+            break;
+    }
+}
+
+void compare_100µs(void)
+{
+	if (TIFR1 & (1 << OCF1A))
+	{
+		IDCB_test = Callbacks_Remove_Timer(IDCB_test);
+		CLR_BIT(PORTD, PORTD7);   // LED OFF
+		state = 0;               // reset
+	}
+	
+}
+*/
+
+
+
 
 
 

@@ -253,3 +253,43 @@ void setDutyCycle_3A(int Duty_cycle)
 //CONTENU FONCTIONS INTERNES
 
 	
+void Pulse_Generate(uint16_t duree_us)
+{
+    uint32_t ticks = (duree_us * 16);  // 1 tick = 62.5 ns = 1/16 MHz
+
+    TCNT1 = 0;         // reset compteur
+    OCR1A = ticks;     // compare match
+
+    // Force une transition au début : front montant
+    TCCR1A |= (1 << COM1A1);  // Force OC1A high
+
+    // Activation du timer
+    TCCR1B |= (1 << CS10);
+
+    // Attendre la fin de l’impulsion
+    while (!(TIFR1 & (1 << OCF1A)));
+
+    // Clear flag
+    TIFR1 = (1 << OCF1A);
+
+    // Arrêter la sortie après l’impulsion
+    TCCR1A &= ~((1 << COM1A1) | (1 << COM1A0));
+    PORTD &= ~(1 << PD5);   // force état bas
+}
+
+
+void Timer1_Init_Microtimer(void)
+{
+
+    TCCR1A = 0;
+    TCCR1B = 0;
+	TCNT1 = 0;
+    // Mode CTC : WGM12 = 1
+   // TCCR1B |= (1 << WGM12);
+
+    // Compare Output Mode : Set on compare match (impulsion)
+   // TCCR1A |= (1 << COM1A0);  
+    // COM1A0 = 1 → Toggle OC1A on Compare Match
+
+    TCCR1B |= (1 << CS10);   // prescaler = 1 (tick = 62.5 ns)
+}

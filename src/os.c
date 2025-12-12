@@ -108,8 +108,17 @@ unsigned char Callbacks_Record_Timer(void(*ptFonction)(void), unsigned int Time)
 // *****************************************************
 char Callbacks_Remove_Timer(unsigned char ID_CB)
 {
-	 My_CB[ID_CB-1] = 0; // -1 car i+1 dans la fonction Callbacks_Record_Timer() !!
-	 return 0;
+	// Protect against invalid ID (0 means "no callback") or out-of-range
+	if (ID_CB == 0) return 0; // nothing to remove
+	if (ID_CB > MAX_CALLBACKS) return -1; // invalid ID
+
+	My_CB[ID_CB-1] = 0; // -1 car i+1 dans la fonction Callbacks_Record_Timer() !!
+
+	// Also clear timing data to avoid stale values
+	Time_CB[ID_CB-1] = 0;
+	Tick_CB[ID_CB-1] = 0;
+
+	return 0;
 }
 
 
