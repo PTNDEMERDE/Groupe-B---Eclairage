@@ -79,15 +79,10 @@ void READonSRAM(unsigned long address, unsigned char taille, unsigned char* data
 void SRAM_Write(unsigned long address, unsigned char data){
 	SRAM_OFF;
 	SPI_MasterTransmit(WRITE);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit((address & 0xff0000)>>16);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit((address & 0x00ff00)>>8);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit(address & 0x0000ff);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit(data);
-	SRAM_SPIF_CLR;
 	SRAM_ON;
 	return;	
 }
@@ -102,15 +97,10 @@ void SRAM_Write(unsigned long address, unsigned char data){
 unsigned char SRAM_Read(unsigned long address) {
 	SRAM_OFF;
 	SPI_MasterTransmit(READ); // Envoie d'abord l'instruction
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit((address & 0xff0000)>>16);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit((address & 0x00ff00)>>8);
-	SRAM_SPIF_CLR;
 	SPI_MasterTransmit(address & 0x0000ff);
-	SRAM_SPIF_CLR;
 	unsigned char out= SPI_MasterTransmit(junk);
-	SRAM_SPIF_CLR;
 	SRAM_ON;
 	return out;
 }

@@ -1,0 +1,43 @@
+#include "SRAM23LC1024.h"
+#include "SPI.h"
+#include "SRAMConf.h"
+
+
+
+/*Variables Globales*/
+
+unsigned long LAMP1_Address         = 0x000000;
+unsigned long LAMP2_Address         = 0x000001;
+unsigned long LAMP3_Address         = 0x000002;
+unsigned long LAMP4_Address         = 0x000003;
+unsigned long LAMP1_PWM_Address     = 0x000004;
+unsigned long LAMP_All_PWM_Address  = 0x000005;
+unsigned long RTC_Address           = 0x000006;
+
+// Déclaration de la variable en tant que variable globale accessible depuis d'autres fichiers
+extern unsigned char LAMP1_State;
+extern unsigned char LAMP2_State;
+extern unsigned char LAMP3_State;
+extern unsigned char LAMP4_State;
+extern unsigned char LAMP1_PWM_State;
+extern unsigned char LAMP_All_PWM_State;
+extern unsigned char RTC_State;
+
+
+void SRAM_Save_All(void){
+
+    LAMP1SRAM;
+    LAMP2SRAM;
+    LAMP3SRAM;
+    LAMP4SRAM;
+    LAMP1_PWM_SRAM;
+    LAMP_All_PWM_SRAM;
+    RTCSRAM;
+    return;
+    
+}
+
+/*Fonctions*/
+
+//Function name :    SRAM_Write
+

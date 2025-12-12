@@ -19,9 +19,6 @@
 // Bouton ENTER (analyse avancée)
 volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
 
-#define ENTER_PRESSED 1
-#define ENTER_RELEASED 0
-
 // Pour la détection des patterns
 volatile uint16_t press_time = 0;
 volatile uint16_t release_timer = 0;
@@ -273,18 +270,18 @@ void OS_Start(void)
              }
             else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Si un des boutons 4 premiers est appuyé){
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
 				statebtn = 3;
              }
             else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Si un des boutons 4 premiers est appuyé){
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //Callbacks_Remove_Timer(IDCB_Led);
 				//CLR_BIT(PORTD,PORTD7);
 				statebtn = 2;
              }
             else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Si un des boutons 4 premiers est appuyé){
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
 				statebtn = 1;
@@ -322,9 +319,9 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 
     
 
-// ******************
-// INTERRUPTION TIMER
-// ******************
+// ******************************************************
+// 					INTERRUPTION TIMER
+// ******************************************************
 /*
 ISR(TIMER0_OVF_vect)
 {
@@ -432,7 +429,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
         case BTN_STATE_IDLE:	// si le bouton n'a eu acun appui
             if (button_raw == ENTER_PRESSED) 	// et vient d'être appuyé
             {
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("interupt");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("interupt");sei();
 
                 btn_state = BTN_STATE_PRESSED;	// alors on passe à l'état appuyé
 
