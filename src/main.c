@@ -297,7 +297,7 @@ void Switch_LED_DIM_ON(void) // si frequence à 5kHz duty cycle = 100% (active l
 void Switch_LED_DIM_ON(void)
 {
     // Allume la LED immédiatement
-    SET_BIT(PORTD, PORTD7);
+    LAMP2_ON;
 
     // Empêche un ancien OFF de couper la LED
     IDCB_Switch_LED_DIM_OFF = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
@@ -308,8 +308,7 @@ void Switch_LED_DIM_ON(void)
 
 void Switch_LED_DIM_OFF(void)
 {
-    CLR_BIT(PORTD, PORTD7);  // LED OFF
-
+	LAMP2_OFF;
     // Supprime ce callback (anti-répétition)
     IDCB_Switch_LED_DIM_OFF = Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
 }
