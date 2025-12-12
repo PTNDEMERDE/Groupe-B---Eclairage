@@ -34,7 +34,9 @@
     #define TWI_TWPS          0x00        // This driver presumes prescaler = 00
 
 #elif F_CPU == 16000000UL
-    #define TWI_TWBR            0x98        // TWI Bit rate Register setting.
+    #define TWI_TWBR            0x48        // TWI Bit rate Register setting. ==TEST VALUE=== 100kHz
+    //#define TWI_TWBR            0x0C        // TWI Bit rate Register setting. ===TEST VALUE=== 400kHz
+    //#define TWI_TWBR            0x98        // TWI Bit rate Register setting.  ===OLD VALUE=== 25kHz
                                             // See Application note for detailed 
                                             // information on setting this value.
     // Not used defines!

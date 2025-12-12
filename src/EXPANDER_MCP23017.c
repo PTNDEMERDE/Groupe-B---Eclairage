@@ -8,30 +8,41 @@
 unsigned char Expander_Buffer[TWI_BUFFER_SIZE];
 
 unsigned char IODIRA_CFG = 0b00000000; // All GPIOA are outputs
-unsigned char IODIRB_CFG = 0b11110000; // GPIOB7-4 are inputs and GPIOB3-0 are outputs
+// Configure GPIOB so that GPB0..GPB3 are inputs (buttons), GPB4..GPB7 are outputs (LEDs)
+unsigned char IODIRB_CFG = 0b00001111; // GPIOB0-3 are inputs and GPIOB4-7 are outputs
 
-unsigned char GPINTENB_CFG = 0b11110000; // Interrupts enables for GPIOB7-4
-unsigned char IOCON_CFG = 0b00000100;
+// Enable interrupts on the input pins (GPB0..GPB3)
+unsigned char GPINTENB_CFG = 0b00001111; // Interrupts enabled for GPIOB0-3
+unsigned char IOCON_CFG = 0b00101100;
 
-// Configuration IOCON2 Register: Enable pull-ups and interrupt mirroring
-unsigned char GPPUB_CFG = 0b11110000; // Enable pull-ups and interrupt mirroring
-unsigned char DEFVALB_CFG = 0b11110000; // Default comparison value for interrupt on change
-unsigned char INTCONB_CFG = 0b11110000; // Compare against DEFVAL register for interrupt on change
+// Enable internal pull-ups on the input pins (GPB0..GPB3)
+unsigned char GPPUB_CFG = 0b00001111; // Enable pull-ups on GPIOB0-3
+
+// Default comparison value (not used when INTCONB=0), set to 1 for pulled-up inputs
+unsigned char DEFVALB_CFG = 0b00001111; // Default comparison value for GPIOB0-3
+
+// Use interrupt-on-change mode (0 = compare to previous value)
+unsigned char INTCONB_CFG = 0b11111111; // Interrupt-on-change (compare to previous)
 
 void Expander_Init()
 {
 	Expander_Write(IOCON1, IOCON_CFG);
+	Expander_Write(IOCON2, IOCON_CFG);
 	Expander_Write(IODIRA, IODIRA_CFG);
 	Expander_Write(IODIRB, IODIRB_CFG);
 
-	// Activation des pull-up sur les entrées
-	Expander_Write(GPPUB, GPPUB_CFG); // Enable pull-ups on GPIOB7-4
+	// Activation des pull-up sur les entrées (GPB0..GPB3)
+	Expander_Write(GPPUB, GPPUB_CFG); // Enable pull-ups on GPIOB0-3
 
+	// Activer les interruptions pour GPB0..GPB3 et configurer le comportement d'interruption
+	Expander_Write(GPINTENB, GPINTENB_CFG); // Enable interrupts on GPIOB0-3
 	Expander_Write(DEFVALB, DEFVALB_CFG); // Set default comparison value for interrupt on change
-	Expander_Write(INTCONB, INTCONB_CFG); // Set interrupt control for GPIOB7-4
-	Expander_Write(GPINTENB, GPINTENB_CFG); // Enable interrupts on GPIOB7-4
+	Expander_Write(INTCONB, INTCONB_CFG); // Set interrupt control for GPIOB0-3
 
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
+	Expander_Write(GPIOA, 0b00000000); // Initial state for GPIOA outputs
+	Expander_Write(GPIOB, 0b00000000); // Initial state for GPIOB outputs
+
+	/*Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,LOW); // LED Identification OFF
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA3,LOW); // Output OFF.
@@ -42,7 +53,7 @@ void Expander_Init()
 	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
 	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
 	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
-	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
+	//Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.*/
 		
 }
 
@@ -92,4 +103,37 @@ void Expander_Gpio_Ctrl(unsigned char GPIOPort, unsigned char GPIOPin, unsigned 
 	}
 	
 	Expander_Write(GPIOPort, currentState);
+}
+
+// Fichier: src/EXPANDER_MCP23017.c
+
+void Expander_Gpio_Ctrl_test(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortState)
+{
+	unsigned char currentState;
+    unsigned char mask = (1 << GPIOPin);
+    unsigned char latchAddress;
+
+    // 1. Déterminer l'adresse du Latch (OLAT) pour lire l'état commandé
+    if (GPIOPort == GPIOA) {
+        latchAddress = OLATA; // 0x14
+    } else if (GPIOPort == GPIOB) {
+        latchAddress = OLATB; // 0x15
+    } else {
+        return; 
+    }
+    
+    // 2. LIRE l'état COMMANDÉ (OLAT)
+    currentState = Expander_Read(latchAddress); // LECTURE de OLATA ou OLATB
+
+	if (GPIOPortState == HIGH)
+	{
+		currentState |= mask;
+	}
+	else if (GPIOPortState == LOW)
+	{
+		currentState &= ~mask;
+	}
+	
+    // 3. ÉCRIRE dans le registre GPIO (qui met à jour la sortie physique et le Latch)
+	Expander_Write(GPIOPort, currentState); // ÉCRITURE dans GPIOA ou GPIOB
 }

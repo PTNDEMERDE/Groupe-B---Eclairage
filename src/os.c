@@ -15,13 +15,9 @@
 //Variables globales
 
 unsigned int Expander_Flag = 0; // Flag pour indiquer une interruption de l'Expander MCP23017
+unsigned char current_buttons = 0; // Variable pour stocker l'état actuel des boutons de l'Expander MCP23017
 
 unsigned int BTN_EXP = 0;
-unsigned int LAMP1 = 0;
-
-unsigned char IDCB_LAMP1 = 0;		// Identificateur callback timer pour la gestion de l'éclairage
-
-
 unsigned char LAMP1_Current_State = LOW; // Variable pour stocker l'état actuel de LAMP1
 
 //Callback Chrono
@@ -148,10 +144,6 @@ void OS_Start(void)
 	// Initialisation de l'Expander MCP23017
 	Expander_Init();
 
-	Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
-
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,HIGH); // LED Identification ON
-
 	cli();lcd_gotoxy(0,0);lcd_puts("INIT FINI");sei();
 
 	
@@ -227,141 +219,88 @@ void OS_Start(void)
 
 		
 		//cli();lcd_gotoxy(0,1);lcd_puts("Attente");sei();
-
-		unsigned char current_buttons = Expander_Read(GPIOB);
-
-		if (current_buttons & (1 << BTN1_PIN))
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 ACTIF ");sei();
-			}
-		else if (current_buttons & (1 << BTN2_PIN))
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 ACTIF ");sei();
-			}
-		else if (current_buttons & (1 << BTN3_PIN))
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 ACTIF ");sei();
-			}
-		else if (current_buttons & (1 << BTN4_PIN))
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 ACTIF ");sei();
-			}
-		else
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("No BTN");sei();
-			}
+		
 
 		if (Expander_Flag == 1)
 		{
+			current_buttons = Expander_Read(INTCAPB);
 
-			lcd_gotoxy(0,0);lcd_puts("INT EXPANDER ");
+			/*cli(); // Désactiver les interruptions pour un accès sûr
 
-			cli(); // Désactiver les interruptions pour un accès sûr
 
-			lcd_gotoxy(0,0);lcd_puts("After CLI     ");
-
-			// 1. Purge du flag matériel de l'Expander (avec INTCAPB ou GPIOB, si GPIOB est plus simple)
-			// Utilisez de préférence INTCAPB (0x11) car c'est le rôle de ce registre de capturer l'état.
-			//Expander_Read(INTCAPB); 
-			
-			// 2. Afficher la confirmation de l'interruption et l'état de la broche
-			lcd_gotoxy(0,1);
-			lcd_gotoxy(0,0);lcd_puts("After INTCAPB ");
-			
-			// Le bit PCINT10 sur PINB2 est l'entrée de l'interruption. 
-			// S'il est HIGH, l'interruption est désactivée.
-			if (Is_BIT_SET(PINB, PINB2)) { 
-				lcd_gotoxy(0,0);lcd_puts("INT PURGEE   "); // Le pin INTB est repassé HIGH (inactif)
-			} else {
-				lcd_gotoxy(0,0);lcd_puts("INT PERSISTE"); // Le pin INTB est resté LOW (actif)
-			}
-			
-			// 3. Logique d'analyse des boutons (pour une utilisation future)
-			// Ici, vous pouvez décoder 'interrupt_value' pour savoir quel bouton a été pressé.
+			if (current_buttons & (0 << BTN1_PIN))
+				{
+					cli();lcd_gotoxy(0,1);lcd_puts("BTN1 ACTIF ");sei();
+					LAMP1_ON
+					LAMP2_ON
+					LAMP3_ON
+					LAMP4_ON
+				}	
+			else if (current_buttons & (1 << BTN2_PIN))
+				{
+					cli();lcd_gotoxy(0,1);lcd_puts("BTN2 ACTIF ");sei();
+					LAMP1_OFF
+					LAMP2_OFF
+					LAMP3_OFF
+					LAMP4_OFF
+				}
+			else if (current_buttons & (1 << BTN3_PIN))
+				{
+					cli();lcd_gotoxy(0,1);lcd_puts("BTN3 ACTIF ");sei();
+				}
+			else if (current_buttons & (1 << BTN4_PIN))
+				{
+					cli();lcd_gotoxy(0,1);lcd_puts("BTN4 ACTIF ");sei();
+				}
+			else
+				{
+					cli();lcd_gotoxy(0,1);lcd_puts("No BTN     ");sei();
+				}
 			
 			Expander_Flag = 0; // Réinitialisation du flag logiciel
 			sei();
 
 			Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
-
-			/*if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0){
-				lcd_clrscr();
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 Pressed ");sei();
-				LAMP1_ON
-				LAMP2_ON
-				LAMP3_ON
-				LAMP4_ON
-				Expander_Flag = 0;
-				Expander_Read(GPIOB);
-				Expander_Read(INTCAPB);
-			}
-			else if ((Expander_Read(GPIOB) & (1 << BTN2_PIN)) == 0){
-				lcd_clrscr();
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 Pressed ");sei();
-				LAMP1_OFF
-				LAMP2_OFF
-				LAMP3_OFF
-				LAMP4_OFF
-				Expander_Flag = 0;
-				Expander_Read(GPIOB);
-				Expander_Read(INTCAPB);
-			}
-			else if ((Expander_Read(GPIOB) & (1 << BTN3_PIN)) == 0){
-				lcd_clrscr();
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 Pressed ");sei();
-				Expander_Flag = 0;
-				LAMP1_ON
-				LAMP2_OFF
-				LAMP3_ON
-				LAMP4_OFF
-				Expander_Read(GPIOB);
-				Expander_Read(INTCAPB);
-			}
-			else if ((Expander_Read(GPIOB) & (1 << BTN4_PIN)) == 0){
-				lcd_clrscr();
-				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 Pressed ");sei();
-				Expander_Flag = 0;
-				LAMP1_OFF
-				LAMP2_ON
-				LAMP3_OFF
-				LAMP4_ON
-				Expander_Read(GPIOB);
-				Expander_Read(INTCAPB);
-			}else
-			{
-				cli();lcd_gotoxy(0,1);lcd_puts("                ");sei();
-				Expander_Flag = 0;
-				Expander_Read(GPIOB);
-				Expander_Read(INTCAPB);
-			}
-
-			Expander_Flag = 0;
-			Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
-			Expander_Read(INTCAPB);*/
-			
+			Expander_Read(INTCAPB); // Lecture initiale pour effacer les interruptions en attente
 			
 		}
 		else {
-			//cli();lcd_gotoxy(0,1);lcd_puts("No INT       ");sei();
-		}
 
-		/*switch (BTN_EXP)
-		{
-			case BTN1:
-				IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
-				break;
-			case BTN2:
-				Callbacks_Remove_Timer(IDCB_LAMP1);
-				break;
-			case BTN3:
-				
-				break;
-			case BTN4:
-				
-				break;
-			default:
-				break;
 		}*/
+			//cli();lcd_gotoxy(0,1);lcd_puts("No INT       ");sei();
+		// Detect which button is physically pressed (GPIOB 0 to 3)
+
+			// Check which button is pressed (active low: pressed = 0)
+			if ((current_buttons & (0 << BTN4_PIN)) == 0) {
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN1 ACTIF ");sei();
+				LAMP1_ON
+				LAMP2_ON
+				LAMP3_ON
+				LAMP4_ON
+			} 
+			if ((current_buttons & (0 << BTN3_PIN)) == 0) {
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN2 ACTIF ");sei();
+				LAMP1_OFF
+				LAMP2_OFF
+				LAMP3_OFF
+				LAMP4_OFF
+			} 
+			if ((current_buttons & (0 << BTN2_PIN)) == 0) {
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN3 ACTIF ");sei();
+				LAMP1_ON
+			} 
+			if ((current_buttons & (0 << BTN1_PIN)) == 0) {
+				cli();lcd_gotoxy(0,1);lcd_puts("BTN4 ACTIF ");sei();
+				LAMP1_OFF
+			} 
+			else {
+				cli();lcd_gotoxy(0,1);lcd_puts("No BTN     ");sei();
+			}
+
+			Expander_Flag = 0; // Réinitialisation du flag logiciel
+			Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
+			Expander_Read(INTCAPB); // Lecture initiale pour effacer les interruptions en attente
+		}
 	}
 }
 
@@ -383,32 +322,6 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 	}
 	return nextstate;
 }
-
-//**************** Control LAMP1 ************************************
-//  Gestion de l'éclairage LAMP1
-//****************************************************************
-void Control_LAMP1(void)
-{
-	//TOGGLE_IO(PORTD,PORTD6); // Supposons que PORTD6 contrôle LAMP1
-	LAMP1_ON
-	
-}
-
-/*void Expander_test(void)
-{
-	// Test d'allumage des lampes
-
-	BTN1 = Expander_Read(GPIOB) & (1 << BTN1_PIN); // Lire l'état du bouton BTN1
-
-	if (BTN1 == 0)
-		{
-			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, HIGH);// Allumer LAMP1
-		}
-	else if (BTN1 == 1)
-		{
-			Expander_Gpio_Ctrl(GPIOB, LAMP1_PIN, LOW); // Eteindre LAMP1
-		}
-}*/
 
     
 
@@ -485,34 +398,6 @@ ISR(PCINT1_vect)
 	char comp_PINB = ~PINB;
 	if (Is_BIT_SET(comp_PINB, PINB2))
 	Expander_Flag = 1;
-
-	//Expander_Read(GPIOB); // Lecture initiale pour effacer les interruptions en attente
-
-	/*cli();lcd_gotoxy(0,1);lcd_puts("Enter_int");sei();
-	
-	if ((Expander_Read(GPIOB) & (1 << BTN1_PIN)) == 0)
-	{
-		LAMP1_Current_State = Expander_Read(GPIOB) & (1 << LAMP1_PIN);
-
-		if (LAMP1_Current_State == HIGH)
-		{
-			LAMP1_Current_State = LOW;
-			IDCB_LAMP1 = Callbacks_Record_Timer(Control_LAMP1, 50);
-			lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
-			lcd_gotoxy(0,1);lcd_puts("ON");
-		}
-		else if (LAMP1_Current_State == LOW)
-		{
-			LAMP1_Current_State = HIGH;
-			Callbacks_Remove_Timer(IDCB_LAMP1);
-			lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
-			lcd_gotoxy(0,1);lcd_puts("OFF");
-		}
-
-		lcd_clrscr();lcd_gotoxy(0,0);lcd_puts("LAMP1 STATE:");
-		lcd_gotoxy(0,1);lcd_puts(LAMP1_Current_State ? "ON " : "OFF ");
-		
-	}*/
 
 }
 
