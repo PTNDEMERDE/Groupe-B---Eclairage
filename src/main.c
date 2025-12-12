@@ -50,8 +50,11 @@ int main (void)
 	lcd_init(LCD_DISP_ON);lcd_puts("LCD OK !");
 
 	TWI_Master_Initialise(); // Initialisation I2C (TWI) two wire interface
-	
+
 	SPI_MasterInit();       // Initialisation SPI
+
+	SRAM_Init();            // Initialisation SRAM externe 23LC1024
+	
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();

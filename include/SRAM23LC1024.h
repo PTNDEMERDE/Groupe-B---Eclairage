@@ -14,18 +14,26 @@
 
 
 //Definition of instruction used in the transfert functions
-#define READ 3 // Read data from memory array beginning at selected address.
-#define WRITE 2 // Write data to memory array beginning at selected address.
-#define SRAM_INSTR_WM 1 // Write Mode Register.
-#define SRAM_INSTR_RM 5 // Read Mode register.
+//adresse registre + instruction
+#define SRAM_READ_DATA 0x03
+#define SRAM_WRITE_DATA 0x02
+
+#define SRAM_WRITE_REG 0x01
+#define SRAM_READ_REG 0x05    //
+
+//Mode pour la config interne de la SRAM
+#define ByteMode  0x00
+#define PageMode  0x80
+#define SeqMode   0x40
+
 
 //MACRO definition
 //Clear the SPIF flag to 0 
-#define SRAM_SPIF_CLR CLR_BIT(SPSR,SPIF)
+//#define SRAM_SPIF_CLR CLR_BIT(SPSR,SPIF)
 //Clear the bit of PB1 to enable the spi communication
-#define SRAM_OFF CLR_BIT(PORTB,PORTB1)
+#define SRAM_ON CLR_BIT(PORTB,PORTB1)
 //Set the bit PB1 to 1 to disable the spi communication
-#define SRAM_ON SET_BIT(PORTB,PORTB1)
+#define SRAM_OFF SET_BIT(PORTB,PORTB1)
 
 
 
@@ -45,7 +53,7 @@ void SRAM_Init(void);
 //REturn : nothing in return
 //How it works : Address is the starting address of the sram where we are going to encode data
 //				 Data is all the data we want to write on the sram
-void WRITEonSRAM(unsigned long address, unsigned char data[], unsigned int taille);
+// void WRITEonSRAM(unsigned long address, unsigned char data[], unsigned int taille);
 
 
 //Function name :    READonSRAM
@@ -54,7 +62,7 @@ void WRITEonSRAM(unsigned long address, unsigned char data[], unsigned int taill
 //REturn : table of char of lenght 'taille' read on t
 //How it works : Address is the starting address of the data we want
 //				 taille is the number of bytes we want to receive beginning at this address
-void READonSRAM(unsigned long address, unsigned char taille, unsigned char* data);
+// void READonSRAM(unsigned long address, unsigned char taille, unsigned char* data);
 
 
 //Function name :    SRAM_Read

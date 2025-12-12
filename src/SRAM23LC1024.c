@@ -21,22 +21,17 @@ unsigned char junk = 0;
 //How it works : we write in the SRAM the mode we want to use, here it will be byter mode
 void SRAM_Init(void){
 	
-	SRAM_OFF;
-	SPI_MasterTransmit(SRAM_INSTR_WM);
-	SPI_MasterTransmit(0b01000000);
 	SRAM_ON;
-	
+	SPI_MasterTransmit(SRAM_WRITE_REG);
+	SPI_MasterTransmit(ByteMode); 
 	SRAM_OFF;
-	SPI_MasterTransmit(SRAM_INSTR_RM);
-	SPI_MasterTransmit(0b01000000);
-	SRAM_ON;
-	
+
 	return;
 }
 
 
 
-
+/*
 //Function name :    WRITEonSRAM 
 //Parameters :    - unsigned long (32 bits) address of writing
 //                - tabel of unsigned char, the bytes we want to write
@@ -67,7 +62,7 @@ void READonSRAM(unsigned long address, unsigned char taille, unsigned char* data
 	}
 }
 
-
+*/
 
 //Function name :    SRAM_Write
 //Parameters :    - unsigned long (32 bits) address of writing
@@ -77,18 +72,18 @@ void READonSRAM(unsigned long address, unsigned char taille, unsigned char* data
 //				 then we make 4 spi communication with the sram, sending the write instruction and then the 3 last bytes of the address in the good order. We clear spif flag everytime
 //				 finally we transmit the data we ant to read, clear spif flag one last time and close the communication by setting chipselect to 1 again
 void SRAM_Write(unsigned long address, unsigned char data){
-	SRAM_OFF;
-	SPI_MasterTransmit(WRITE);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit((address & 0xff0000)>>16);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit((address & 0x00ff00)>>8);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit(address & 0x0000ff);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit(data);
-	SRAM_SPIF_CLR;
 	SRAM_ON;
+	SPI_MasterTransmit(SRAM_WRITE_DATA);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit((address & 0xff0000)>>16);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit((address & 0x00ff00)>>8);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit(address & 0x0000ff);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit(data);
+	//SRAM_SPIF_CLR;
+	SRAM_OFF;
 	return;	
 }
 
@@ -100,18 +95,18 @@ void SRAM_Write(unsigned long address, unsigned char data){
 //				 then we make 4 spi communication with the sram, sending the read instruction and then the 3 last bytes of the address in the good order. We clear spif flag everytime
 //				 finally we transmit a junk byte to fill spdr register to push and get the data byte in return savec in out variable, clear spif flag one last time and close the communication by setting chipselect to 1 again
 unsigned char SRAM_Read(unsigned long address) {
-	SRAM_OFF;
-	SPI_MasterTransmit(READ); // Envoie d'abord l'instruction
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit((address & 0xff0000)>>16);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit((address & 0x00ff00)>>8);
-	SRAM_SPIF_CLR;
-	SPI_MasterTransmit(address & 0x0000ff);
-	SRAM_SPIF_CLR;
-	unsigned char out= SPI_MasterTransmit(junk);
-	SRAM_SPIF_CLR;
 	SRAM_ON;
+	SPI_MasterTransmit(SRAM_READ_DATA); // Envoie d'abord l'instruction
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit((address & 0xff0000)>>16);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit((address & 0x00ff00)>>8);
+	//SRAM_SPIF_CLR;
+	SPI_MasterTransmit(address & 0x0000ff);
+	//SRAM_SPIF_CLR;
+	unsigned char out= SPI_MasterTransmit(junk);
+	//SRAM_SPIF_CLR;
+	SRAM_OFF;
 	return out;
 }
 
