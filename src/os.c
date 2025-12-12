@@ -182,8 +182,7 @@ void OS_Start(void)
 
 	Expander_Init(); // Initialisation de l'expander MCP23017
 
-	SRAM_Init();            // Initialisation SRAM externe 23LC1024
-	SRAM_Write(6, FALSE);
+	
 
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais

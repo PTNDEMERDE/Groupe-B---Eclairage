@@ -55,7 +55,8 @@ int main (void)
 
 	SPI_MasterInit();       // Initialisation SPI
 
-	
+	SRAM_Init();            // Initialisation SRAM externe 23LC1024
+	SRAM_Write(LAMP1_Address, FALSE);
 
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
@@ -131,14 +132,14 @@ void Light_Switch_Finalize(void)
 		
 		break;
 	case 1 :
-		if(SRAM_Read(6) == FALSE){ // si LAMP1 est allumé
+		if(SRAM_Read(LAMP1_Address) == FALSE){ // si LAMP1 est allumé
 		cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
 		LAMP1_ON;
 		//LAMP1_State = TRUE;
 		//LAMP1SRAM; // sauvegarde état on dans SRAM
-		SRAM_Write(6, TRUE);
+		SRAM_Write(LAMP1_Address, TRUE);
 		}
-		else if (SRAM_Read(6) == TRUE)
+		else if (SRAM_Read(LAMP1_Address) == TRUE)
 		{cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
 			LAMP1_OFF;
 		//LAMP1_State = FALSE;
