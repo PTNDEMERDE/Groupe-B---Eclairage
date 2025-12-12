@@ -3,8 +3,8 @@
 #ifndef LIGHTING_H_
 #define LIGHTING_H_
 
-#include "EXPANDER_MCP23017.h"
 
+#include "EXPANDER_MCP23017.h"
 // DEFINE
 
 #define LAMP1_PIN    EXP_GPIOB4
@@ -17,12 +17,6 @@
 #define BTN3_PIN    EXP_GPIOB2
 #define BTN4_PIN    EXP_GPIOB3
 
-#define BTN1 0b00000001
-#define BTN2 0b00000010
-#define BTN3 0b00000100
-#define BTN4 0b00001000
-
-
 #define LAMP1_ON Expander_Gpio_Ctrl_test(GPIOB, LAMP1_PIN, HIGH);
 #define LAMP1_OFF Expander_Gpio_Ctrl_test(GPIOB, LAMP1_PIN, LOW);
 #define LAMP2_ON Expander_Gpio_Ctrl_test(GPIOB, LAMP2_PIN, HIGH);
@@ -31,6 +25,5 @@
 #define LAMP3_OFF Expander_Gpio_Ctrl_test(GPIOB, LAMP3_PIN, LOW);
 #define LAMP4_ON Expander_Gpio_Ctrl_test(GPIOB, LAMP4_PIN, HIGH);
 #define LAMP4_OFF Expander_Gpio_Ctrl_test(GPIOB, LAMP4_PIN, LOW);
-
 
 #endif /* LIGHTING_H_ */

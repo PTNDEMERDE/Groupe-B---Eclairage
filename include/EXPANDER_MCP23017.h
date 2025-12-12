@@ -145,5 +145,5 @@ void Expander_Init();
 void Expander_Write(unsigned char registerAddress,unsigned char dataToWrite);
 unsigned char Expander_Read(unsigned char registerAddress);
 void Expander_Gpio_Ctrl(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortDirection);
-void Expander_Gpio_Ctrl_test(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortDirection);
+void Expander_Gpio_Ctrl_test(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortState);
 #endif /* EXPANDER_MCP23017_H_ */
