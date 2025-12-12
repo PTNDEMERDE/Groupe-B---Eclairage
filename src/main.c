@@ -30,9 +30,11 @@ extern unsigned char IDCB_BTN_HANDLER;
 unsigned char IDCB_Switch_LED_DIM_ON = 0;
 unsigned char IDCB_Switch_LED_DIM_OFF = 0;
 
+unsigned char IDCB_Led = 0;
+
 //unsigned char current_button = NONE;
 extern volatile char statebtn;
-volatile int value_dim = 1; // variable pour le dimming PWM //200µs
+volatile int value_dim = 1; // variable pour le dimming PWM //100µs
 
 // Gestion bouton
 extern volatile uint8_t button_raw;
@@ -51,7 +53,7 @@ int main (void)
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
- //	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
+ 	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
 	//Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 
 
@@ -125,15 +127,20 @@ char Light_Switch(char input)
 
 void Light_Switch_Finalize(void)
 {
-    TOGGLE_IO(PORTD,PORTD7);  // enfin le toggle sans PWM interférant
-	cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("switch");sei();
+   // TOGGLE_IO(PORTD,PORTD7);  // enfin le toggle sans PWM interférant
+	cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("switch");sei();
 
 	switch (statebtn)
 	{
 	case 0 :
-		/* code */
+		
 		break;
 	case 1 :
+		/*if(& (1 << LAMP1_PIN)){ // si LAMP1 est allumé
+			LAMP1_OFF;
+		}
+		else{expender_Read(GPIOB) & (1 << LAMP1_PIN)==0; // si LAMP1 est éteint*/		
+
 		LAMP1_ON;
 		break;	
 	case 2 :
@@ -187,7 +194,7 @@ char Light_All_Off(char input)
 
 void Light_All_Off_Finalize(void)
 {
-	cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("All OFF");sei();
+	cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("All OFF");sei();
 
     //CLR_BIT(PORTD, PORTD7);   // LED OFF définitif
 
@@ -222,7 +229,8 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
     {
         Usart0_Tx_String("Trimming up\r\n");
         first_time = FALSE;
-		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 10000); // 10*100us = 1ms
+		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 5000); // 10000*100us=1s
+		//tick = 0;
     }
 
     // Si le bouton est relâché --> retour
@@ -263,14 +271,14 @@ void PWM_update(void){ //toute les millisecondes
 	Usart0_Tx_String(buffer);
 	Usart0_Tx(0X0D);
 	
-	if(value_dim_float < 10.0){// 10 * 100us = 1ms = signal à 1kHz
+	if(value_dim_float <= 100.0){// 10 * 100us = 1ms = signal à 1kHz
 		if(value_dim_float <= 10.0){ // jusqu'à 1kHz
         	value_dim_float += 2.0;      // lent pour les hautes fréquences
     	} 
-		/*
-		else if((10.0 < value_dim_float) && (value_dim_float < 1000.0)){
-        	value_dim_float += 50.0;      // ralentir progression
-   		} 
+		
+		else if((10.0 < value_dim_float) && (value_dim_float < 100.0)) {
+        	value_dim_float += 10.0;      // ralentir progression
+   		} /*
 		else {
         	value_dim_float += 200.0;      // trés rapide pour basses fréquences
    		}
@@ -296,6 +304,10 @@ void Switch_LED_DIM_ON(void) // si frequence à 5kHz duty cycle = 100% (active l
 
 void Switch_LED_DIM_ON(void)
 {
+	//
+	//SRAM_Write pour etat haut
+	//
+
     // Allume la LED immédiatement
     LAMP2_ON;
 

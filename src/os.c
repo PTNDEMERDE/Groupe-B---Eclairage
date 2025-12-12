@@ -26,7 +26,7 @@ volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
 volatile uint16_t press_time = 0;
 volatile uint16_t release_timer = 0;
 volatile char Expander_flag = FALSE;
-volatile uint16_t debounce_timer;
+//volatile uint16_t debounce_timer;
 volatile char statebtn = 0; // 0=idle, 1=btn1, 2=btn2, 3=btn3, 4=btn4
 typedef enum {
     BTN_STATE_IDLE,
@@ -35,7 +35,6 @@ typedef enum {
     BTN_STATE_IGNORE_RELEASE  // pour ignorer le relâchement après un double appui
 } BtnState_t;
 unsigned char current_button = NONE;
-unsigned char IDCB_Led = 0;
 volatile BtnState_t btn_state = BTN_STATE_IDLE;
 volatile char DoublePressDetected = FALSE;
 volatile char LongPressDetected = FALSE;
@@ -267,24 +266,24 @@ void OS_Start(void)
 
             if(!Is_BIT_SET(current_button,BTN4_PIN)){ // Si un des boutons 4 premiers est appuyé){
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 				statebtn = 4;
              }
             else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Si un des boutons 4 premiers est appuyé){
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
 				statebtn = 3;
              }
             else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Si un des boutons 4 premiers est appuyé){
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //Callbacks_Remove_Timer(IDCB_Led);
 				//CLR_BIT(PORTD,PORTD7);
 				statebtn = 2;
              }
             else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Si un des boutons 4 premiers est appuyé){
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
 				statebtn = 1;
@@ -385,15 +384,15 @@ détecter l’état instantané du bouton (pressé / relâché)
 */
 ISR(PCINT1_vect)
 {	
-	debounce_timer = 0;
+	static volatile uint16_t debounce_timer = 0;
 
     char comp_PINB = ~PINB;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
 
 	 //Si on est dans la fenêtre de rebondissement, ignorer
-   // if (debounce_timer > 0)
-   // {
-   //    return;
-   // }
+    if (debounce_timer > 0)
+    {
+       return;
+    }
 	debounce_timer = 20;  // Ignorer interruptions pendant 20ms
 
     if (Is_BIT_SET(comp_PINB, PINB2))  // PINC7 = ENTER
@@ -421,18 +420,19 @@ ISR(PCINT1_vect)
 void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 {
 	
-    
-// if (debounce_timer > 0)			// anti rebond
-   // {
-   //     debounce_timer--;
-   // }
+    extern  uint16_t debounce_timer;
+
+   if (debounce_timer > 0)			// anti rebond
+   {
+        debounce_timer--;
+   }
 
     switch (btn_state)		// a partir de l'état actuel du bouton
     {
         case BTN_STATE_IDLE:	// si le bouton n'a eu acun appui
             if (button_raw == ENTER_PRESSED) 	// et vient d'être appuyé
             {
-				cli();lcd_clrscr;lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("interupt");sei();
+				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("interupt");sei();
 
                 btn_state = BTN_STATE_PRESSED;	// alors on passe à l'état appuyé
 

@@ -39,7 +39,7 @@ void  Expander_Init()
 	//Expander_Write(GPINTENB, GPINTENB_CFG); // Enable interrupts on GPIOB7-4
 
 	Expander_Write(GPIOA, 0b00000111); // Initialize GPIOA to 0x00
-	Expander_Write(GPIOB, 0b11110000); // Initialize GPIOB to
+	Expander_Write(GPIOB, 0b00000000); // Initialize GPIOB to
 /*
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
 	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.
