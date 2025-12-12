@@ -333,7 +333,16 @@ détecter l’état instantané du bouton (pressé / relâché)
 */
 ISR(PCINT2_vect)
 {	
+	static uint16_t debounce_timer = 0;
+
     char comp_PINC = ~PINC;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
+
+	// Si on est dans la fenêtre de rebondissement, ignorer
+    if (debounce_timer > 0)
+    {
+        return;
+    }
+	debounce_timer = 20;  // Ignorer interruptions pendant 20ms
 
     if (Is_BIT_SET(comp_PINC, PINC7))  // PINC7 = ENTER
 	{
@@ -343,19 +352,29 @@ ISR(PCINT2_vect)
 	{
 		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
 	}   
-
-	if (Is_BIT_SET(comp_PINC, ???))  // 
+	/*
+	if (Is_BIT_SET(comp_PINC, ???))  	// 
 	{
-		button_raw = ENTER_PRESSED;	// Bouton appuyé mais le bouton envoi un 0 logique
+		button_raw = ENTER_PRESSED;		// Bouton appuyé mais le bouton envoi un 0 logique
 	}
     else
 	{
 		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
-	}   
+	} 
+	*/  
 }
 
 void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 {
+
+	extern volatile uint16_t debounce_timer;
+	
+    
+    if (debounce_timer > 0)			// anti rebond
+    {
+        debounce_timer--;
+    }
+
     switch (btn_state)		// a partir de l'état actuel du bouton
     {
         case BTN_STATE_IDLE:	// si le bouton n'a eu acun appui
