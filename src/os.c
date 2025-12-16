@@ -8,16 +8,13 @@
 #include "menu.h"
 #include "lcd.h"
 #include "expander_mcp23017.h"
-#include "Lighting.h"
+#include "lighting.h"
 #include "SRAM23LC1024.h"
 #include "SRAMConf.h"
 
-//------------------------------------------------------------------------------------------
 //Variables globales
-//------------------------------------------------------------------------------------------
 
 //Gestion bouton
-//-----------------------------------------------------------
 // Bouton ENTER (analyse avancée)
 volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
 
@@ -27,7 +24,7 @@ volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
 // Pour la détection des patterns
 volatile uint16_t press_time = 0;
 volatile uint16_t release_timer = 0;
-volatile char Expander_flag = FALSE;
+volatile char Expander_flag = FALSE; // Flag d'interruption sur le MCP23017
 //volatile uint16_t debounce_timer;
 volatile char statebtn = 0; // 0=idle, 1=btn1, 2=btn2, 3=btn3, 4=btn4
 typedef enum {
@@ -264,35 +261,38 @@ void OS_Start(void)
 				 }
 			 }
 		 }
-		 current_button = Expander_Read(INTCAPB); // lire l'état des boutons via l'expander
 
+		 // ------------------- Interruption de L'EXPANDER MCP23017 -------------------
+		 current_button = Expander_Read(INTCAPB); // Lecture du registre d'état des boutons via l'expander
+
+		 // Vérification du flag d'interruption
          if (Expander_flag){
 
             ////////////////debug via usart registre interrupt
 
-            if(!Is_BIT_SET(current_button,BTN4_PIN)){ // Si un des boutons 4 premiers est appuyé){
+            if(!Is_BIT_SET(current_button,BTN4_PIN)){ // Vérifie si le bouton 4 est appuyé
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
-				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
+				cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-				statebtn = 4;
+				statebtn = 4;  // Renvoie l'etat du bouton pour le "main.c"
              }
-            else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Si un des boutons 4 premiers est appuyé){
+            else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Vérifie si le bouton 3 est appuyé
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
-				statebtn = 3;
+				statebtn = 3;  // Renvoie l'etat du bouton pour le "main.c"
              }
-            else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Si un des boutons 4 premiers est appuyé){
+            else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Vérifie si le bouton 2 est appuyé
 				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //Callbacks_Remove_Timer(IDCB_Led);
 				//CLR_BIT(PORTD,PORTD7);
-				statebtn = 2;
+				statebtn = 2;  // Renvoie l'etat du bouton pour le "main.c"
              }
-            else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Si un des boutons 4 premiers est appuyé){
+            else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Vérifie si le bouton 1 est appuyé
 				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
-				statebtn = 1;
+				statebtn = 1;  // Renvoie l'etat du bouton pour le "main.c"
              }
 
 
@@ -384,15 +384,12 @@ ISR(USART0_RX_vect)
 	}
 }
 
-
-/*----------------------Interruption Touches----------------------
-détecter l’état instantané du bouton (pressé / relâché) 
-*/
+// ***************************************
+//			Interruption Touches
+// ***************************************
 ISR(PCINT1_vect)
 {	
-	
-
-    char comp_PINB = ~PINB;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
+	char comp_PINB = ~PINB;	// car les boutons sont en pull-up, on inverse les bits lus pour rendre la logique plus intuitive
 
 	 //Si on est dans la fenêtre de rebondissement, ignorer
     if (debounce_timer > 0)
@@ -401,7 +398,7 @@ ISR(PCINT1_vect)
     }
 	debounce_timer = 20;  // Ignorer interruptions pendant 20ms
 
-    if (Is_BIT_SET(comp_PINB, PINB2))  // PINC7 = ENTER
+    if (Is_BIT_SET(comp_PINB, PINB2))  // On vérifie l'état de l'entrée ou est l'interruption du MCP23017
 	{
 		button_raw = ENTER_PRESSED;	// Bouton appuyé mais le bouton envoi un 0 logique
 		//Light_Switch_Finalize();
@@ -410,17 +407,7 @@ ISR(PCINT1_vect)
     else
 	{
 		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
-	}   
-	/*
-	if (Is_BIT_SET(comp_PINC, ???))  	// 
-	{
-		button_raw = ENTER_PRESSED;		// Bouton appuyé mais le bouton envoi un 0 logique
-	}
-    else
-	{
-		button_raw = ENTER_RELEASED;	// Bouton relaché mais le bouton envoi un 1 logique
 	} 
-	*/  
 }
 
 void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
@@ -449,7 +436,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
             }
         break;
 
-        case BTN_STATE_PRESSED:					// arrive ici apres un appui
+        case BTN_STATE_PRESSED:					// si le bouton est appuyé
 			if (button_raw == ENTER_PRESSED)	// tant que le bouton reste appuyé
 			{
 				press_time++;					// on incrémente le temps d'appui

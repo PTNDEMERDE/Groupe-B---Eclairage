@@ -3,6 +3,8 @@
 #ifndef SRAMCONF_H
 #define SRAMCONF_H
 
+// DEFINITIONS DES ADRESSES EN SRAM POUR CHAQUE VARIABLE A SAUVEGARDER
+
 #define LAMP1_Address          0x000000
 #define LAMP2_Address          0x000001
 #define LAMP3_Address          0x000002
@@ -11,6 +13,8 @@
 #define LAMP_All_PWM_Address   0x000005
 #define RTC_Address            0x000006
 
+// DECLARATION DES VARIABLES A SAUVEGARDER EN SRAM
+
 extern unsigned char LAMP1_State;
 extern unsigned char LAMP2_State;
 extern unsigned char LAMP3_State;
@@ -18,6 +22,8 @@ extern unsigned char LAMP4_State;
 extern unsigned char LAMP1_PWM_State;
 extern unsigned char LAMP_All_PWM_State;
 extern unsigned char RTC_State;
+
+// DEFINITIONS DES MACROS POUR SAUVEGARDER LES VARIABLES EN SRAM
 
 #define LAMP1SRAM           SRAM_Write(LAMP1_Address, LAMP1_State)
 #define LAMP2SRAM           SRAM_Write(LAMP2_Address, LAMP2_State)

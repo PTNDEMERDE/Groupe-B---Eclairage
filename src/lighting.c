@@ -1,4 +1,4 @@
-#include "Lighting.h"
+#include "lighting.h"
 #include "main.h"
 #include "EXPANDER_MCP23017.h"
 #include <stdint.h>
@@ -17,6 +17,9 @@ extern volatile char Expander_flag;
  *  - BTN2 appuyé: éteint LAMP1
  *  - BTN1 appuyé: allume LAMP1
  */
+
+ //theoriquement on peut supprimer
+
 void Button_Light_Handler(void)
 {
     uint8_t current_button;

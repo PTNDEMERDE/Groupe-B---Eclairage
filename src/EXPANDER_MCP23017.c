@@ -7,53 +7,26 @@
 
 unsigned char Expander_Buffer[TWI_BUFFER_SIZE];
 
-unsigned char IOCON_CFG = 0b00101100; //0b00101100 
-
-unsigned char IODIRA_CFG = 0b00000000; // All GPIOA are outputs
-unsigned char IODIRB_CFG = 0b00001111; // GPIOB7-4 are inputs and GPIOB3-0 are outputs   //0b01110000
-
-unsigned char GPINTENB_CFG = 0b00001111; // Interrupts enables for GPIOB7-4
-
-
-unsigned char GPPUB_CFG = 0b00001111; // Enable pull-ups 
-
-// Configuration IOCON2 Register: Enable pull-ups and interrupt mirroring
-
-unsigned char DEFVALB_CFG = 0b00001111; // Default comparison value for interrupt on change
-unsigned char INTCONB_CFG = 0b11111111; // Compare against DEFVAL register for interrupt on change //0b11111111
+unsigned char IOCON_CFG 	= 0b00101100; // Sequential operation disabled, Slew rate disabled, Hardware address disabled, Enable INT pins as open-drain
+unsigned char IODIRA_CFG 	= 0b00000000; // All GPIOA are outputs
+unsigned char IODIRB_CFG 	= 0b00001111; // GPIOB7-4 are outputs and GPIOB3-0 are inputs
+unsigned char GPINTENB_CFG 	= 0b00001111; // Interrupts enables for GPIOB3-0
+unsigned char GPPUB_CFG 	= 0b00001111; // Enable pull-up for GPIOB3-0
+unsigned char DEFVALB_CFG 	= 0b00001111; // Default comparison value for interrupt on change
+unsigned char INTCONB_CFG 	= 0b11111111; // Compare against DEFVAL register for interrupt on change
 
 void  Expander_Init()
 {
 	Expander_Write(IOCON1, IOCON_CFG);
 	Expander_Write(IOCON2, IOCON_CFG);
-
 	Expander_Write(IODIRA, IODIRA_CFG);
 	Expander_Write(IODIRB, IODIRB_CFG);
-
-	// Activation des pull-up sur les entrées
-	Expander_Write(GPPUB, GPPUB_CFG); // Enable pull-ups on GPIOB7-4
-
-	Expander_Write(GPINTENB, GPINTENB_CFG); // Enable interrupts on GPIOB7-4
-	Expander_Write(DEFVALB, DEFVALB_CFG); // Set default comparison value for interrupt on change
-	Expander_Write(INTCONB, INTCONB_CFG); // Set interrupt control for GPIOB7-4
-	//Expander_Write(GPINTENB, GPINTENB_CFG); // Enable interrupts on GPIOB7-4
-
-	Expander_Write(GPIOA, 0b00000111); // Initialize GPIOA to 0x00
-	Expander_Write(GPIOB, 0b00000000); // Initialize GPIOB to
-/*
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA0,LOW); // LED Mode Automatique OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA1,LOW); // LED Mode Manuel OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA2,LOW); // LED Identification OFF
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA3,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA4,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA5,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA6,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOA,EXP_GPIOA7,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB0,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB1,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB2,LOW); // Output OFF.
-	Expander_Gpio_Ctrl(GPIOB,EXP_GPIOB3,LOW); // Output OFF.
-		*/
+	Expander_Write(GPPUB, GPPUB_CFG); 		
+	Expander_Write(GPINTENB, GPINTENB_CFG);	
+	Expander_Write(DEFVALB, DEFVALB_CFG); 	
+	Expander_Write(INTCONB, INTCONB_CFG); 	
+	Expander_Write(GPIOA, 0b00000111); 		// Initialize GPIOA to 0x07
+	Expander_Write(GPIOB, 0b00000000); 		// Initialize GPIOB to 0x00
 }
 
 void Expander_Write(unsigned char registerAddress,unsigned char dataToWrite)
@@ -86,9 +59,10 @@ unsigned char Expander_Read(unsigned char registerAddress)
 		return 0xFF; // ou autre valeur d'erreur
 	}
 	
-
 	return Expander_Buffer[1]; // L'octet utile est � l'index 1
 }
+
+//====================Ancienne version de la fonction========================
 /*
 void Expander_Gpio_Ctrl(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortState)
 {
@@ -107,6 +81,8 @@ void Expander_Gpio_Ctrl(unsigned char GPIOPort, unsigned char GPIOPin, unsigned 
 	Expander_Write(GPIOPort, currentState);
 }
 */
+
+//====================Réecriture de la fonction pour éviter de lire l'état physique des GPIO========================
 void Expander_Gpio_Ctrl_test(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortState)
 {
     unsigned char currentState;

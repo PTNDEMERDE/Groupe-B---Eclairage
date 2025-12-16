@@ -2,9 +2,12 @@
 #define __OS_H
 
 //Définit le nombre maximal de callback de type Chrono
-#define	MAX_CALLBACKS		15
+#define MAX_CALLBACKS	15
 //Définit le nombre maximal de bytes dans le buffer USART
-#define MAXBUFUSART0		4
+#define MAXBUFUSART0 	4
+
+#define ENTER_PRESSED       1
+#define ENTER_RELEASED      0
 
 // PROTOTYPE DES FONCTIONS EXTERNES
 //**********************************************************
