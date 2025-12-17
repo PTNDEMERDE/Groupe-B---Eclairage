@@ -25,7 +25,7 @@ void  Expander_Init()
 	Expander_Write(GPINTENB, GPINTENB_CFG);	
 	Expander_Write(DEFVALB, DEFVALB_CFG); 	
 	Expander_Write(INTCONB, INTCONB_CFG); 	
-	Expander_Write(GPIOA, 0b00000111); 		// Initialize GPIOA to 0x07
+	Expander_Write(GPIOA, 0b00000000); 		// Initialize GPIOA to 0x00
 	Expander_Write(GPIOB, 0b00000000); 		// Initialize GPIOB to 0x00
 }
 

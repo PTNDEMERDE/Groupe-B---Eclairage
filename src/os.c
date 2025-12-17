@@ -46,7 +46,7 @@ volatile uint8_t ButtonEvent = NONE;
 
 // Timer0
 volatile unsigned char Temps_appuis = 0; // variable ou a chaque interuption (1ms) on incrémante, jusqu'a 1000(1s) pour éteindre ou allumer la LED.
-									 // volatile car elle peut etre modifier ailleur dans le code.
+ // volatile car elle peut etre modifier ailleur dans le code.
 
 //Callback Chrono
 void (*My_CB[MAX_CALLBACKS])(void);
@@ -262,6 +262,8 @@ void OS_Start(void)
 			 }
 		 }
 
+		 Lamp_SRAM_Update(); // Met à jour les états des lampes selon la SRAM
+
 		 // ------------------- Interruption de L'EXPANDER MCP23017 -------------------
 		 current_button = Expander_Read(INTCAPB); // Lecture du registre d'état des boutons via l'expander
 
@@ -272,24 +274,24 @@ void OS_Start(void)
 
             if(!Is_BIT_SET(current_button,BTN4_PIN)){ // Vérifie si le bouton 4 est appuyé
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
-				cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
+				//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 				statebtn = 4;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Vérifie si le bouton 3 est appuyé
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
+				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
 				statebtn = 3;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Vérifie si le bouton 2 est appuyé
-				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
+				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //Callbacks_Remove_Timer(IDCB_Led);
 				//CLR_BIT(PORTD,PORTD7);
 				statebtn = 2;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Vérifie si le bouton 1 est appuyé
-				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
+				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
                 //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
 				statebtn = 1;  // Renvoie l'etat du bouton pour le "main.c"
@@ -425,7 +427,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
         case BTN_STATE_IDLE:	// si le bouton n'a eu acun appui
             if (button_raw == ENTER_PRESSED) 	// et vient d'être appuyé
             {
-				cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("interupt");sei();
+				//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("CASE_IDLE");sei();
 
                 btn_state = BTN_STATE_PRESSED;	// alors on passe à l'état appuyé
 
@@ -439,6 +441,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
         case BTN_STATE_PRESSED:					// si le bouton est appuyé
 			if (button_raw == ENTER_PRESSED)	// tant que le bouton reste appuyé
 			{
+				//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("CASE_PRESSED");sei();
 				press_time++;					// on incrémente le temps d'appui
 
 				if (press_time >= 2000)			// si le bouton est appuyé depuis 2 secondes
@@ -462,6 +465,8 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
         case BTN_STATE_WAIT_SECOND:			// état d'attente d'un second appui
             release_timer++;				// on incrémente le timer de relâchement
 
+			//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("CASE_WAIT_SECOND");sei();
+
             // DOUBLE PRESS
             if (button_raw == ENTER_PRESSED && release_timer < 1000)	// si le bouton est appuyé de nouveau et avant 500ms
 			{
@@ -483,6 +488,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
 			// Après un double ou long appui, on ignore le relâchement pour éviter de générer un short press
 		case BTN_STATE_IGNORE_RELEASE:
 			// On attend uniquement que le bouton soit relâché
+			//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("CASE_IGNORE_RELEASE");sei();
 			if (button_raw == ENTER_RELEASED)
 			{
 				btn_state = BTN_STATE_IDLE;
@@ -490,4 +496,5 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
 		break;
 
     }
+
 }

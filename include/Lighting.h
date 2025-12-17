@@ -31,5 +31,6 @@
 
 // Function prototypes
 void Button_Light_Handler(void);
+void Lamp_SRAM_Update(void);
 
 #endif /* LIGHTING_H_ */
