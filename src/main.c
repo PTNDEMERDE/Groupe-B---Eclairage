@@ -114,30 +114,7 @@ char Light_Switch(char input)
     // 2) attendre 1 tick OS avant de changer la LED
     IDCB_Light_Switch_finalize = Callbacks_Record_Timer(Light_Switch_Finalize, 1);
 
-//	TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
-/*
-	if( ??? = 100 ) // si en plein jour
-	{
-		TOGGLE_IO(PORTD,PORTD7); // Toggle LED on PB0
 
-	}else if  ( ??? = 80)	// si de 18h à 21h ou de 6h à 9h
-	{
-
-		value_dim = 8;
-
-		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
-		IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim);
-
-
-	}else if ( ??? = 60)	// si de 21h à 6h
-	{
-
-		value_dim = 6;
-		IDCB_PWM_DIM = Callbacks_Remove_Timer(IDCB_PWM_DIM);
-		IDCB_PWM_DIM = Callbacks_Record_Timer(Switch_LED_DIM, value_dim);
-
-	}
-*/	
 	return ST_TXT_START;
 }
 
@@ -154,13 +131,13 @@ void Light_Switch_Finalize(void)
 	case 1 :
 		if(SRAM_Read(LAMP1_Address) == FALSE)// si LAMP1 est eteinte
 		{ 
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp1 on");sei();
 			LAMP1_State = TRUE;
 			LAMP1WRITE; // sauvegarde état on dans SRAM
 		}
 		else if (SRAM_Read(LAMP1_Address) == TRUE)
 		{
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp1 off");sei();
 			LAMP1_State = FALSE;
 			LAMP1WRITE; // sauvegarde état éteint dans SRAM
 		}
@@ -175,7 +152,7 @@ void Light_Switch_Finalize(void)
 				LAMP2_State = FALSE;
 				LAMP2WRITE;
 			}else
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp2 on");sei();
 			LAMP2_State = TRUE;
 			LAMP2WRITE; // sauvegarde état on dans SRAM
 			}
@@ -186,7 +163,7 @@ void Light_Switch_Finalize(void)
 				LAMP2_PWM_State = FALSE;
 				LAMP2_PWM_WRITE;
 			}
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp2 off");sei();
 			LAMP2_State = FALSE;
 			//LAMP2_PWM_State = FALSE;
 			// sauvegarde état éteint dans SRAM
@@ -198,13 +175,13 @@ void Light_Switch_Finalize(void)
 
 		if(SRAM_Read(LAMP3_Address) == FALSE)// si LAMP3 est eteinte
 		{ 
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp3 on");sei();
 			LAMP3_State = TRUE;
 			LAMP3WRITE; // sauvegarde état on dans SRAM
 		}
 		else if (SRAM_Read(LAMP3_Address) == TRUE)
 		{
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp3 off");sei();
 			LAMP3_State = FALSE;
 			LAMP3WRITE; // sauvegarde état éteint dans SRAM
 		}
@@ -213,13 +190,13 @@ void Light_Switch_Finalize(void)
 
 		if(SRAM_Read(LAMP4_Address) == FALSE)// si LAMP4 est allumé
 		{
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("on");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp4 on");sei();
 			LAMP4_State = TRUE;
 			LAMP4WRITE; // sauvegarde état on dans SRAM
 		}
 		else if (SRAM_Read(LAMP4_Address) == TRUE)
 		{
-			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("off");sei();
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp4 off");sei();
 			LAMP4_State = FALSE;
 			LAMP4WRITE; // sauvegarde état éteint dans SRAM
 		}
@@ -407,10 +384,14 @@ void Auto_PWM_Control(void)
 	if (IDCB_PWM_ON != 0) return;
 
 	unsigned char auto_en = LAMP2_PWM_AUTO_READ; // 0 = disabled, non-zero = enabled
-	unsigned char pwm_percent = LAMP2_PWM_VALUE_READ; // expected 0..100
-
-	if (auto_en == TRUE)
+	unsigned char pwm_percent = LAMP2_PWM_Value; // expected 0..100
+	//char buffer[10];
+	
+		if (auto_en == TRUE)
 	{
+
+		//cli();lcd_gotoxy(1,1);lcd_puts(itoa(LAMP2_PWM_Value,buffer,10));sei();
+
 		if (pwm_percent > 100) pwm_percent = 100;
 
 		if (pwm_percent == 0)

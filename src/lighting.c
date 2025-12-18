@@ -13,9 +13,20 @@ void Lamp_SRAM_Update(void)
     if (LAMP3READ == FALSE)LAMP3_OFF;
     if (LAMP4READ == TRUE)LAMP4_ON;
     if (LAMP4READ == FALSE)LAMP4_OFF;
-    if (LAMP2READ == TRUE && LAMP2_PWM_READ == FALSE)LAMP2_ON;
+    if (LAMP2READ == TRUE && LAMP2_PWM_READ == FALSE)
+        {
+            if (LAMP2_PWM_AUTO_READ == TRUE) // Si le mode auto est activé,on rallume la lampe en mode auto en appeleant la fonction Auto_PWM_Control
+            {
+                Auto_PWM_Control();
+                return;
+            }
+            LAMP2_ON;
+        }
     if (LAMP2READ == FALSE && LAMP2_PWM_READ == FALSE)LAMP2_OFF;
-    //if (LAMP2READ == TRUE && LAMP2_PWM_READ == TRUE); // Si le mode PWM est actif, on n'agit pas sur la lampe ici
-    //if (LAMP2READ == FALSE && LAMP2_PWM_READ == TRUE); // Si le mode PWM est actif, on n'agit pas sur la lampe ici
+
+//===========================================PEUT-ETRE METTRE ICI LA VALEUR RECUPERRER PAR MATTEO POUR LE PWM============================
+
+//LAMP2_PWM_Value = Matteo_le_bg_value;
+//LAMP2_PWM_WRITE;
 
 }

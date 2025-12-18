@@ -29,7 +29,7 @@ extern unsigned char RTC_State;
 extern unsigned char LAMP2_PWM_Value;
 extern unsigned char LAMP2_PWM_Auto_State;
 
-// DEFINITIONS DES MACROS POUR SAUVEGARDER LES VARIABLES EN SRAM
+// DEFINITIONS DES MACROS POUR ECRIRE ET LIRE LES VARIABLES EN SRAM
 
 #define LAMP1WRITE              SRAM_Write(LAMP1_Address, LAMP1_State)
 #define LAMP2WRITE              SRAM_Write(LAMP2_Address, LAMP2_State)

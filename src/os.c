@@ -174,6 +174,11 @@ void OS_Start(void)
 	statetext = Txt_START;
 	pStateFunc = NULL;
 
+
+//===============================================================ECRIRE ICI LA VALEUR PAR DEFAUT POUR LE PWM============
+	LAMP2_PWM_Value = 50;
+	LAMP2_PWM_WRITE;
+
 	// On autorise toutes les interruptions
  	sei();  
 
