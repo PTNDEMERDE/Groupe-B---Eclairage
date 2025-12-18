@@ -33,6 +33,7 @@ unsigned char IDCB_Switch_LED_DIM_ON = 0;
 unsigned char IDCB_Switch_LED_DIM_OFF = 0;
 
 unsigned char IDCB_Led = 0;
+unsigned char IDCB_AUTO_PWM = 0;
 
 //unsigned char current_button = NONE;
 extern volatile char statebtn;
@@ -45,6 +46,7 @@ extern volatile uint16_t debounce_timer;
 #define ENTER_RELEASED 0
 
 //****************** fonction principale *****************
+
 int main (void)
 {
  	// Initialisation hardware 
@@ -59,10 +61,27 @@ int main (void)
 	SRAM_Init();            // Initialisation SRAM externe 23LC1024
 	SRAM_Save_All(); // Sauvegarde toutes les lampes éteintes dans la SRAM
 
+	// Initialize manual PWM period from SRAM-stored percent (if any)
+	{
+	    unsigned char stored_percent = LAMP2_PWM_VALUE_READ;
+	    if (stored_percent > 0 && stored_percent <= 100)
+	    {
+	        // map percent to period: period = 100 - percent + 1
+	        unsigned char period = (unsigned char)(100 - stored_percent + 1);
+	        if (period < 1) period = 1;
+	        value_dim = (int)period;
+	    }
+	}
+
 	//Timer1_Init_Microtimer();
 	// Initialisation des Callbacks
 	OS_Init();
  	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); //5000*100us=500ms
+	
+	
+	IDCB_AUTO_PWM = Callbacks_Record_Timer(Auto_PWM_Control, 1000);// Auto PWM controller checks SRAM value and adjusts PWM periodically (100ms)
+
+
 	//Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 
 
@@ -233,17 +252,30 @@ void Stop_PWM_DIM(void)
     // Il faut attendre un tick OS avant de faire ON ou OFF.
 }
 
-char Light_All_Off(char input)
+char Double_Push_Action(char input)
 {
-    Usart0_Tx_String("All Off\r\n");
-
-    Stop_PWM_DIM();  // on arrête le PWM proprement
+    if (statebtn == 1 || statebtn == 3 || statebtn == 4) {
+	Stop_PWM_DIM();  // on arrête le PWM proprement
 
     // IMPORTANT : ne pas allumer/éteindre dans la même fonction !
     // => On demande un traitement au prochain tick OS.
     IDCB_Light_All_Off_Finalize = Callbacks_Record_Timer(Light_All_Off_Finalize, 1);
 
+	}else if (statebtn == 2) { //Si on a un double appuis sur le bouton 2, on active ou désactive le mode RTC
+
+		if (LAMP2_PWM_AUTO_READ == TRUE) {
+			LAMP2_PWM_Auto_State = FALSE;
+			LAMP2_PWM_AUTO_WRITE;
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("AUTO OFF");sei();
+		}else if (LAMP2_PWM_AUTO_READ == FALSE) {
+			LAMP2_PWM_Auto_State = TRUE;
+			LAMP2_PWM_AUTO_WRITE;
+			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("AUTO ON");sei();
+		}
+	}
+
     return ST_TXT_START;
+
 }
 
 void Light_All_Off_Finalize(void) // au tick suivant sinon conflit avec Stop_PWM_DIM
@@ -348,7 +380,70 @@ void PWM_update(void){ //toute les millisecondes
 	}
 
 	value_dim = (int)value_dim_float;
+
+	// Save the resulting dim percent back to SRAM so manual setting persists
+	{
+		unsigned int vd = (unsigned int)value_dim; // period
+		unsigned char percent = 0;
+		if (vd >= 1 && vd <= 200)
+		{
+			int p = 101 - (int)vd; // inverse mapping of period -> percent
+			if (p < 0) p = 0;
+			if (p > 100) p = 100;
+			percent = (unsigned char)p;
+		}
+		LAMP2_PWM_Value = percent;
+		LAMP2_PWM_VALUE_WRITE;
+	}
 	
+}
+
+// Automatic PWM controller: reads desired PWM percent from SRAM and
+// sets the dimming period accordingly. If auto-flag in SRAM is disabled,
+// this function does nothing and manual dimming remains in effect.
+void Auto_PWM_Control(void)
+{
+	// Do not interfere when trimming is active
+	if (IDCB_PWM_ON != 0) return;
+
+	unsigned char auto_en = LAMP2_PWM_AUTO_READ; // 0 = disabled, non-zero = enabled
+	unsigned char pwm_percent = LAMP2_PWM_VALUE_READ; // expected 0..100
+
+	if (auto_en == TRUE)
+	{
+		if (pwm_percent > 100) pwm_percent = 100;
+
+		if (pwm_percent == 0)
+		{
+			// Turn lamp off and disable PWM callbacks
+			Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
+			Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
+			IDCB_Switch_LED_DIM_ON = 0;
+			IDCB_Switch_LED_DIM_OFF = 0;
+			LAMP2_OFF;
+			LAMP2_State = FALSE;
+			LAMP2WRITE;
+		}
+		else
+		{
+			// Map percent (1..100 -> period 1..100) so higher percent => smaller period => brighter
+			unsigned char target_period = (unsigned char)(100 - pwm_percent + 1);
+			if (target_period < 1) target_period = 1;
+			if (target_period > 200) target_period = 200; // safety cap
+
+			// If not already running or period changed, (re)program the DIM callback
+			if (IDCB_Switch_LED_DIM_ON == 0 || value_dim != (int)target_period)
+			{
+				value_dim = (int)target_period;
+				Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
+				IDCB_Switch_LED_DIM_ON = Callbacks_Record_Timer(Switch_LED_DIM_ON, value_dim);
+			}
+			// Ensure lamp state flagged as PWM on
+			LAMP2_State = TRUE;
+			LAMP2WRITE;
+		}
+	}
+	// else: auto disabled -> do nothing (manual dim still works)
 }
 
 

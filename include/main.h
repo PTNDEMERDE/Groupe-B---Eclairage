@@ -38,7 +38,8 @@ void Switch_LED(void);	// callback timer --> cligotement de la LED
 char Light_Switch(char input);
 void Light_Switch_Finalize(void);
 
-char Light_All_Off(char input);
+//char Light_All_Off(char input);
+char Double_Push_Action(char input);
 void Light_All_Off_Finalize(void);
 
 void Stop_PWM_DIM(void);
@@ -48,6 +49,8 @@ void PWM_update(void);
 
 void Switch_LED_DIM_ON(void);
 void Switch_LED_DIM_OFF(void);
+
+void Auto_PWM_Control(void);
 
 //AUTRES
 

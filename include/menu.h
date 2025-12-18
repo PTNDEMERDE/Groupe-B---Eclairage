@@ -47,7 +47,7 @@ const MENU_STATE Menu_State[] PROGMEM = {
 
     {ST_TXT_START,				        Txt_START,	  		        NULL},
     {ST_TXT_SWITCH,				        Txt_Switch,	  		        Light_Switch},
-    {ST_TXT_ALL_OFF,				    Txt_All_off,	            Light_All_Off},
+    {ST_TXT_ALL_OFF,				    Txt_All_off,	            Double_Push_Action},
     {ST_TXT_T_UP,				        Txt_T_up,	  		        Light_Trimming_Up},
     {ST_TXT_OFF_ON,				        NULL,   	  		        NULL},
 	

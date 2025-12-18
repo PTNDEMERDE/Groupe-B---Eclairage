@@ -15,6 +15,7 @@
 #define LAMP_All_PWM_Address        0x14
 #define RTC_Address                 0x18
 #define LAMP2_PWM_Value_Address     0x1C
+#define LAMP2_PWM_AUTO_Address      0x20
 
 // DECLARATION DES VARIABLES A SAUVEGARDER EN SRAM
 
@@ -26,6 +27,7 @@ extern unsigned char LAMP2_PWM_State;
 extern unsigned char LAMP_All_PWM_State;
 extern unsigned char RTC_State;
 extern unsigned char LAMP2_PWM_Value;
+extern unsigned char LAMP2_PWM_Auto_State;
 
 // DEFINITIONS DES MACROS POUR SAUVEGARDER LES VARIABLES EN SRAM
 
@@ -37,6 +39,7 @@ extern unsigned char LAMP2_PWM_Value;
 #define LAMP_All_PWM_WRITE      SRAM_Write(LAMP_All_PWM_Address, LAMP_All_PWM_State)
 #define RTCWRITE                SRAM_Write(RTC_Address, RTC_State)
 #define LAMP2_PWM_VALUE_WRITE   SRAM_Write(LAMP2_PWM_Value_Address, LAMP2_PWM_Value)
+#define LAMP2_PWM_AUTO_WRITE    SRAM_Write(LAMP2_PWM_AUTO_Address, LAMP2_PWM_Auto_State)
 
 #define LAMP1READ               SRAM_Read(LAMP1_Address)
 #define LAMP2READ               SRAM_Read(LAMP2_Address)
@@ -46,6 +49,7 @@ extern unsigned char LAMP2_PWM_Value;
 #define LAMP_All_PWM_READ       SRAM_Read(LAMP_All_PWM_Address)
 #define RTCREAD                 SRAM_Read(RTC_Address)
 #define LAMP2_PWM_VALUE_READ    SRAM_Read(LAMP2_PWM_Value_Address)
+#define LAMP2_PWM_AUTO_READ     SRAM_Read(LAMP2_PWM_AUTO_Address)
 
 
 

@@ -11,6 +11,8 @@ unsigned char LAMP4_State           = FALSE;
 unsigned char LAMP2_PWM_State       = FALSE;
 unsigned char LAMP_All_PWM_State    = FALSE;
 unsigned char RTC_State             = FALSE;
+unsigned char LAMP2_PWM_Value       = 0;
+unsigned char LAMP2_PWM_Auto_State  = FALSE;
 
 void SRAM_Save_All(void){
 
@@ -21,6 +23,8 @@ void SRAM_Save_All(void){
     LAMP2_PWM_WRITE;
     LAMP_All_PWM_WRITE;
     RTCWRITE;
+    LAMP2_PWM_VALUE_WRITE;
+    LAMP2_PWM_AUTO_WRITE;
 
 }
 
