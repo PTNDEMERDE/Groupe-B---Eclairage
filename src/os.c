@@ -64,6 +64,8 @@ volatile unsigned char idxbuf_USART0 = 0;
 volatile unsigned char Button;
 volatile unsigned char IDCB_BTN_HANDLER = 0;
 
+volatile unsigned char IDCB_Lamp_SRAM_Update = 0;
+
 //Variables pour la machine d'états
 unsigned char state;  // holds the current state, according to "menu.h"
 char Message_LCD[17];
@@ -184,12 +186,15 @@ void OS_Start(void)
 
 	Expander_Init(); // Initialisation de l'expander MCP23017
 
-	
+	IDCB_Lamp_SRAM_Update = Callbacks_Record_Timer(Lamp_SRAM_Update, 50); // callback chaque 100 ms pour mettre à jour les lampes selon la SRAM
 
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais
 	 while(1)
  	 {
+
+		// Lamp_SRAM_Update(); // Met à jour les états des lampes selon la SRAM
+
   		 // Check les conditions pour rappeler les fonctions liées au temps 
   		 for (idx = 0; idx < MAX_CALLBACKS; idx++)
     	 {
@@ -267,7 +272,7 @@ void OS_Start(void)
 			 }
 		 }
 
-		 Lamp_SRAM_Update(); // Met à jour les états des lampes selon la SRAM
+		
 
 		 // ------------------- Interruption de L'EXPANDER MCP23017 -------------------
 		 current_button = Expander_Read(INTCAPB); // Lecture du registre d'état des boutons via l'expander

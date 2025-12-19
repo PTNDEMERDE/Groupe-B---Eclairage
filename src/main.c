@@ -26,6 +26,12 @@
 unsigned char IDCB_Light_Switch_finalize = 0;
 unsigned char IDCB_Light_All_Off_Finalize = 0;
 
+unsigned char IDCB_Auto_PWM_control = 0;
+
+unsigned char IDCB_test= 0;
+
+extern volatile unsigned char IDCB_Lamp_SRAM_Update;
+
 unsigned char IDCB_PWM_ON = 0;
 extern unsigned char IDCB_BTN_HANDLER;
 unsigned char IDCB_Switch_LED_DIM_ON = 0;
@@ -110,11 +116,12 @@ char Light_Switch(char input)
 	Usart0_Tx_String("Switch Light\r\n");
 
     // 1) arrêter proprement le PWM
-    Stop_PWM_DIM();
-
+	if (statebtn == 2){ // Si on est en mode dimming
+		Stop_PWM_DIM();
+	}
+    
     // 2) attendre 1 tick OS avant de changer la LED
     IDCB_Light_Switch_finalize = Callbacks_Record_Timer(Light_Switch_Finalize, 1);
-
 
 	return ST_TXT_START;
 }
@@ -158,18 +165,19 @@ void Light_Switch_Finalize(void)
 			LAMP2WRITE; // sauvegarde état on dans SRAM
 			}
 		else if ((SRAM_Read(LAMP2_Address) == TRUE) /*|| */)
-		{
+		{ 
 			if (LAMP2_PWM_READ == TRUE)
 			{
 				LAMP2_PWM_State = FALSE;
 				LAMP2_PWM_WRITE;
 			}
+			
 			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp2 off");sei();
+			
 			LAMP2_State = FALSE;
-			//LAMP2_PWM_State = FALSE;
 			// sauvegarde état éteint dans SRAM
 			LAMP2WRITE;
-			//LAMP2_PWM_SRAM;
+			LAMP2_OFF; //obligé de forcer la valeur ici à 0
 		}
 		break;
 	case 3 :
@@ -205,10 +213,12 @@ void Light_Switch_Finalize(void)
 	default:
 		break;
 	}
-	statebtn = 0;
-	Callbacks_Remove_Timer(IDCB_Light_Switch_finalize);
+
 	debounce_timer = 0; 
 	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
+	statebtn = 0;
+	Callbacks_Remove_Timer(IDCB_Light_Switch_finalize);
+
 }
 
 
@@ -232,25 +242,44 @@ void Stop_PWM_DIM(void)
 
 char Double_Push_Action(char input)
 {
-    if (statebtn == 1 || statebtn == 3 || statebtn == 4) {
+    if (statebtn == 1 || statebtn == 2 || statebtn == 3) {
 	Stop_PWM_DIM();  // on arrête le PWM proprement
-
+	//LAMP2_OFF;
     // IMPORTANT : ne pas allumer/éteindre dans la même fonction !
     // => On demande un traitement au prochain tick OS.
     IDCB_Light_All_Off_Finalize = Callbacks_Record_Timer(Light_All_Off_Finalize, 1);
 
-	}else if (statebtn == 2) { //Si on a un double appuis sur le bouton 2, on active ou désactive le mode RTC
+	}else if (statebtn == 4) { //Si on a un double appuis sur le bouton 2, on active ou désactive le mode RTC
 
-		if (LAMP2_PWM_AUTO_READ == TRUE) {
+		if (LAMP2_PWM_AUTO_READ == TRUE && LAMP2_PWM_READ == FALSE) {
+			
+			Stop_PWM_DIM();
+			Callbacks_Remove_Timer(IDCB_PWM_ON);
+			
+
 			LAMP2_PWM_Auto_State = FALSE;
 			LAMP2_PWM_AUTO_WRITE;
+			LAMP2_State = TRUE;
+			LAMP2WRITE;
+
 			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("AUTO OFF");sei();
-		}else if (LAMP2_PWM_AUTO_READ == FALSE) {
+		}
+		else if (LAMP2_PWM_AUTO_READ == FALSE && LAMP2_PWM_READ == FALSE) {
+
+
 			LAMP2_PWM_Auto_State = TRUE;
 			LAMP2_PWM_AUTO_WRITE;
+			
+			LAMP2_State = TRUE;
+			LAMP2WRITE;
+		
 			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("AUTO ON");sei();
 		}
 	}
+
+	statebtn = 0;
+	debounce_timer = 0; 
+	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
 
     return ST_TXT_START;
 
@@ -259,32 +288,41 @@ char Double_Push_Action(char input)
 void Light_All_Off_Finalize(void) // au tick suivant sinon conflit avec Stop_PWM_DIM
 {
 	cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("All OFF");sei();
-	/*
-    CLR_BIT(PORTD, PORTD7);   // LED OFF définitif
-	for (int i=???;i<=???;i++){
-		//SRAM_Write(i, FALSE); // sauvegarde état éteint dans SRAM
-	}*/	
 
+	
 	LAMP1_State = FALSE;
 	LAMP2_State = FALSE;
 	LAMP3_State = FALSE;
 	LAMP4_State = FALSE;
+	LAMP2_PWM_State = FALSE;
+	
+	LAMP1WRITE;
+    LAMP2WRITE;
+    LAMP3WRITE;
+    LAMP4WRITE;
+    LAMP2_PWM_WRITE;
+   // LAMP_All_PWM_WRITE;
+   // RTCWRITE;
+   // LAMP2_PWM_VALUE_WRITE;
+    //LAMP2_PWM_AUTO_WRITE;
 
 	// Sauvegarde des états dans SRAM
-	SRAM_Save_All();
+	//SRAM_Save_All();
 
 	Callbacks_Remove_Timer(IDCB_Light_All_Off_Finalize);
-	debounce_timer = 0; 
-	Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
+
 }
 
 
 char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 {
 	
-	if (statebtn != 2){ // si on n'est pas sur la lampe 2, on ne fait rien
+	if (statebtn != 2 || LAMP2_PWM_AUTO_READ == TRUE){ // si on n'est pas sur la lampe 2, on ne fait rien
 		return ST_TXT_START;
+		debounce_timer = 0; 
+		Callbacks_Remove_Timer(IDCB_BTN_HANDLER);
 	}
+
     static unsigned char first_time = TRUE;
 
 	// lors du premier passage et si c'est le bouton 2, on lance une calleback qui va augmenter 
@@ -382,7 +420,8 @@ void PWM_update(void){ //toute les millisecondes
 void Auto_PWM_Control(void)
 {
 	// Do not interfere when trimming is active
-	if (IDCB_PWM_ON != 0) return;
+	//if (IDCB_PWM_ON != 0) return;
+
 
 	unsigned char auto_en = LAMP2_PWM_AUTO_READ; // 0 = disabled, non-zero = enabled
 	unsigned char pwm_percent = LAMP2_PWM_Value; // expected 0..100
@@ -421,11 +460,12 @@ void Auto_PWM_Control(void)
 				IDCB_Switch_LED_DIM_ON = Callbacks_Record_Timer(Switch_LED_DIM_ON, value_dim);
 			}
 			// Ensure lamp state flagged as PWM on
-			LAMP2_State = TRUE;
-			LAMP2WRITE;
+			//LAMP2_State = TRUE;
+			//LAMP2WRITE;
 		}
 	}
 	// else: auto disabled -> do nothing (manual dim still works)
+	
 }
 
 
