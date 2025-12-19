@@ -275,30 +275,20 @@ void OS_Start(void)
 		 // Vérification du flag d'interruption
          if (Expander_flag){
 
-            ////////////////debug via usart registre interrupt
-
             if(!Is_BIT_SET(current_button,BTN4_PIN)){ // Vérifie si le bouton 4 est appuyé
-                //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
-				//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("BTN4");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
 				statebtn = 4;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN3_PIN)){ // Vérifie si le bouton 3 est appuyé
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN3");sei();
 				statebtn = 3;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN2_PIN)){ // Vérifie si le bouton 2 est appuyé
-				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN2");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-                //Callbacks_Remove_Timer(IDCB_Led);
-				//CLR_BIT(PORTD,PORTD7);
 				statebtn = 2;  // Renvoie l'etat du bouton pour le "main.c"
              }
             else if(!Is_BIT_SET(current_button,BTN1_PIN)){ // Vérifie si le bouton 1 est appuyé
-				//cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("BTN1");sei();
 				IDCB_BTN_HANDLER=Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement
-                //IDCB_Led = Callbacks_Record_Timer(Switch_LED, 500);
 				statebtn = 1;  // Renvoie l'etat du bouton pour le "main.c"
              }
 
@@ -332,29 +322,7 @@ unsigned char StateMachine(char state, unsigned char stimuli)
 	return nextstate;
 }
 
-    
 
-// ******************
-// INTERRUPTION TIMER
-// ******************
-/*
-ISR(TIMER0_OVF_vect)
-{
-	// Ajourner tous les TICKS
-	unsigned char Int_Counter;
-  	for (Int_Counter = 0; Int_Counter < MAX_CALLBACKS; Int_Counter++)
-	{
-		Tick_CB[Int_Counter]++;
-	}
-	#if F_CPU == 1000000UL
-		TCNT0 = 131;
-	#elif F_CPU == 8000000UL
-		TCNT0 = 131;
-	#elif F_CPU == 16000000UL
-		TCNT0 = 6;
-	#endif
-}
-*/
 
 ISR(TIMER0_COMPA_vect)
 {

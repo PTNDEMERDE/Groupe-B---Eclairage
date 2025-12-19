@@ -8,7 +8,6 @@
 #include "timer.h"
 #include "usart.h"  // for debug
 #include "lcd.h"
-#include "adc.h"
 #include "ftoa.h"
 #include "spi.h"
 #include "i2c_master.h"
@@ -103,6 +102,8 @@ void Switch_LED(void)
 	TOGGLE_IO(PORTD,PORTD7);
 }
 
+
+
 char Light_Switch(char input)
 {
 	//static unsigned char ??? = 100; 
@@ -120,7 +121,7 @@ char Light_Switch(char input)
 
 void Light_Switch_Finalize(void)
 {
-   // TOGGLE_IO(PORTD,PORTD7);  // enfin le toggle sans PWM interférant
+
 	cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("switch");sei();
 
 	switch (statebtn)
@@ -280,19 +281,19 @@ void Light_All_Off_Finalize(void) // au tick suivant sinon conflit avec Stop_PWM
 
 char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
 {
-
+	
 	if (statebtn != 2){ // si on n'est pas sur la lampe 2, on ne fait rien
 		return ST_TXT_START;
 	}
     static unsigned char first_time = TRUE;
-   // static uint16_t tick = 0; // uint16_t pour pouvoir compter jusqu'à 500+
 
+	// lors du premier passage et si c'est le bouton 2, on lance une calleback qui va augmenter 
+	// le période du PWM toute les 0.5s
     if (first_time)
     {
         Usart0_Tx_String("Trimming up\r\n");
         first_time = FALSE;
-		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 5000); // 10000*100us=1s
-		//tick = 0;
+		IDCB_PWM_ON = Callbacks_Record_Timer(PWM_update, 5000); // 5000*100us=500ms
 
 		// Met à jour l'état PWM dans la SRAM
 		LAMP2_State = TRUE;
@@ -303,12 +304,12 @@ char Light_Trimming_Up(char input) //apres 2s d'appuis longi sur le bouton
     }
 
     // Si le bouton est relâché --> retour
+	// on arrête la callback d'augmentation du PWM mais on ne touche pas à sa valeur
+	// la led dimme toujours
     if (button_raw == ENTER_RELEASED)
     {
         first_time = TRUE;
-        //tick = 0;
 		Callbacks_Remove_Timer(IDCB_PWM_ON);
-		//IDCB_PWM_OFF_DIM = Callbacks_Remove_Timer(IDCB_PWM_OFF_DIM); // arrêter cette callback
 		Usart0_Tx_String("ARRET_PWM"); Usart0_Tx(0X0D);
 
 		debounce_timer = 0; 
@@ -428,11 +429,12 @@ void Auto_PWM_Control(void)
 }
 
 
+//////////////////////////
+// PWM DIMMING CALLBACKS -> allumer la LED pendant 100µs puis l'éteint pendant value_dim (en secondes) - 100µs 
+// ///////////////////////
 void Switch_LED_DIM_ON(void)
 {    
-
-	LAMP2_ON;
-
+	LAMP2_ON; 
     // Empêche un ancien OFF de couper la LED
     Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
 
@@ -446,7 +448,7 @@ void Switch_LED_DIM_OFF(void)
     // Supprime ce callback (anti-répétition)
     Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_OFF);
 }
-
+///////////////////////////
 
 
 
