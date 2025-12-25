@@ -12,7 +12,7 @@
 
 //PROTOTYPE FONCTIONS INTERNES
 
-
+//creation d'un timer de 100µs en mode CTC
 void Timer0_Init_100us(void)
 {
     TCCR0A = 0;
