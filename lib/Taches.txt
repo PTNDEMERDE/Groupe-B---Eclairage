@@ -18,7 +18,10 @@ GPB1 	 -->	LED2(PWM)
 GPB2 	 -->	LED3
 GPB3 	 -->	LED4
 GPB4 	 -->	BTN1	--> LED1
-GPB5 	 -->	BTN2	--> LED2(PWM)
-GPB6  	 -->	BTN3	--> 2x Eteint
-GPB7	 -->	BTN4	--> 2x ACT/DESACT RTC fonction
+GPB5 	 -->	BTN2	--> LED2 + long = PWM LED2
+GPB6  	 -->	BTN3	--> LED3
+GPB7	 -->	BTN4	--> LED4 + 2x ACT/DESACT RTC fonction sur LED2
 
+2x n'importe quel bouton éteint toute (sauf BTN4)
+quand on est en PWM si on éteint, ne revient pas en PWM après
+quand on est en mode auto(RTC), si on éteint, on revient en mode auto après
