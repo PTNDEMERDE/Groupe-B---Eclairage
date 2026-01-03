@@ -7,7 +7,7 @@
 #include "lcd.h"
 #include "os.h"
 
-extern unsigned char IDCB_Auto_PWM_control;
+//extern unsigned char IDCB_Auto_PWM_control;
 char first_time_auto_pwm = TRUE;
 
 void Lamp_SRAM_Update(void)

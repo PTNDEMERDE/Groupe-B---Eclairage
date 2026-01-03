@@ -78,7 +78,7 @@ int main (void)
  	IDCB_Led = Callbacks_Record_Timer(Switch_LED, 5000); // changer l'état de la led test (5000*100us=500ms)
 	
 	
-	IDCB_Auto_PWM_control = Callbacks_Record_Timer(Auto_PWM_Control, 1000);// Auto PWM controller checks SRAM value and adjusts PWM periodically (100ms)
+//	IDCB_Auto_PWM_control = Callbacks_Record_Timer(Auto_PWM_Control, 1000);// Auto PWM controller checks SRAM value and adjusts PWM periodically (100ms)
 
 
 	//Callbacks_Record_Timer(Button_Handler, 10); // callback chaque 1 ms qui analyse l'état du bouton pour générer un événement

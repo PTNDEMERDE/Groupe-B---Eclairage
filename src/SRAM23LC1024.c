@@ -23,7 +23,7 @@ void SRAM_Init(void){
 	
 	SRAM_ON;
 	SPI_MasterTransmit(SRAM_WRITE_REG);
-	SPI_MasterTransmit(ByteMode); 
+	SPI_MasterTransmit(ByteMode); // on selectionne le mode qu'on veut pour la lecture et l'écriture de la SRAM (ici mode byte)
 	SRAM_OFF;
 
 	return;
