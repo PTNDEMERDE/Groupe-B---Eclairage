@@ -15,6 +15,23 @@ unsigned char GPPUB_CFG 	= 0b00001111; // Enable pull-up for GPIOB3-0
 unsigned char DEFVALB_CFG 	= 0b00001111; // Default comparison value for interrupt on change
 unsigned char INTCONB_CFG 	= 0b11111111; // Compare against DEFVAL register for interrupt on change
 
+/**
+ * Expander_Init()
+ * 
+ * Initializes the MCP23017 I/O expander chip.
+ * Configures both 8-bit GPIO ports (PORTA and PORTB) with their respective
+ * control registers, interrupt settings, and pull-up resistors.
+ * 
+ * Configuration applied:
+ * - IOCON1/IOCON2: Enables sequential operation mode, disables slew rate control
+ * - IODIRA: Sets all GPIOA pins as outputs (0x00)
+ * - IODIRB: Sets GPIOB pins 3-0 as inputs, 7-4 as outputs
+ * - GPPUB: Enables pull-up resistors for GPIOB pins 3-0 (buttons)
+ * - GPINTENB: Enables interrupt-on-change for GPIOB pins 3-0
+ * - DEFVALB: Default comparison register for interrupt detection (0x0F)
+ * - INTCONB: Compare pin state against DEFVAL register
+ * - GPIOA/GPIOB: Initialize all GPIO outputs to LOW (0x00)
+ */
 void  Expander_Init()
 {
 	Expander_Write(IOCON1, IOCON_CFG);
@@ -29,6 +46,24 @@ void  Expander_Init()
 	Expander_Write(GPIOB, 0b00000000); 		// Initialize GPIOB to 0x00
 }
 
+/**
+ * Expander_Write()
+ * 
+ * Writes a single byte to a specified register in the MCP23017 I/O expander.
+ * Uses the TWI (I2C) interface to communicate with the chip.
+ * 
+ * Parameters:
+ *   - registerAddress: The MCP23017 register address to write to (e.g., GPIOA, GPIOB, IOCON1)
+ *   - dataToWrite: The 8-bit value to write into the register
+ * 
+ * Operation:
+ *   1. Prepares the I2C transmission buffer with:
+ *      - Byte 0: EXPANDER_W_CTRL_BYTE (I2C control byte with write bit set)
+ *      - Byte 1: Target register address
+ *      - Byte 2: Data to write
+ *   2. Initiates TWI transmission of 3 bytes
+ *   3. Blocks until TWI transmission is complete
+ */
 void Expander_Write(unsigned char registerAddress,unsigned char dataToWrite)
 {
 	

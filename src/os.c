@@ -11,21 +11,39 @@
 #include "lighting.h"
 #include "SRAM23LC1024.h"
 #include "SRAMConf.h"
+/** Global variables
+ *  Button handling:
+ *  - `button_raw` stores the raw physical state (1=pressed, 0=released) sampled
+ *    by the expander ISR or pin-change ISR and used by the button state machine.
+ */ 
+// Gestion bouton - raw physical input state (set by ISR/expander)
+volatile uint8_t button_raw = 0;  // 1 = pressed, 0 = released
 
-//Variables globales
-
-//Gestion bouton
-// Bouton ENTER (analyse avancée)
-volatile uint8_t button_raw = 0;  // 1 = appuyé, 0 = relâché
-
+// Logical names for `button_raw` values used throughout the code
 #define ENTER_PRESSED 1
 #define ENTER_RELEASED 0
 
-// Pour la détection des patterns
+// High-level button/event bookkeeping
+// `Button` is the simple button enum used by legacy code paths.
+volatile unsigned char Button;
+// ID of the OS callback that polls/handles button state (0 = none)
+volatile unsigned char IDCB_BTN_HANDLER = 0;
+// Reserved ID for a future Lamp SRAM periodic update callback (unused currently)
+volatile unsigned char IDCB_Lamp_SRAM_Update = 0;
+
+// Timing counters used by the advanced pattern detector:
+// `press_time` = how long the button has been held (ticks), 
+// `release_timer` = time since it was released.
 volatile uint16_t press_time = 0;
 volatile uint16_t release_timer = 0;
-volatile char Expander_flag = FALSE; // Flag d'interruption sur le MCP23017
+
+// Flag set by the MCP23017 interrupt handler to notify the main loop.
+volatile char Expander_flag = FALSE; // MCP23017 interrupt flag
+
+// NOTE: `debounce_timer` is declared elsewhere in some files; historical declaration commented out:
 //volatile uint16_t debounce_timer;
+
+// Logical button index for higher-level state machine: 0=idle, 1..4 = buttons 1..4
 volatile char statebtn = 0; // 0=idle, 1=btn1, 2=btn2, 3=btn3, 4=btn4
 typedef enum {
     BTN_STATE_IDLE,
@@ -59,12 +77,6 @@ volatile unsigned char USART0_Reception;
 volatile unsigned char USART0_First_Char = FALSE;
 char buf_USART0[MAXBUFUSART0];
 volatile unsigned char idxbuf_USART0 = 0;
-
-//Gestion Touches
-volatile unsigned char Button;
-volatile unsigned char IDCB_BTN_HANDLER = 0;
-
-volatile unsigned char IDCB_Lamp_SRAM_Update = 0;
 
 //Variables pour la machine d'états
 unsigned char state;  // holds the current state, according to "menu.h"

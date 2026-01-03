@@ -8,6 +8,7 @@
 #define PGM_P const rom char *  
 #endif
 
+// Structure du MENU_NEXTSTATE
 typedef struct PROGMEM
 {
     unsigned char state;
@@ -15,6 +16,7 @@ typedef struct PROGMEM
     unsigned char nextstate;
 } MENU_NEXTSTATE;
 
+// Structure du MENU_STATE
 typedef struct PROGMEM
 {
     unsigned char state;
