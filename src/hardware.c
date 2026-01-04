@@ -41,29 +41,5 @@ void Init_Hardware(void)
 	SET_BIT(DDRB, DDB1); 		// Set PB1 as output
 	SET_BIT(PORTB, PORTB1); 	// Initialize PB1 to high sram inactive
 
-	/*
-	// Configuration clavier 5 touches
-	// TOUCHES UP (PC3),DOWN (PC4), LEFT (PC5), RIGHT (PC6), ENTER (PC7)
-	//Input Mode
-	CLR_BIT(DDRC,DDC3);
-	CLR_BIT(DDRC,DDC4);
-	CLR_BIT(DDRC,DDC5);
-	CLR_BIT(DDRC,DDC6);
-	CLR_BIT(DDRC,DDC7);
-	//enable pull up
-	SET_BIT(PORTC,PORTC3);
-	SET_BIT(PORTC,PORTC4);
-	SET_BIT(PORTC,PORTC5);
-	SET_BIT(PORTC,PORTC6);
-	SET_BIT(PORTC,PORTC7);
-	// enable int
-	SET_BIT(PCICR,PCIE2);
-	// enable mask
-	SET_BIT(PCMSK2,PCINT19);  // UP
-	SET_BIT(PCMSK2,PCINT20); // DOWN
-	SET_BIT(PCMSK2,PCINT21); // LEFT
-	SET_BIT(PCMSK2,PCINT22); // RIGHT
-	SET_BIT(PCMSK2,PCINT23); // ENTER
-    */
 }
 
