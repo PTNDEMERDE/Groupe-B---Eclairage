@@ -38,6 +38,8 @@ extern volatile char statebtn;				// 0=idle, 1=btn1, 2=btn2, 3=btn3, 4=btn4, ren
 volatile int value_dim = 1; 				// variable pour le dimming PWM //100µs pour le demarrage
 											// variable global car si on quitte le pwm et qu'on veut rechanger le dimming on veut garder la valeur precedente
 
+int value_dim_RTC = 1;
+
 // Gestion bouton
 extern volatile uint8_t button_raw;
 extern volatile uint16_t debounce_timer;
@@ -72,7 +74,7 @@ int main (void)
 	    }
 	}
 
-	//Timer1_Init_Microtimer();
+	
 	// Initialisation des Callbacks
 	OS_Init();
 
@@ -143,22 +145,12 @@ void Light_Switch_Finalize(void)
 
 		if(SRAM_Read(LAMP2_Address) == FALSE)// si LAMP2 est eteinte
 		{ 
-/* necessaire? ////////////
-			if (LAMP2_PWM_READ == TRUE) // cas où si la Led est éteinte mais que l'état PWM est toujours activé 
-			{
-				LAMP2_State = FALSE;
-				LAMP2WRITE;
-			}
-*/
 
-////////////////////////////à tester ////////////////////////
 			if (LAMP2_PWM_AUTO_READ == TRUE) // si le mode RTC est activé, on allume la LED en activant la callback Auto_PWM_Control 
 			{
 				IDCB_Auto_PWM_control = Callbacks_Record_Timer(Auto_PWM_Control, 1000);// active une callback (100ms) pour vérifier l'état du mode RTC (PWM suivant l'heure)
 			}
-//////////////////////////////////////
 			
-
 			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp2 on");sei();
 			
 			LAMP2_State = TRUE; // met à jour la variable à "allumer"
@@ -172,17 +164,13 @@ void Light_Switch_Finalize(void)
 				LAMP2_PWM_State = FALSE; // met à jour la variable à "éteinte"
 				LAMP2_PWM_WRITE;		 // sauvegarde état éteint dans SRAM
 			}
-
-
-////////////////////////////à tester ////////////////////////
 			else if(LAMP2_PWM_AUTO_READ == TRUE); // si le mode RTC est activé, on éteint juste la LED mais le mode RTC reste actif (LAMP2_PWM_AUTO_READ toujours TRUE)
 			{
 				Stop_PWM_DIM(); // on arrête le PWM proprement pour eviter les conflits (tick OS)
 				Callbacks_Remove_Timer(IDCB_Auto_PWM_control); // on arrête la callback qui vérifie l'état du mode RTC
 				IDCB_Auto_PWM_control = 0;
+				value_dim_RTC = 1;
 			}
-//////////////////////////////////////
-
 
 			cli();lcd_clrscr();lcd_gotoxy(0,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("Lamp2 off");sei();
 			
@@ -263,17 +251,11 @@ char Double_Push_Action(char input)
 	}else if (statebtn == 4) { //Si on a un double appuis sur le bouton 4, on active ou désactive le mode RTC
 
 		if (LAMP2_PWM_AUTO_READ == TRUE && LAMP2_PWM_READ == FALSE) { // si le mode RTC est activé (et que le PWM est désactivé (securité))
-
-
-////////////////////////////à tester ////////////////////////			
+			
 			Stop_PWM_DIM(); // on arrête le PWM proprement pour eviter les conflits (tick OS)
 			Callbacks_Remove_Timer(IDCB_Auto_PWM_control); // on arrête la callback qui vérifie l'état du mode RTC
 			IDCB_Auto_PWM_control = 0;
-///////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////nesecessaire ?
-			Callbacks_Remove_Timer(IDCB_PWM_ON);
-/////////////////////////////////////////////////////////////////////
+			value_dim_RTC = 1;
 
 			LAMP2_PWM_Auto_State = FALSE;	// met à jour la variable à "désactivé"
 			LAMP2_PWM_AUTO_WRITE;			// sauvegarde état on dans SRAM
@@ -285,9 +267,7 @@ char Double_Push_Action(char input)
 		else if (LAMP2_PWM_AUTO_READ == FALSE && LAMP2_PWM_READ == FALSE) { // si le mode RTC est desactivé (et que le PWM est désactivé (securité pour eviter les confusions softwares))
 
 
-////////////////////////////à tester ////////////////////////
 			IDCB_Auto_PWM_control = Callbacks_Record_Timer(Auto_PWM_Control, 1000);// active une callback (100ms) pour vérifier l'état du mode RTC (PWM suivant l'heure)
-////////////////////////////////////////////////////////////
 
 			LAMP2_PWM_Auto_State = TRUE;    // met à jour la variable à "activé"
 			LAMP2_PWM_AUTO_WRITE;			// sauvegarde état on dans SRAM
@@ -314,7 +294,7 @@ void Light_All_Off_Finalize(void) // au tick suivant (sinon conflit avec Stop_PW
 		//Stop_PWM_DIM(); // on arrête le PWM proprement pour eviter les conflits (tick OS)
 		Callbacks_Remove_Timer(IDCB_Auto_PWM_control); // on arrête la callback qui vérifie l'état du mode RTC
 		IDCB_Auto_PWM_control = 0;
-
+		value_dim_RTC = 1;
 	}
 	// met à jour la variable à "éteinte"
 	LAMP1_State = FALSE;
@@ -447,13 +427,10 @@ void PWM_update(void){
 // this function does nothing and manual dimming remains in effect.
 void Auto_PWM_Control(void)
 {
-	// Do not interfere when trimming is active
-	//if (IDCB_PWM_ON != 0) return;
-
 
 	unsigned char auto_en = LAMP2_PWM_AUTO_READ; // 0 = disabled, non-zero = enabled
 	unsigned char pwm_percent = LAMP2_PWM_Value; // expected 0..100
-	static int value_dim_RTC = 1;
+	
 	//char buffer[10];
 	
 	if (auto_en == TRUE)
@@ -480,15 +457,8 @@ void Auto_PWM_Control(void)
 			if (target_period < 1) target_period = 1;
 			if (target_period > 200) target_period = 200; // safety cap
 
-			// If not already running or period changed, (re)program the DIM callback
 
-
-//////////////////////////////////
-			// if (value_dim_RTC != (int)target_period)////////// une idée à la place ? ne passera très rarement si on ne tombe pas sur le moment où IDCB_Switch_LED_DIM_ON = 0
-//////////////////////////////////
-
-
-			if (IDCB_Switch_LED_DIM_ON == 0 || value_dim_RTC != (int)target_period)
+			if (value_dim_RTC != (int)target_period)
 			{
 				value_dim_RTC = (int)target_period;
 				Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
