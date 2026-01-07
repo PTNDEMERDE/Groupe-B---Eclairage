@@ -1,0 +1,866 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.10.7)  3 JAN 2026 16:00
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"c:/Users/Natta/OneDrive - Haute Ecole Louvain en Hainaut/Documents/CoursHelha/Master 1/Microcontroller/Projet/Code/Groupe B - Eclairage/docs/Full_Project_Summary.tex"
+(c:/Users/Natta/OneDrive - Haute Ecole Louvain en Hainaut/Documents/CoursHelha/Master 1/Microcontroller/Projet/Code/Groupe B - Eclairage/docs/Full_Project_Summary.tex
+LaTeX2e <2025-06-01> patch level 1
+L3 programming layer <2025-09-02>
+(C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen148
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count283
+\Gm@cntv=\count284
+\c@Gm@tempcnt=\count285
+\Gm@bindingoffset=\dimen149
+\Gm@wd@mp=\dimen150
+\Gm@odd@mp=\dimen151
+\Gm@even@mp=\dimen152
+\Gm@layoutwidth=\dimen153
+\Gm@layoutheight=\dimen154
+\Gm@layouthoffset=\dimen155
+\Gm@layoutvoffset=\dimen156
+\Gm@dimlist=\toks18
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen157
+\Gin@req@width=\dimen158
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count286
+\float@exts=\toks19
+\float@box=\box53
+\@float@everytoks=\toks20
+\@floatcapt=\box54
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2025/08/03 v25.12 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
+\babel@savecnt=\count287
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2045.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input line 2047.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input line 2049.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input line 2050.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) on input line 2051.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) on input line 2053.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2078.
+\U@D=\dimen159
+\l@unhyphenated=\language79
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count288
+
+*************************************
+* Local config file bblopts.cfg used
+*
+(C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of babel
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french.ldf
+Language: french 2025-08-15 v4.0e French support from the babel system
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/fr\babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line 12.
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french3.ldf
+Language: french 2025-08-15 v3.7e French support from the babel system
+\FB@stdchar=\count289
+Package babel Info: Making : an active character on input line 273.
+Package babel Info: Making ; an active character on input line 274.
+Package babel Info: Making ! an active character on input line 275.
+Package babel Info: Making ? an active character on input line 276.
+\FBguill@level=\count290
+\FBold@everypar=\toks21
+\FB@Mht=\dimen160
+\mc@charclass=\count291
+\mc@charfam=\count292
+\mc@charslot=\count293
+\std@mcc=\count294
+\dec@mcc=\count295
+\FB@pardim=\dimen161
+\listindentFB=\dimen162
+\descindentFB=\dimen163
+\labelindentFB=\dimen164
+\labelwidthFB=\dimen165
+\leftmarginFB=\dimen166
+\parindentFFN=\dimen167
+\FBfnindent=\dimen168
+))) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/carlisle\scalefnt.sty) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count296
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count297
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
+)
+\@linkdim=\dimen169
+\Hy@linkcounter=\count298
+\Hy@pagecounter=\count299
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count300
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4195.
+Package hyperref Info: Link nesting OFF on input line 4200.
+Package hyperref Info: Hyper index ON on input line 4203.
+Package hyperref Info: Plain pages OFF on input line 4210.
+Package hyperref Info: Backreferencing OFF on input line 4215.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4462.
+\c@Hy@tempcnt=\count301
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4801.
+\XeTeXLinkMargin=\dimen170
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count302
+\Field@Width=\dimen171
+\Fld@charsize=\dimen172
+Package hyperref Info: Hyper figures OFF on input line 6078.
+Package hyperref Info: Link nesting OFF on input line 6083.
+Package hyperref Info: Hyper index ON on input line 6086.
+Package hyperref Info: backreferencing OFF on input line 6093.
+Package hyperref Info: Link coloring OFF on input line 6098.
+Package hyperref Info: Link coloring with OCG OFF on input line 6103.
+Package hyperref Info: PDF/A mode OFF on input line 6108.
+\Hy@abspage=\count303
+\c@Item=\count304
+\c@Hfootnote=\count305
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
+\Fld@listcount=\count306
+\c@bookmark@seq@number=\count307
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
+Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
+)
+\Hy@SectionHShift=\skip51
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2024/12/21 v2.1c Standard LaTeX package
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks22
+\inpenc@posthook=\toks23
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen173
+\captionmargin=\dimen174
+\caption@leftmargin=\dimen175
+\caption@rightmargin=\dimen176
+\caption@width=\dimen177
+\caption@indent=\dimen178
+\caption@parindent=\dimen179
+\caption@hangindent=\dimen180
+Package caption Info: Standard document class detected.
+Package caption Info: french babel package is loaded.
+)
+\c@caption@flags=\count308
+\c@continuedfloat=\count309
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/csquotes\csquotes.sty
+Package: csquotes 2024-04-04 v5.2o context-sensitive quotations (JAW)
+\csq@reset=\count310
+\csq@gtype=\count311
+\csq@glevel=\count312
+\csq@qlevel=\count313
+\csq@maxlvl=\count314
+\csq@tshold=\count315
+\csq@ltx@everypar=\toks24
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/csquotes\csquotes.def
+File: csquotes.def 2024-04-04 v5.2o csquotes generic definitions (JAW)
+)
+Package csquotes Info: Trying to load configuration file 'csquotes.cfg'...
+Package csquotes Info: ... configuration file loaded successfully.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/csquotes\csquotes.cfg
+File: csquotes.cfg 
+)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count316
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count317
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
+Package: enumitem 2025/02/06 v3.11 Customized lists
+\labelindent=\skip52
+\enit@outerparindent=\dimen181
+\enit@toks=\toks25
+\enit@inbox=\box55
+\enit@count@id=\count318
+\enitdp@description=\count319
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty
+Package: footmisc 2025/05/09 v7.0b a miscellany of footnote facilities
+\FN@temptoken=\toks26
+\footnotemargin=\dimen182
+Package footmisc Info: Declaring symbol style bringhurst on input line 549.
+Package footmisc Info: Declaring symbol style chicago on input line 557.
+Package footmisc Info: Declaring symbol style wiley on input line 566.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 577.
+Package footmisc Info: Declaring symbol style lamport* on input line 597.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 618.
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fourier.sty
+Package: fourier 2024/09/08 2.4 fourier-GUTenberg package
+Now handling font encoding FML ...
+... no UTF-8 mapping file for font encoding FML
+Now handling font encoding FMS ...
+... no UTF-8 mapping file for font encoding FMS
+Now handling font encoding FMX ...
+... no UTF-8 mapping file for font encoding FMX
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2024/12/21 v2.1c Standard LaTeX package
+LaTeX Font Info:    Trying to load font information for T1+futs on input line 116.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\t1futs.fd
+File: t1futs.fd 2004/03/02 Fontinst v1.926 font definitions for T1/futs.
+)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fourier-orns.sty
+Package: fourier-orns 2024/09/08 2.4 fourier-ornaments package
+)
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 64.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `normal' on input line 64.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> T1/futs/m/n on input line 64.
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `bold' on input line 64.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/m/n on input line 64.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  T1/futs/m/n --> T1/futs/b/n on input line 65.
+LaTeX Font Info:    Redeclaring symbol font `letters' on input line 73.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `normal' on input line 73.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> FML/futmi/m/it on input line 73.
+LaTeX Font Info:    Encoding `OML' has changed to `FML' for symbol font
+(Font)              `letters' in the math version `bold' on input line 73.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> FML/futmi/m/it on input line 73.
+\symotherletters=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  FML/futmi/m/it --> FML/futmi/b/it on input line 75.
+LaTeX Font Info:    Overwriting symbol font `otherletters' in version `bold'
+(Font)                  FML/futm/m/it --> FML/futm/b/it on input line 76.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 77.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 79.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 80.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 81.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 82.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 83.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 84.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 85.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 86.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 87.
+LaTeX Font Info:    Redeclaring symbol font `symbols' on input line 127.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `normal' on input line 127.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> FMS/futm/m/n on input line 127.
+LaTeX Font Info:    Encoding `OMS' has changed to `FMS' for symbol font
+(Font)              `symbols' in the math version `bold' on input line 127.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> FMS/futm/m/n on input line 127.
+LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 128.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `normal' on input line 128.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 128.
+LaTeX Font Info:    Encoding `OMX' has changed to `FMX' for symbol font
+(Font)              `largesymbols' in the math version `bold' on input line 128.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> FMX/futm/m/n on input line 128.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 129.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 129.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> T1/futs/bx/n on input line 129.
+LaTeX Font Info:    Redeclaring math alphabet \mathrm on input line 130.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 131.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> T1/futs/m/it on input line 131.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> T1/futs/m/it on input line 131.
+LaTeX Font Info:    Redeclaring math alphabet \mathcal on input line 132.
+LaTeX Font Info:    Redeclaring math symbol \parallel on input line 148.
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 162.
+LaTeX Font Info:    Redeclaring math symbol \varkappa on input line 200.
+LaTeX Font Info:    Redeclaring math symbol \varvarrho on input line 201.
+LaTeX Font Info:    Redeclaring math delimiter \Vert on input line 224.
+LaTeX Font Info:    Redeclaring math delimiter \vert on input line 229.
+LaTeX Font Info:    Redeclaring math delimiter \Downarrow on input line 239.
+LaTeX Font Info:    Redeclaring math delimiter \backslash on input line 241.
+LaTeX Font Info:    Redeclaring math delimiter \rangle on input line 243.
+LaTeX Font Info:    Redeclaring math delimiter \langle on input line 245.
+LaTeX Font Info:    Redeclaring math delimiter \rbrace on input line 247.
+LaTeX Font Info:    Redeclaring math delimiter \lbrace on input line 249.
+LaTeX Font Info:    Redeclaring math delimiter \rceil on input line 251.
+LaTeX Font Info:    Redeclaring math delimiter \lceil on input line 253.
+LaTeX Font Info:    Redeclaring math delimiter \rfloor on input line 255.
+LaTeX Font Info:    Redeclaring math delimiter \lfloor on input line 257.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 261.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 262.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 263.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 264.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 265.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 266.
+LaTeX Font Info:    Redeclaring math accent \check on input line 267.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 268.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 269.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 270.
+\symUfutm=\mathgroup5
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\biblatex.sty
+Package: biblatex 2025/07/10 v3.21 programmable bibliographies (PK/MW)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/logreq\logreq.sty
+Package: logreq 2010/08/04 v1.0 xml request logger
+\lrq@indent=\count320
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/logreq\logreq.def
+File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
+)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+)
+\c@tabx@nest=\count321
+\c@listtotal=\count322
+\c@listcount=\count323
+\c@liststart=\count324
+\c@liststop=\count325
+\c@citecount=\count326
+\c@citetotal=\count327
+\c@multicitecount=\count328
+\c@multicitetotal=\count329
+\c@instcount=\count330
+\c@maxnames=\count331
+\c@minnames=\count332
+\c@maxitems=\count333
+\c@minitems=\count334
+\c@citecounter=\count335
+\c@maxcitecounter=\count336
+\c@savedcitecounter=\count337
+\c@uniquelist=\count338
+\c@uniquename=\count339
+\c@refsection=\count340
+\c@refsegment=\count341
+\c@maxextratitle=\count342
+\c@maxextratitleyear=\count343
+\c@maxextraname=\count344
+\c@maxextradate=\count345
+\c@maxextraalpha=\count346
+\c@abbrvpenalty=\count347
+\c@highnamepenalty=\count348
+\c@lownamepenalty=\count349
+\c@maxparens=\count350
+\c@parenlevel=\count351
+\blx@tempcnta=\count352
+\blx@tempcntb=\count353
+\blx@tempcntc=\count354
+\c@blx@maxsection=\count355
+\blx@maxsegment@0=\count356
+\blx@notetype=\count357
+\blx@parenlevel@text=\count358
+\blx@parenlevel@foot=\count359
+\blx@sectionciteorder@0=\count360
+\blx@sectionciteorderinternal@0=\count361
+\blx@entrysetcounter=\count362
+\blx@biblioinstance=\count363
+\labelnumberwidth=\skip53
+\labelalphawidth=\skip54
+\biblabelsep=\skip55
+\bibitemsep=\skip56
+\bibnamesep=\skip57
+\bibinitsep=\skip58
+\bibparsep=\skip59
+\bibhang=\skip60
+\blx@bcfin=\read3
+\blx@bcfout=\write3
+\blx@langwohyphens=\language80
+\c@mincomprange=\count364
+\c@maxcomprange=\count365
+\c@mincompwidth=\count366
+Package biblatex Info: Trying to load biblatex default data model...
+Package biblatex Info: ... file 'blx-dm.def' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\blx-dm.def
+File: blx-dm.def 2025/07/10 v3.21 biblatex datamodel (PK/MW)
+)
+Package biblatex Info: Trying to load biblatex citestyle data model...
+Package biblatex Info: ... file 'authortitle.dbx' not found.
+Package biblatex Info: Trying to load biblatex bibstyle data model...
+Package biblatex Info: ... file 'numeric.dbx' not found.
+Package biblatex Info: Trying to load biblatex custom data model...
+Package biblatex Info: ... file 'biblatex-dm.cfg' not found.
+\c@afterword=\count367
+\c@savedafterword=\count368
+\c@annotator=\count369
+\c@savedannotator=\count370
+\c@author=\count371
+\c@savedauthor=\count372
+\c@bookauthor=\count373
+\c@savedbookauthor=\count374
+\c@commentator=\count375
+\c@savedcommentator=\count376
+\c@editor=\count377
+\c@savededitor=\count378
+\c@editora=\count379
+\c@savededitora=\count380
+\c@editorb=\count381
+\c@savededitorb=\count382
+\c@editorc=\count383
+\c@savededitorc=\count384
+\c@foreword=\count385
+\c@savedforeword=\count386
+\c@holder=\count387
+\c@savedholder=\count388
+\c@introduction=\count389
+\c@savedintroduction=\count390
+\c@namea=\count391
+\c@savednamea=\count392
+\c@nameb=\count393
+\c@savednameb=\count394
+\c@namec=\count395
+\c@savednamec=\count396
+\c@translator=\count397
+\c@savedtranslator=\count398
+\c@shortauthor=\count399
+\c@savedshortauthor=\count400
+\c@shorteditor=\count401
+\c@savedshorteditor=\count402
+\c@labelname=\count403
+\c@savedlabelname=\count404
+\c@institution=\count405
+\c@savedinstitution=\count406
+\c@lista=\count407
+\c@savedlista=\count408
+\c@listb=\count409
+\c@savedlistb=\count410
+\c@listc=\count411
+\c@savedlistc=\count412
+\c@listd=\count413
+\c@savedlistd=\count414
+\c@liste=\count415
+\c@savedliste=\count416
+\c@listf=\count417
+\c@savedlistf=\count418
+\c@location=\count419
+\c@savedlocation=\count420
+\c@organization=\count421
+\c@savedorganization=\count422
+\c@origlocation=\count423
+\c@savedoriglocation=\count424
+\c@origpublisher=\count425
+\c@savedorigpublisher=\count426
+\c@publisher=\count427
+\c@savedpublisher=\count428
+\c@language=\count429
+\c@savedlanguage=\count430
+\c@origlanguage=\count431
+\c@savedoriglanguage=\count432
+\c@pageref=\count433
+\c@savedpageref=\count434
+\shorthandwidth=\skip61
+\shortjournalwidth=\skip62
+\shortserieswidth=\skip63
+\shorttitlewidth=\skip64
+\shortauthorwidth=\skip65
+\shorteditorwidth=\skip66
+\locallabelnumberwidth=\skip67
+\locallabelalphawidth=\skip68
+\localshorthandwidth=\skip69
+\localshortjournalwidth=\skip70
+\localshortserieswidth=\skip71
+\localshorttitlewidth=\skip72
+\localshortauthorwidth=\skip73
+\localshorteditorwidth=\skip74
+Package biblatex Info: Trying to load compatibility code...
+Package biblatex Info: ... file 'blx-compat.def' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\blx-compat.def
+File: blx-compat.def 2025/07/10 v3.21 biblatex compatibility (PK/MW)
+)
+Package biblatex Info: Trying to load generic definitions...
+Package biblatex Info: ... file 'biblatex.def' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\biblatex.def
+File: biblatex.def 2025/07/10 v3.21 biblatex compatibility (PK/MW)
+\c@textcitecount=\count435
+\c@textcitetotal=\count436
+\c@textcitemaxnames=\count437
+\c@biburlbigbreakpenalty=\count438
+\c@biburlbreakpenalty=\count439
+\c@biburlnumpenalty=\count440
+\c@biburlucpenalty=\count441
+\c@biburllcpenalty=\count442
+\biburlbigskip=\muskip18
+\biburlnumskip=\muskip19
+\biburlucskip=\muskip20
+\biburllcskip=\muskip21
+\c@smartand=\count443
+)
+Package biblatex Info: Trying to load bibliography style 'numeric'...
+Package biblatex Info: ... file 'numeric.bbx' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex/bbx\numeric.bbx
+File: numeric.bbx 2025/07/10 v3.21 biblatex bibliography style (PK/MW)
+Package biblatex Info: Trying to load bibliography style 'standard'...
+Package biblatex Info: ... file 'standard.bbx' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex/bbx\standard.bbx
+File: standard.bbx 2025/07/10 v3.21 biblatex bibliography style (PK/MW)
+\c@bbx:relatedcount=\count444
+\c@bbx:relatedtotal=\count445
+))
+Package biblatex Info: Trying to load citation style 'authortitle'...
+Package biblatex Info: ... file 'authortitle.cbx' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex/cbx\authortitle.cbx
+File: authortitle.cbx 2025/07/10 v3.21 biblatex citation style (PK/MW)
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\parencite'.
+Package biblatex Info: Redefining '\footcite'.
+Package biblatex Info: Redefining '\footcitetext'.
+Package biblatex Info: Redefining '\smartcite'.
+Package biblatex Info: Redefining '\textcite'.
+Package biblatex Info: Redefining '\textcites'.
+)
+Package biblatex Info: Trying to load configuration file...
+Package biblatex Info: ... file 'biblatex.cfg' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\biblatex.cfg
+File: biblatex.cfg 
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Document encoding is UTF8 ....
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2025-09-02 L3 programming layer (loader) 
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-06-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count446
+))
+Package biblatex Info: ... and expl3
+(biblatex)             2025-09-02 L3 programming layer (loader) 
+(biblatex)             is new enough (at least 2020/04/06),
+(biblatex)             setting 'casechanger=expl3'.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex\blx-case-expl3.sty (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xparse.sty
+Package: xparse 2024-08-16 L3 Experimental document command parser
+)
+Package: blx-case-expl3 2025/07/10 v3.21 expl3 case changing code for biblatex
+)) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+\lst@mode=\count447
+\lst@gtempboxa=\box56
+\lst@token=\toks27
+\lst@length=\count448
+\lst@currlwidth=\dimen183
+\lst@column=\count449
+\lst@pos=\count450
+\lst@lostspace=\dimen184
+\lst@width=\dimen185
+\lst@newlines=\count451
+\lst@lineno=\count452
+\lst@maxwidth=\dimen186
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
+File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
+\c@lstnumber=\count453
+\lst@skipnumbers=\count454
+\lst@framebox=\box57
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
+File: listings.cfg 2024/09/23 1.10c listings configuration
+))
+Package: listings 2024/09/23 1.10c (Carsten Heinz)
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
+)
+Package french3.ldf Info: Setting StandardItemizeEnv=true for
+(french3.ldf)             compatibility with enumitem package,
+(french3.ldf)             reported on input line 96.
+Package french3.ldf Info: Setting StandardEnumerateEnv=true for
+(french3.ldf)             compatibility with enumitem package,
+(french3.ldf)             reported on input line 96.
+Package csquotes Info: Checking for multilingual support...
+Package csquotes Info: ... found 'babel' package.
+Package csquotes Info: Adjusting default style.
+Package csquotes Info: Redefining alias 'default' -> 'french'.
+ (Full_Project_Summary.aux
+Package babel Info: 'french' activates 'french' shorthands.
+(babel)             Reported on input line 12.
+)
+\openout1 = `Full_Project_Summary.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 96.
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for FML/futm/m/it on input line 96.
+LaTeX Font Info:    Trying to load font information for FML+futm on input line 96.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmlfutm.fd
+File: fmlfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FML/futm.
+)
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for FMS/futm/m/n on input line 96.
+LaTeX Font Info:    Trying to load font information for FMS+futm on input line 96.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmsfutm.fd
+File: fmsfutm.fd 2004/10/30 Fontinst v1.926 font definitions for FMS/futm.
+)
+LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for FMX/futm/m/n on input line 96.
+LaTeX Font Info:    Trying to load font information for FMX+futm on input line 96.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\fmxfutm.fd
+File: fmxfutm.fd futm-extension
+)
+LaTeX Font Info:    ... okay on input line 96.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(71.13188pt, 472.03123pt, 71.13188pt)
+* v-part:(T,H,B)=(71.13188pt, 652.70622pt, 71.13188pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=472.03123pt
+* \textheight=652.70622pt
+* \oddsidemargin=-1.1381pt
+* \evensidemargin=-1.1381pt
+* \topmargin=-38.1381pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count455
+\scratchdimen=\dimen187
+\scratchbox=\box58
+\nofMPsegments=\count456
+\nofMParguments=\count457
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count458
+\MPscratchDim=\dimen188
+\MPnumerator=\count459
+\makeMPintoPDFobject=\count460
+\everyMPtoPDFconversion=\toks29
+) (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Info: Redefining \degres on input line 96.
+Package hyperref Info: Link coloring OFF on input line 96.
+ (Full_Project_Summary.out) (Full_Project_Summary.out)
+\@outlinefile=\write4
+\openout4 = `Full_Project_Summary.out'.
+
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: listings package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package biblatex Info: Trying to load language 'french'...
+Package biblatex Info: ... file 'french.lbx' found.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/biblatex/lbx\french.lbx
+File: french.lbx 2025/07/10 v3.21 biblatex localization (PK/MW)
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+\openout3 = `Full_Project_Summary.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'Full_Project_Summary.bbl' not found.
+
+No file Full_Project_Summary.bbl.
+Package biblatex Info: Reference section=0 on input line 96.
+Package biblatex Info: Reference segment=0 on input line 96.
+\c@lstlisting=\count461
+<Images/engineer.png, id=31, 672.8337pt x 585.387pt>
+File: Images/engineer.png Graphic file (type png)
+<use Images/engineer.png>
+Package pdftex.def Info: Images/engineer.png  used on input line 100.
+(pdftex.def)             Requested size: 227.62204pt x 198.03746pt.
+<Images/helha.jpg, id=33, 126.4725pt x 63.5976pt>
+File: Images/helha.jpg Graphic file (type jpg)
+<use Images/helha.jpg>
+Package pdftex.def Info: Images/helha.jpg  used on input line 111.
+(pdftex.def)             Requested size: 169.75594pt x 85.35826pt.
+<Images/cti.png, id=34, 1183.42125pt x 1163.34625pt>
+File: Images/cti.png Graphic file (type png)
+<use Images/cti.png>
+Package pdftex.def Info: Images/cti.png  used on input line 112.
+(pdftex.def)             Requested size: 86.8206pt x 85.35826pt.
+
+
+[1
+
+{C:/Users/Natta/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Natta/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc} <./Images/engineer.png> <./Images/helha.jpg> <./Images/cti.png>]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 130.
+LaTeX Font Info:    Trying to load font information for TS1+futs on input line 132.
+ (C:\Users\Natta\AppData\Local\Programs\MiKTeX\tex/latex/fourier\ts1futs.fd
+File: ts1futs.fd 2003/09/14 Fontinst v1.801 font definitions for TS1/futs.
+)
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.169 \newpage
+               [1]
+
+[2]
+Overfull \hbox (12.51074pt too wide) in paragraph at lines 234--236
+[]\T1/futs/m/n/10 La fonc-tion \T1/cmtt/m/n/10 Expander_Gpio_Ctrl()  \T1/futs/m/n/10 a été cor-ri-gée pour as-su-rer un contrôle cor-rect des broches GPIO du MCP23017. 
+ []
+
+
+
+[3]
+
+[4]
+
+[5] (Full_Project_Summary.aux)
+ ***********
+LaTeX2e <2025-06-01> patch level 1
+L3 programming layer <2025-09-02>
+ ***********
+Package rerunfilecheck Info: File `Full_Project_Summary.out' has not changed.
+(rerunfilecheck)             Checksum: 1FC6A2A9B9DFAAAC86CDAD51146C745F;1758.
+Package logreq Info: Writing requests to 'Full_Project_Summary.run.xml'.
+\openout1 = `Full_Project_Summary.run.xml'.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 23584 strings out of 468130
+ 410420 string characters out of 5430633
+ 1431598 words of memory out of 5000000
+ 51801 multiletter control sequences out of 15000+600000
+ 681850 words of font info for 72 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 75i,5n,79p,852b,1774s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Natta\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk><C:/Users/Natta/AppData/Local/Programs/MiKTeX/fonts/type1/adobe/utopia/putb8a.pfb><C:/Users/Natta/AppData/Local/Programs/MiKTeX/fonts/type1/adobe/utopia/putr8a.pfb>
+Output written on Full_Project_Summary.pdf (6 pages, 380773 bytes).
+PDF statistics:
+ 286 PDF objects out of 1000 (max. 8388607)
+ 153 named destinations out of 1000 (max. 500000)
+ 72 words of extra memory for PDF output out of 10000 (max. 10000000)
+

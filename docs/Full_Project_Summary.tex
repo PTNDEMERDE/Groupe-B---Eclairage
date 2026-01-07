@@ -1,0 +1,338 @@
+% Full project summary combining all requested topics
+\documentclass{article}
+%\usepackage[utf8]{inputenc}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry} % Page format
+\usepackage{graphicx} % Pictures
+\usepackage{float} % [H] parametre
+\usepackage[french]{babel} % French content
+\usepackage{hyperref} % Clickable links
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{csquotes}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[stable]{footmisc}
+\usepackage{fourier}
+\usepackage[
+   backend=biber,        % compilateur par défaut pour biblatex
+   sorting=nyt,          % trier par nom, année, titre
+   citestyle=authortitle, % style de citation auteur-année
+   bibstyle=numeric,  % style de bibliographie alphabétique
+]{biblatex}
+\usepackage{listings}
+\lstset{
+  aboveskip=3mm,
+  belowskip=-2mm,
+  backgroundcolor=\color{white},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{gray},
+  deletekeywords={\ldots},
+  escapeinside={\%*}{*},
+  extendedchars=true,
+  framexleftmargin=16pt,
+  framextopmargin=3pt,
+  framexbottommargin=6pt,
+  frame=tb,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=C,
+  literate=
+  {²}{{\textsuperscript{2}}}1
+  {⁴}{{\textsuperscript{4}}}1
+  {⁶}{{\textsuperscript{6}}}1
+  {⁸}{{\textsuperscript{8}}}1
+  {€}{{\euro{}}}1
+  {é}{{\'e}}1
+  {è}{{\`{e}}}1
+  {ê}{{\^{e}}}1
+  {ë}{{\¨{e}}}1
+  {É}{{\'{E}}}1
+  {Ê}{{\^{E}}}1
+  {û}{{\^{u}}}1
+  {ù}{{\`{u}}}1
+  {â}{{\^{a}}}1
+  {à}{{\`{a}}}1
+  {á}{{\'{a}}}1
+  {ã}{{\~{a}}}1
+  {Á}{{\'{A}}}1
+  {Â}{{\^{A}}}1
+  {Ã}{{\~{A}}}1
+  {ç}{{\c{c}}}1
+  {Ç}{{\c{C}}}1
+  {õ}{{\~{o}}}1
+  {ó}{{\'{o}}}1
+  {ô}{{\^{o}}}1
+  {Õ}{{\~{O}}}1
+  {Ó}{{\'{O}}}1
+  {Ô}{{\^{O}}}1
+  {î}{{\^{\i}}}1
+  {Î}{{\^{I}}}1
+  {í}{{\'{\i}}}1
+  {Í}{{\~{Í}}}1,
+  morekeywords={*,\ldots},
+  numbers=left,
+  numbersep=10pt,
+  numberstyle=\tiny\color{black},
+  rulecolor=\color{white},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=1,
+  stringstyle=\color{gray},
+  tabsize=4,
+  %title=\lstname,
+}
+
+\addbibresource{bibli.bib}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1.8ex plus .9ex minus .4ex}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \includegraphics[width=8cm]{Images/engineer.png}\\[2cm]
+    \HRule\\[0.4cm]
+    {\Huge \textbf{Micro-contrôleur \textendash{} Groupe B}}\\[1cm]
+    {\huge \textbf{Projet}}\\[0.4cm]
+    \HRule\\[1cm]
+    {\large \textbf{\today}}\\[1cm]
+    {\large \textbf{Bataille Achille}}\\
+    {\large \textbf{Deroy Julien}}\\
+    {\large \textbf{Papier  Nattan}}\\
+    {\large \textbf{Rombaut Romain}}\\[1cm]
+    {Année académique 2025\textendash{}2026}\\[0.5cm]
+    \includegraphics[height=3cm]{Images/helha.jpg}
+    \includegraphics[height=3cm]{Images/cti.png}\\
+\end{titlepage}
+
+\section*{Différentes tâches du projet}
+Ce document rassemble et explique toutes les modifications et ajouts réalisés dans le projet de micro-contrôleur pour la gestion de l'éclairage.
+Il couvre les aspects suivants:
+\begin{itemize}
+  \item Creation d'une machine d'état pour la gestion des lampes
+  \item Creation d'une fonction PWM pour faire varier la luminosité des lampes
+  \item Gestion du GPIO Expander (MCP23017),
+  \item Integration d'une SRAM (23LC1024),
+  \item Mise en place de l'eclaire en fonction de l'heure (RTC)
+\end{itemize}
+
+\section{Machine d'état pour la gestion des lampes}
+
+Le fichier \textbf{menu.h} contient la définition de la machine d'état utilisée pour gérer les interactions utilisateur via le menu.
+
+\begin{lstlisting}[language=C,caption={Extrait simplifié de l'implémentation de la machine d'état (menu.h)}]
+#ifndef PGM_P
+#define PGM_P const rom char *  
+#endif
+
+// Définition d'une transition d'état
+typedef struct PROGMEM{
+    unsigned char state;
+    unsigned char input;
+    unsigned char nextstate;
+} MENU_NEXTSTATE;
+
+// Structure d'un état de menu
+typedef struct PROGMEM{
+    unsigned char state;
+    PGM_P pText;	
+    char (*pFunc)(char input);
+} MENU_STATE;
+
+// Table de transitions stockée en PROGMEM
+const MENU_NEXTSTATE menu_nextstate[] PROGMEM = {
+    {ST_TXT_START, BTN_ENTER_SHORT,  ST_TXT_SWITCH},
+    {ST_TXT_START, BTN_ENTER_DOUBLE, ST_TXT_ALL_OFF},
+    {ST_TXT_START, BTN_ENTER_LONG,   ST_TXT_T_UP},
+    // ... autres transitions ...
+};
+
+
+// Table des états (texte + fonction associée)
+const MENU_STATE Menu_State[] PROGMEM = {
+    {ST_TXT_START,   txt_start,   NULL},
+    {ST_TXT_SWITCH,  txt_switch,  &Light_Switch},
+    {ST_TXT_ALL_OFF, txt_alloff,  &Double_Push_Action},
+    {ST_TXT_T_UP,    txt_t_up,    &Light_Trimming_Up},
+    // ...
+};
+
+\end{lstlisting}
+
+\newpage
+
+\section{PWM pour la variation de luminosité}
+Un PWM a été intégré pour la gestion de la luminosité des lampes. L'implémentation principale se trouve dans \textbf{main.c}. 
+
+Les principales composantes sont:
+\begin{itemize}
+  \item Callbacks \texttt{Switch\_LED\_DIM\_ON} et \texttt{Switch\_LED\_DIM\_OFF}\@: utilisés pour créer la modulation de largeur d'impulsion en allumant et éteignant la lampe à des intervalles spécifiques.
+  \item Trimming manuel\@: permet à l'utilisateur d'ajuster la luminosité via des appuis longs sur les boutons, avec sauvegarde de la valeur en SRAM.\@
+  \item Fonction \texttt{Auto\_PWM\_Control()}\@: callback périodique qui ajuste la luminosité de \textbf{Lamp2} en fonction d'une valeur stockée en SRAM.\@
+  \item Stockage en SRAM\@: les valeurs de luminosité et le mode automatique sont persistés en SRAM pour conserver l'état entre les redémarrages.
+\end{itemize}
+
+Voici un extrait de la fonction de base du PWM\@:
+\begin{lstlisting}[language=C,caption={Extrait simplifié de l'implémentation du PWM (main.c)}]
+void PWM_update(void){ 
+	static float value_dim_float;
+	char buffer[10];
+	Usart0_Tx_String("PWM_UPDATE");
+	Usart0_Tx(0X0D);
+	
+	Callbacks_Remove_Timer(IDCB_Switch_LED_DIM_ON);
+	IDCB_Switch_LED_DIM_ON = Callbacks_Record_Timer(Switch_LED_DIM_ON, value_dim);
+
+	itoa(value_dim,buffer,10);
+	Usart0_Tx_String(buffer);
+	Usart0_Tx(0X0D);
+	
+	if(value_dim_float <= 100.0){
+		if(value_dim_float <= 10.0){ 
+        	value_dim_float += 2.0;
+    	} 
+		
+		else if((10.0 < value_dim_float) && (value_dim_float < 100.0)) {
+        	value_dim_float += 10.0;
+   		} 
+	}
+	else{
+		value_dim_float= 1.0;
+	}
+
+	value_dim = (int)value_dim_float;
+	{
+		unsigned int vd = (unsigned int)value_dim;
+		unsigned char percent = 0;
+		if (vd >= 1 && vd <= 200)
+		{
+			int p = 101 - (int)vd; // inverse mapping of period -> percent
+			if (p < 0) p = 0;
+			if (p > 100) p = 100;
+			percent = (unsigned char)p;
+		}
+		LAMP2_PWM_Value = percent;
+		LAMP2_PWM_VALUE_WRITE;
+	}
+	
+}
+
+\end{lstlisting}
+
+\section{Gestion du GPIO Expander (MCP23017)}
+Le GPIO Expander MCP23017 est géré via de l'I2C implémenté dans \textbf{EXPANDER\_MCP23017.c}. Ce fichier permet de contrôler les broches supplémentaires fournies par le MCP23017, qui sont utilisées pour gérer les lampes.
+
+\subsection{Correction du fichier \textbf{EXPANDER\_MCP23017.c}}
+
+La fonction \texttt{Expander\_Gpio\_Ctrl() } a été corrigée pour assurer un contrôle correct des broches GPIO du MCP23017.\\
+La version corrigée de la fonction est la suivante:
+
+\begin{lstlisting}[language=C,caption={Correction de la fonction Expander\_Gpio\_Ctrl (EXPANDER\_MCP23017.c)}]
+void Expander_Gpio_Ctrl_test(unsigned char GPIOPort, unsigned char GPIOPin, unsigned char GPIOPortState)
+{
+    unsigned char currentState;
+    unsigned char mask = (1 << GPIOPin);
+    unsigned char latchAddress;
+
+    if (GPIOPort == GPIOA) {
+        latchAddress = OLATA;
+    } else if (GPIOPort == GPIOB) {
+        latchAddress = OLATB;
+    } else {
+        return; 
+    }
+
+    (latchAddress);
+
+    if (GPIOPortState == HIGH)
+    {
+        currentState |= mask;
+    }
+    else if (GPIOPortState == LOW)
+    {
+        currentState &= ~mask;
+    }
+    
+    Expander_Write(GPIOPort, currentState);
+}
+\end{lstlisting}
+
+Cette amélioration garantit que les broches GPIO sont correctement contrôlées en fonction de l'état souhaité. (La fonction originale avait des erreurs dans la manipulation des bits et l'adresse du registre de latch selon la datasheet.)
+
+\newpage
+
+\subsection{Implémentation dans le projet}
+Le MCP23017 est initialisé dans \textbf{main.c} pour configurer les broches en entrée/sortie selon les besoins du projet. Les fonctions de contrôle des lampes utilisent ensuite le MCP23017 pour allumer/éteindre les lampes via les broches étendues.
+
+Afin de faciliter la gestion des lampes, un fichier d'en-tête \textbf{Light\_Control.h} a été créé. Ce fichier encapsule les fonctions de contrôle des lampes, rendant le code plus modulaire et facile à maintenir.
+
+Dans \textbf{Light\_Control.h}, des cross-definitions et des prototypes de fonctions sont définis pour gérer les lampes.
+
+Extrait de \textbf{Light\_Control.h}:
+\begin{lstlisting}[language=C,caption={Exemples de cross-definitions dans Light\_Control.h}]
+
+#define LAMP1_PIN   EXP_GPIOB4
+#define LAMP2_PIN   EXP_GPIOB5
+...
+
+#define BTN1_PIN    EXP_GPIOB0
+#define BTN2_PIN    EXP_GPIOB1
+...
+
+#define LAMP1_ON    Expander_Gpio_Ctrl_test(GPIOB, LAMP1_PIN, HIGH);
+#define LAMP1_OFF   Expander_Gpio_Ctrl_test(GPIOB, LAMP1_PIN, LOW);
+#define LAMP2_ON    Expander_Gpio_Ctrl_test(GPIOB, LAMP2_PIN, HIGH);
+#define LAMP2_OFF   Expander_Gpio_Ctrl_test(GPIOB, LAMP2_PIN, LOW);
+...
+
+
+\end{lstlisting}
+
+\section{Intégration de la SRAM}
+L'integration de la SRAM 23LC1024 a été implémentée via les bibliothèques fournies \textbf{SRAM23LC1024.c}\\
+et \textbf{SRAM23LC1024.h}.
+
+L'assignation des adresses ainsi que des cross-definitions a été réalisée dans \textbf{SRAMConf.h} pour faciliter la lecture.
+
+Cette assignation ce fait comme suis:
+\begin{lstlisting}[language=C,caption={Extrait de SRAMConf.h }]
+
+#define LAMP1_Address               0x00
+#define LAMP2_Address               0x04
+#define LAMP3_Address               0x08
+...
+
+#define LAMP1WRITE              SRAM_Write(LAMP1_Address, LAMP1_State)
+#define LAMP2WRITE              SRAM_Write(LAMP2_Address, LAMP2_State)
+#define LAMP3WRITE              SRAM_Write(LAMP3_Address, LAMP3_State)
+...
+
+#define LAMP1READ               SRAM_Read(LAMP1_Address)
+#define LAMP2READ               SRAM_Read(LAMP2_Address)
+#define LAMP3READ               SRAM_Read(LAMP3_Address)
+...
+
+\end{lstlisting}
+
+Le changement d'état des lampes est d'abord sauvegardé dans la SRAM avant d'être appliqué a chaque ticks du programme dans la boucle principale via la Callbacks \texttt{Lamp\_SRAM\_Update()}.
+
+
+
+\section{Mise en place de l'éclairage en fonction de l'heure (RTC)}
+
+Pour gérer l'éclairage en fonction de l'heure, le module RTC DS1307 est utilisé. L'implémentation a été réalisée par un autre groupe qui nous fournira une valeur de poucentage de luminosité en fonction de l'heure actuelle.
+Cette valeur est ensuite utilisée dans la fonction \texttt{Auto\_PWM\_Control()} pour ajuster automatiquement la luminosité de \textbf{Lamp2}.
+
+Cette fonction est semblable au \texttt{PWM\_update()} mais elle lit la valeur de luminosité depuis la SRAM et ajuste la luminosité en conséquence.
+
+\section*{Conclusion}
+Ce document a présenté les différentes tâches réalisées dans le cadre du projet de micro-contrôleur pour la gestion de l'éclairage. Chaque section a détaillé les modifications apportées, les fichiers concernés, et les extraits de code pertinents pour illustrer les implémentations.
+
+\end{document}
