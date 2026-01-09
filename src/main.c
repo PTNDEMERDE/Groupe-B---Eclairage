@@ -25,7 +25,7 @@
 unsigned char IDCB_Light_Switch_finalize = 0;   // Identificateur callback timer pour finaliser le changement d'état de la lampe
 unsigned char IDCB_Light_All_Off_Finalize = 0; 	// Identificateur callback timer pour finaliser l'extinction de toutes les lampes		
 
-unsigned char IDCB_Auto_PWM_control = 0;
+unsigned char IDCB_Auto_PWM_control = 0;	// Identificateur callback timer pour active la fonction Auto_PWM_Control
 
 unsigned char IDCB_PWM_ON = 0; 				// Identificateur callback timer pour active la fonction PWM_update
 extern unsigned char IDCB_BTN_HANDLER;		// Identificateur callback timer pour la gestion des différents appuye des boutons

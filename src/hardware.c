@@ -19,10 +19,7 @@
 
 void Init_Hardware(void)
 {
-	//Configuration LED sur PD7 en sortie
-	SET_BIT(DDRD,DDD7);
-	SET_BIT(PORTD,PORTD7); //activé au demarrage état haut
-
+	
 	//Configuration LED sur PD7 en sortie
 	SET_BIT(DDRD,DDD7);
 	CLR_BIT(PORTD,PORTD7);  // Initialiser la LED à 0 (éteinte)

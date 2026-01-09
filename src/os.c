@@ -61,7 +61,6 @@ char buf_USART0[MAXBUFUSART0];
 volatile unsigned char idxbuf_USART0 = 0;
 
 //Gestion Touches
-volatile unsigned char Button;
 volatile unsigned char IDCB_BTN_HANDLER = 0;
 
 volatile unsigned char IDCB_Lamp_SRAM_Update = 0;
@@ -186,7 +185,7 @@ void OS_Start(void)
 
 	Expander_Init(); // Initialisation de l'expander MCP23017
 
-	IDCB_Lamp_SRAM_Update = Callbacks_Record_Timer(Lamp_SRAM_Update, 50); // callback chaque 100 ms pour mettre à jour les lampes selon la SRAM
+	IDCB_Lamp_SRAM_Update = Callbacks_Record_Timer(Lamp_SRAM_Update, 50); // callback chaque 5 ms pour mettre à jour les lampes selon la SRAM
 
  	// BOUCLE INFINIE
 	// Boucle principale de l'OS d'où on ne sort jamais
@@ -446,7 +445,7 @@ void Button_Handler(void)	// callback chaque 1 ms qui analyse l'état du bouton 
 			//cli();lcd_clrscr();lcd_gotoxy(1,1);lcd_puts("                ");lcd_gotoxy(1,1);lcd_puts("CASE_WAIT_SECOND");sei();
 
             // DOUBLE PRESS
-            if (button_raw == ENTER_PRESSED && release_timer < 1000)	// si le bouton est appuyé de nouveau et avant 500ms
+            if (button_raw == ENTER_PRESSED && release_timer < 500)	// si le bouton est appuyé de nouveau et avant 500ms
 			{
 				DoublePressDetected = TRUE;							// alors on set le flag de double appui
 				ButtonEvent = BTN_ENTER_DOUBLE;						// et on génère l'événement double appui
